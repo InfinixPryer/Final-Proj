@@ -3,7 +3,6 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
 
-//GWAPS SI FILIP
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
