@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400&display=swap");
+@layer utilities {
+  tr:nth-child(even) {
+    @apply bg-gray-100;
+  }
+  td {
+    @apply border;
+    @apply border-gray-200;
+  }
+  thead th {
+    @apply sticky;
+    @apply top-0;
+    @apply z-30;
+    @apply bg-black;
+  }
+  input {
+    @apply border;
+    @apply p-1;
+  }
+  .addnew input {
+    @apply w-2/6;
+  }
+
+  .grid-container {
+    padding: 0.5rem 2rem 5rem 0.2rem;
+  }
+  .product-box {
+    transition: box-shadow 0.1s, transform 0.125s;
+  }
+  .radcon {
+    @apply cursor-pointer;
+    @apply w-3/6;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  .radcon input {
+    @apply absolute;
+    @apply opacity-0;
+    @apply cursor-pointer;
+    @apply h-0;
+    @apply w-0;
+  }
+  .radcon input:checked + span {
+    @apply border-none;
+    @apply text-white;
+    @apply bg-darkbrown;
+  }
+  .btn-focus {
+    transition: width 0.6s, font-size 0.1s, border-radius 0.2s;
+  }
+
+  @variants hover, group-hover {
+    .product-box-hover {
+      box-shadow: 0px 2px 4px rgb(230, 230, 230);
+    }
+
+    .btn-focus-hover {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 0.94rem;
+      border-radius: 0rem;
+    }
+  }
+}
