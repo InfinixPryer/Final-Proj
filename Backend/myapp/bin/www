@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-//FOR npm start "node ./bin/www"
+//FOR npm start  with bin "node ./bin/www"
 
 var app = require('../app');
 var debug = require('debug')('myapp:server');
