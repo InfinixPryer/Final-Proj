@@ -1,14 +1,3 @@
-import products from "../products.js";
-
-export const productUpdateReducer = (state = products, action) => {
-  switch (action.type) {
-    case "DELETE_ITEM":
-      return state.filter((obj) => obj.product_id !== action.payload);
-    default:
-      return state;
-  }
-};
-
 export const adminLoggedReducer = (state = false, action) => {
   switch (action.type) {
     case "ADMIN_LOGGED":
@@ -18,27 +7,26 @@ export const adminLoggedReducer = (state = false, action) => {
   }
 };
 
-export const tableSelectReducer = (state = [], action) => {
+export const productsReducer = (state, action) => {
   switch (action.type) {
-    case "SELECT":
-      return state.concat(action.payload);
-    case "DESELECT":
-      return state.filter((id) => id !== action.payload);
-    case "CLEAR":
-      return (state = []);
+    case "SET_ITEMS":
+      return action.payload;
+    case "DELETE_ITEM":
+      return state.filter((obj) => obj.product_id !== action.payload);
     default:
       return state;
   }
 };
 
-export const cartItemsReducer = (state = [], action) => {
+export const cartItemsReducer = (state, action) => {
   switch (action.type) {
     case "ADD_TO_CART":
-      return state.concat(action.payload);
+      return [...state, action.payload];
     default:
       return state;
   }
 };
+
 export const tagsReducer = (state = [], action) => {
   switch (action.type) {
     case "ADD_TAG":
@@ -65,9 +53,9 @@ export const sortItemsReducer = (state = "", action) => {
 export const screenReducer = (state = "", action) => {
   switch (action.type) {
     case "MOBILE":
-      return state.concat(action.payload); //on tag click requests all matching objects
+      return state.concat(action.payload); 
     case "DESKTOP":
-      return action.payload.toLowerCase(); //on search click requests all the matching objects
+      return action.payload.toLowerCase();
     default:
       return state;
   }

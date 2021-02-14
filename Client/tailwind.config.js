@@ -22,9 +22,11 @@ module.exports = {
       fontSize: {
         norm: "0.97rem",
       },
-
+      minWidth: {
+        "1/4": "25%",
+      },
       height: {
-        page: "94vh",
+        page: "90vh",
         smpage: "60vh",
       },
       boxShadow: {

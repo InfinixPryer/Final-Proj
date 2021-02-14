@@ -1,18 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  deleteItem,
-  deselectTableItem,
-  selectTableItem,
-  clearTableItems,
-} from "../actions";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { ProductContext } from "../context/ProductContext";
 import { AddNewItem } from "../addnewproduct.js";
 
 const ManageProducts = () => {
   const [adding, setadding] = useState(false);
-  const dispatch = useDispatch();
-  const tableSelectList = useSelector((state) => state.tableSelectList);
-  const itemList = useSelector((state) => state.itemList);
+  const [tableSelectList, setList] = useState([]);
+  const { dispatch, itemList } = useContext(ProductContext);
   const delSelBtn = useRef();
 
   const handleAdd = () => {
@@ -22,8 +15,15 @@ const ManageProducts = () => {
   const handleDelItems = () => {
     for (let item of tableSelectList) {
       console.log(item);
-      dispatch(deleteItem(item));
+      dispatch({ type: "DELETE_ITEM", payload: item });
     }
+    setList([]);
+  };
+  const handleSelect = (e) => {
+    const sel = e.target;
+    if (sel.checked) {
+      setList((prev) => prev.concat(sel.value));
+    } else setList((prev) => prev.filter((index) => index !== sel.value));
   };
 
   useEffect(() => {
@@ -31,10 +31,6 @@ const ManageProducts = () => {
       ? (delSelBtn.current.disabled = false)
       : (delSelBtn.current.disabled = true);
   }, [tableSelectList]);
-
-  useEffect(() => {
-    return () => dispatch(clearTableItems());
-  }, [ManageProducts, itemList]);
 
   if (adding) {
     return (
@@ -75,13 +71,13 @@ const ManageProducts = () => {
             SAVE
           </button>
         </span>
-        <AdminItemTable itemList={itemList} />
+        <AdminItemTable itemList={itemList} handleSelect={handleSelect} />
       </div>
     </section>
   );
 };
 
-const AdminItemTable = ({ itemList }) => {
+const AdminItemTable = ({ itemList, handleSelect }) => {
   return (
     <div className="w-full h-smpage overflow-scroll border border-gray-100 text-sm ">
       <table>
@@ -98,7 +94,13 @@ const AdminItemTable = ({ itemList }) => {
         </thead>
         <tbody>
           {itemList.map((item) => {
-            return <TableRow item={item} key={item.product_id} />;
+            return (
+              <TableRow
+                item={item}
+                key={item.product_id}
+                handleSelect={handleSelect}
+              />
+            );
           })}
         </tbody>
         <tfoot></tfoot>
@@ -107,15 +109,7 @@ const AdminItemTable = ({ itemList }) => {
   );
 };
 
-const TableRow = ({ item }) => {
-  const dispatch = useDispatch();
-  const handleCheck = (e) => {
-    if (e.target.checked) {
-      dispatch(selectTableItem(e.target.value));
-    } else {
-      dispatch(deselectTableItem(e.target.value));
-    }
-  };
+const TableRow = ({ item, handleSelect }) => {
   return (
     <tr className="border-1 bg-white" key={item.product_id}>
       <td className="m-auto">
@@ -124,7 +118,7 @@ const TableRow = ({ item }) => {
             type="checkbox"
             className="m-auto"
             value={item.product_id}
-            onChange={(e) => handleCheck(e)}
+            onChange={(e) => handleSelect(e)}
           />
         </label>
       </td>
@@ -135,7 +129,9 @@ const TableRow = ({ item }) => {
       <td className="w-5/12">
         <span className="flex w-full h-20">
           {item.imgs.map((img) => {
-            return <img src={img} key={img} className="p-1 w-20" />;
+            return (
+              <img src={img} key={img} className="p-1 w-20" alt={item.name} />
+            );
           })}
         </span>
       </td>

@@ -1,10 +1,20 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext, useState, useEffect } from "react";
 import ProductViewer from "../productsviewer.js";
+import { ProductContext } from "../context/ProductContext";
+import { api } from "../App.js";
+import products from "../products";
 
 const ProductPage = () => {
-  const products = useSelector((state) => state.itemList);
-  const [toFindItems, settoFindItems] = useState(products);
+  const { itemList, dispatch } = useContext(ProductContext);
+
+  /*   useEffect(() => {
+    api.get("/photos/1").then((res) => {
+      console.log(res.data);
+      dispatch({ type: "SET_ITEMS", payload: res.data });
+    });
+  }, []); */
+
+  const [toFindItems, settoFindItems] = useState(itemList);
   const [failedToFind, setFailed] = useState(false);
 
   const ProductFinder = () => {
@@ -16,7 +26,6 @@ const ProductPage = () => {
     };
     const handleTagSearch = (tag) => {
       console.log(tag);
-      const find = 1;
     };
     const handleSearch = () => {
       const findName = (obj) => {
