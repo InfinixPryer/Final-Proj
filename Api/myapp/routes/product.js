@@ -79,7 +79,6 @@ router.post('/'/*, upload.single('productImage')*/, (req, res, next) => {
     const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
-        price: req.body.price,
         productImage: req.body.productImage,
         availability: req.body.availability,
         type: req.body.type,

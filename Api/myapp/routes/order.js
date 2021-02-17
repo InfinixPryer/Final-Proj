@@ -7,19 +7,13 @@ const Product = require('../models/productModel');
 
 router.get('/', (req, res, next) => {
     Order.find()
-    .select('_id quantity product')
-    .populate('productId')
+    .select('-__v -_id')
+    // .populate('productObjectId')
     .exec()
     .then(orders => {
         res.status(200).json({
             count: orders.length,
-            orders: orders.map(order => {
-                return{
-                    _id: order._id,
-                    quantity: order.quantity,
-                    product: order.productId
-                }
-            })
+            orders
         })
     })
     .catch(err => {
@@ -32,22 +26,37 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    Product.findById(req.body.productId)
+    Product.find({ productId: req.body.productId })
+    .select()
+    .exec()
     .then(product => {
-        if(!product){
+        if(product.length === 0){
             return res.status(404).json({
                 message: 'Product not found.'
             });
         }
+        const newId = new mongoose.Types.ObjectId();
         const order = new Order({
-            _id: new mongoose.Types.ObjectId(),
+            _id: newId,
+            orderId: newId,
             quantity : req.body.quantity,
-            productId: req.body.productId
+            productId: req.body.productId,
+            // productObjectId: product[0]._id,
+            selectedPreference: req.body.selectedPreference,
+            selectedOption: req.body.selectedOption,
+            totalPrice: req.body.totalPrice
         })
         return order.save();
     })
     .then(result => {
-        res.status(201).json(result);
+        res.status(201).json({
+            orderId: result.orderId,
+            quantity: result.quantity,
+            productId: result.productId,
+            selectedPreference: result.selectedPreference,
+            selectedOption: result.selectedOption,
+            totalPrice: result.totalPrice
+        });
     })
     .catch(err => {
         res.status(500).json({
@@ -57,7 +66,8 @@ router.post('/', (req, res, next) => {
 });
 
 router.get('/:orderId', (req, res, next) => {
-    Order.findById(req.params.orderId)
+    Order.find({orderId: req.params.orderId})
+    .select('-__v -_id')
     .exec()
     .then(order => {
         if(!order){
@@ -77,11 +87,27 @@ router.get('/:orderId', (req, res, next) => {
 });
 
 router.delete('/:orderId', (req, res, next) => {
-    Order.deleteOne({_id:req.params.orderId})
+    Order.deleteOne({orderId:req.params.orderId})
     .exec()
     .then(result => {
         res.status(200).json({
             message: 'Order deleted'
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: err
+        })
+    })
+});
+
+router.delete('/', (req, res, next) => {
+    Order.deleteMany()
+    .exec()
+    .then(result => {
+        res.status(200).json({
+            message: 'Order Deleted',
+            result: result
         })
     })
     .catch(err => {
