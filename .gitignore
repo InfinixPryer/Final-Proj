@@ -1,3 +1,4 @@
 **/node_modules
 Api/myapp/node_modules
 Client/node_modules
+Client/.eslintcache

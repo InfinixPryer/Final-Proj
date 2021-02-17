@@ -19,7 +19,6 @@ mongoose.set('useNewUrlParser', true);
 //Mongoose connection
 mongoose.connect('mongodb://localhost:27017/database');
 
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -28,16 +27,6 @@ app.use(logger('dev'));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin;", '*');
-//   res.header('Access-Control-Allow-Headers', '*');
-//   if(req.method == 'OPTIONS'){
-//     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET,');
-//     return res.status(200).json({});
-//   }
-//   next();
-// })
 
 app.use(cors());
 app.use(express.json());
