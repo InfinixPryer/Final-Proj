@@ -87,6 +87,7 @@ export const ProductInfo = ({ match }) => {
               <div
                 className="w-24 mt-1 mr-1 inline-block cursor-pointer border-2 border-white hover:border-darkbrown"
                 onClick={() => setDisplay(img)}
+                key={img + name}
               >
                 <img src={img} alt={name} key={name + img} />
               </div>
