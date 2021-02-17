@@ -26,43 +26,30 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    Product.find({ productId: req.body.productId })
-    .select()
-    .exec()
-    .then(product => {
-        if(product.length === 0){
-            return res.status(404).json({
-                message: 'Product not found.'
-            });
-        }
-        const newId = new mongoose.Types.ObjectId();
-        const order = new Order({
-            _id: newId,
-            orderId: newId,
-            quantity : req.body.quantity,
-            productId: req.body.productId,
-            // productObjectId: product[0]._id,
-            selectedPreference: req.body.selectedPreference,
-            selectedOption: req.body.selectedOption,
-            totalPrice: req.body.totalPrice
+    postOrder(req.body)
+        .then((order) => {
+            if(result.status === 404){
+                res.status(404).json({
+                    message: 'Product not found'
+                })
+            } 
+            return order.save();
         })
-        return order.save();
-    })
-    .then(result => {
-        res.status(201).json({
-            orderId: result.orderId,
-            quantity: result.quantity,
-            productId: result.productId,
-            selectedPreference: result.selectedPreference,
-            selectedOption: result.selectedOption,
-            totalPrice: result.totalPrice
-        });
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: err
-        });
-    });
+        .then((result) => { 
+            res.status(201).json({
+                orderId: result.orderId,
+                quantity: result.quantity,
+                productId: result.productId,
+                selectedPreference: result.selectedPreference,
+                selectedOption: result.selectedOption,
+                totalPrice: result.totalPrice
+            });
+        })
+        .catch((err) => {
+            res.status(500).json({
+                error: err
+            });
+        })
 });
 
 router.get('/:orderId', (req, res, next) => {
@@ -117,4 +104,33 @@ router.delete('/', (req, res, next) => {
     })
 });
 
-module.exports = router;
+const postOrder = async (order) => {
+    try {
+        const product = await Product.find({ productId: order.productId }).select().exec();
+        if(product.length === 0){
+            return {
+                status: 404,
+                message: 'Product not found'
+            }
+        }
+        const newId = new mongoose.Types.ObjectId();
+        const newOrder = new Order({
+            _id: newId,
+            orderId: newId,
+            quantity : order.quantity,
+            productId: order.productId,
+            // productObjectId: product[0]._id,
+            selectedPreference: order.selectedPreference,
+            selectedOption: order.selectedOption,
+            totalPrice: order.totalPrice
+        })
+        return newOrder;
+    } catch (error) {
+        throw error;
+    }
+}
+
+module.exports = {
+    router,
+    postOrder
+};

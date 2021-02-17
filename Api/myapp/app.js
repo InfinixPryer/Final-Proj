@@ -10,6 +10,7 @@ var bodyParser = require("body-parser");
 var userRouter = require("./routes/user");
 var productRouter = require("./routes/product");
 var orderRouter = require("./routes/order");
+var cartRouter = require("./routes/customerCart");
 
 var app = express();
 
@@ -30,7 +31,8 @@ app.use(cookieParser());
 
 app.use('/user', userRouter);
 app.use('/products', productRouter);
-app.use('/orders', orderRouter);
+app.use('/orders', orderRouter.router);
+app.use('/carts', cartRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
