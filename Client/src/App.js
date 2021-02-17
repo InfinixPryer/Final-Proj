@@ -8,6 +8,8 @@ import About from "./pages/AboutPage.js";
 import Navbar from "./navbar.js";
 import Home from "./pages/LandingPage.js";
 import Cart from "./pages/CartPage.js";
+import Checkout from "./pages/CheckoutPage .js";
+import ProductViewer from "./productsviewer.js";
 import ProductInfo from "./productinfo.js";
 
 export const api = axios.create({
@@ -24,11 +26,14 @@ const ReactRouterSetup = () => {
             <Route exact path="/">
               <Home />
             </Route>
-            <Route exact path="/Products">
-              <Products />
-            </Route>
             <Route
-              path="/Products/:product_name"
+              exact
+              path="/Products/search=:all"
+              component={Products}
+            ></Route>
+            <Route
+              exact
+              path="/Product=:product_name"
               children={<ProductInfo />}
             ></Route>
             <Route path="/About">
@@ -36,6 +41,9 @@ const ReactRouterSetup = () => {
             </Route>
             <Route path="/My-Cart">
               <Cart />
+            </Route>
+            <Route path="/Checkout">
+              <Checkout />
             </Route>
           </Switch>
         </Router>

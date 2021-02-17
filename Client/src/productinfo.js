@@ -4,7 +4,8 @@ import products from "./products";
 import { CartContext } from "./context/CartContext";
 
 export const ProductInfo = ({ match }) => {
-  const { product_name } = useParams(); // change to match when api is available
+  const { product_name } = useParams();
+  console.log(product_name); // change to match when api is available
   const _item = products.find((item) => item.name === product_name);
 
   const { imgs, type, name, options, preferences, details } = _item;
@@ -17,6 +18,8 @@ export const ProductInfo = ({ match }) => {
   const high = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.max(a, b));
   const optionsrange = `${low} - \u20b1${high}`;
   const qtyInp = useRef();
+
+  const [display, setDisplay] = useState(imgs[0]);
 
   const [choices, setChoice] = useState({
     selected: "",
@@ -63,26 +66,30 @@ export const ProductInfo = ({ match }) => {
 
   return (
     <section className="flex w-full h-page overflow-hidden bg-white ">
-      <div className="absolute font-work /text-white text-sm py-1 rounded-br-md pl-6 pr-4 bg-white /bg-darkbrown">
-        <Link to="/Products">{`< PRODUCTS / `}</Link>
-        {`${name.toUpperCase()}`}
+      <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
+        <Link to="/Products/search=all">{`< Products / `}</Link>
+        {`${name}`}
       </div>
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
         <div className="block h-96 w-full relative">
-          <button className="p-3 top-40 absolute left-0">{"<"}</button>
-          <img src={imgs[0]} alt={name} className="block m-auto h-96 w-96" />
-          <button className="p-3 absolute bottom-44 right-0">{">"}</button>
+          <span className="p-3 top-40 absolute left-0 cursor-pointer">
+            {"<"}
+          </span>
+          <img src={display} alt={name} className="block m-auto h-96 w-96" />
+          <span className="p-3 absolute bottom-44 right-0 cursor-pointer">
+            {">"}
+          </span>
         </div>
 
-        <div className=" bg-gray-500 w-full">
+        <div className=" w-96 mx-auto">
           {imgs.map((img) => {
             return (
-              <img
-                src={img}
-                alt={name}
-                key={name + img}
-                className="w-24 mt-3 mr-3 inline-block"
-              />
+              <div
+                className="w-24 mt-1 mr-1 inline-block cursor-pointer border-2 border-white hover:border-darkbrown"
+                onClick={() => setDisplay(img)}
+              >
+                <img src={img} alt={name} key={name + img} />
+              </div>
             );
           })}
         </div>
@@ -188,7 +195,7 @@ const AddtoCartBtn = ({ choices }) => {
         onClick={(e) => {
           handleAdd(e);
         }}
-        className=" w-11/12 mt-3 m-auto  active:bg-gray-800 flex text-sm justify-center bg-white rounded-md border-darkbrown border py-3 font-poppins btn-focus hover:text-white hover:bg-darkbrown hover:btn-focus-hover "
+        className=" w-11/12 mt-3 m-auto text-darkbrown  active:bg-gray-800 flex text-sm justify-center bg-white rounded-md border-darkbrown border py-3 font-poppins btn-focus hover:text-white hover:bg-darkbrown hover:btn-focus-hover "
       >
         ADD TO BAG
       </button>
