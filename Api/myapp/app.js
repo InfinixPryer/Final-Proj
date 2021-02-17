@@ -7,7 +7,6 @@ var cors = require("cors");
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
-var indexRouter = require("./routes/index");
 var userRouter = require("./routes/user");
 var productRouter = require("./routes/product");
 var orderRouter = require("./routes/order");
