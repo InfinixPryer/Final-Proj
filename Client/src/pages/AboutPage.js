@@ -50,7 +50,7 @@ const ManageProducts = () => {
           <button
             onClick={() => handleDelItems()}
             ref={delSelBtn}
-            className="px-2 text-white f/lex rounded border border-red-500 font-medium disabled:bg-red-100 disabled:border-red-100 bg-red-500"
+            className="text-white w-52  rounded border border-red-500  disabled:bg-red-100 disabled:border-red-100 bg-red-500"
           >
             DELETE SELECTED
             {tableSelectList.length !== 0 ? (
@@ -58,18 +58,8 @@ const ManageProducts = () => {
             ) : null}
           </button>
 
-          <button
-            onClick={() => handleAdd()}
-            className="px-2 mx-2 text-gray-400 font-medium text-md rounded border border-gray-400 hover:text-white hover:border-black hover:bg-black"
-          >
-            ADD ITEM
-          </button>
-          <button
-            disabled
-            className="px-2 text-gray-400 font-medium text-md rounded border border-gray-400 hover:text-white hover:border-black hover:bg-black"
-          >
-            SAVE
-          </button>
+          <button onClick={() => handleAdd()}>ADD ITEM</button>
+          <button disabled>SAVE</button>
         </span>
         <AdminItemTable itemList={itemList} handleSelect={handleSelect} />
       </div>
@@ -135,8 +125,8 @@ const TableRow = ({ item, handleSelect }) => {
           })}
         </span>
       </td>
-      <td className="w-2/12">
-        <button className="bg-gray-300 text-white hover:bg-black font-semibold ml-1 mr-3 w-12 rounded-sm">
+      <td className="">
+        <button className="bg-gray-300 text-white border-none text-sm hover:bg-black font-semibold ml-1 mr-3 rounded-sm">
           EDIT
         </button>
       </td>

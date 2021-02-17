@@ -1,23 +1,23 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var cors = require('cors');
-var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
+var createError = require("http-errors");
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+var cors = require("cors");
+var mongoose = require("mongoose");
+var bodyParser = require("body-parser");
 
-var indexRouter = require('./routes/index');
-var userRouter = require('./routes/user');
-var productRouter = require('./routes/product');
-var orderRouter = require('./routes/order');
+var indexRouter = require("./routes/index");
+var userRouter = require("./routes/user");
+var productRouter = require("./routes/product");
+var orderRouter = require("./routes/order");
 
 var app = express();
 
-mongoose.set('useUnifiedTopology', true);
-mongoose.set('useNewUrlParser', true);
+mongoose.set("useUnifiedTopology", true);
+mongoose.set("useNewUrlParser", true);
 //Mongoose connection
-mongoose.connect('mongodb://localhost:27017/database');
+mongoose.connect("mongodb://localhost:27017/database");
 
 
 app.use(logger('dev'));
@@ -34,20 +34,20 @@ app.use('/products', productRouter);
 app.use('/orders', orderRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    const error = new Error('Not found');
-    error.status=404;
-    next(error);
+app.use(function (req, res, next) {
+  const error = new Error("Not found");
+  error.status = 404;
+  next(error);
   //next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
-  res.status(err.status||500);
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
   res.json({
-    err:{
-      message: err.message 
-    }
+    err: {
+      message: err.message,
+    },
   });
   // // set locals, only providing error in development
   // res.locals.message = err.message;

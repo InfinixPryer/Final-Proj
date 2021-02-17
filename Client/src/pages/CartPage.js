@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { CartContext } from "../context/CartContext";
+import { Link } from "react-router-dom";
+import { CartContext } from "../context/CartContext.js";
 
 const CartPage = () => {
   const { cart } = useContext(CartContext);
@@ -43,7 +44,7 @@ const CartContainer = ({ cart }) => {
       )}
       <div>
         <button className="border rounded-md float-right py-2 px-5 text-white bg-coffee">
-          Check Out
+          <Link to="/Checkout">Checkout</Link>
         </button>
       </div>
       <div></div>

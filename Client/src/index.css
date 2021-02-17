@@ -21,11 +21,27 @@
   input {
     @apply border;
     @apply p-1;
+    @apply m-1;
+    @apply rounded;
   }
   .addnew input {
-    @apply w-2/6;
+    @apply w-1/6;
   }
-
+  button {
+    @apply border;
+    @apply ml-2;
+    @apply px-2;
+    @apply rounded;
+    @apply text-lg;
+    @apply font-medium;
+    @apply border-gray-400;
+    @apply text-gray-400;
+  }
+  button:hover {
+    @apply text-white;
+    @apply border-black;
+    @apply bg-black;
+  }
   .grid-container {
     padding: 0.5rem 2rem 5rem 0.2rem;
   }

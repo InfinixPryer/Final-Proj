@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProductCard from "./productcard.js";
 import { Link } from "react-router-dom";
 
@@ -6,7 +6,6 @@ const ProductViewer = ({ toFindItems, failedToFind }) => {
   useEffect(() => {
     console.log(window.innerWidth);
   }, []);
-
   if (!toFindItems) {
     return (
       <div className="flex w-32 justify-around relative">
@@ -17,7 +16,11 @@ const ProductViewer = ({ toFindItems, failedToFind }) => {
     );
   }
   if (failedToFind) {
-    return <div>Sorry that item doesn't exist</div>;
+    return (
+      <section className="w-full h-page flex overflow-auto float-right px-4">
+        <h1 className="m-auto w-52 h-5">Sorry that item doesn't exist</h1>
+      </section>
+    );
   }
 
   return (
@@ -26,7 +29,7 @@ const ProductViewer = ({ toFindItems, failedToFind }) => {
         {toFindItems.map((item) => {
           return (
             <div key={item.product_id}>
-              <Link to={`/Products/${item.name}`}>
+              <Link to={`/Product=${item.name}`}>
                 <ProductCard {...item} />
               </Link>
             </div>

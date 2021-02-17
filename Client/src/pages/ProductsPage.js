@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import ProductViewer from "../productsviewer.js";
 import { ProductContext } from "../context/ProductContext";
 import { api } from "../App.js";
@@ -6,6 +7,13 @@ import products from "../products";
 
 const ProductPage = () => {
   const { itemList, dispatch } = useContext(ProductContext);
+  const [toFindItems, settoFindItems] = useState(itemList);
+  const [failedToFind, setFailed] = useState(false);
+
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+  const query = useQuery();
 
   /*   useEffect(() => {
     api.get("/photos/1").then((res) => {
@@ -14,18 +22,24 @@ const ProductPage = () => {
     });
   }, []); */
 
-  const [toFindItems, settoFindItems] = useState(itemList);
-  const [failedToFind, setFailed] = useState(false);
-
   const ProductFinder = () => {
     const [toFind, settofind] = useState("");
-    const tagArray = ["foo", "bar", "baz"];
+    const tagArray = ["Single Origins", "Feelippine Coffee", "baz"];
 
     const handleChange = (e) => {
       settofind(e.target.value);
     };
     const handleTagSearch = (tag) => {
-      console.log(tag);
+      let arr = [];
+      itemList.filter((obj) => {
+        for (let i of obj.tags) {
+          if (i === tag) {
+            arr.push(obj);
+          }
+        }
+      });
+      settoFindItems(arr);
+      setFailed(false);
     };
     const handleSearch = () => {
       const findName = (obj) => {
@@ -41,27 +55,31 @@ const ProductPage = () => {
     };
 
     return (
-      <section className=" sm:w-52 pt-7 p-3 flex-col float-left text-sm">
-        <span className="mb-4">
+      <section className=" sm:w-60 pt-7 p-1 font-source flex-col float-left text-sm">
+        <span className="mb-4 mx-auto">
           <input
             type="text"
             value={toFind}
             placeholder="Find an item.."
-            className="rounded-md w-9/12 border border-gray-200 p-1"
+            className="rounded-md w-9/12 border border-gray-200 ml-2"
             onChange={(e) => handleChange(e)}
           />
-          <button className="p-1 shadow-md w-6 ml-1" onClick={handleSearch}>
+          <button
+            className="border-none shadow hover:bg-gray-100"
+            onClick={handleSearch}
+          >
             s
           </button>
         </span>
         {tagArray.map((tag) => (
-          <button
-            className="border-b p-2 w-full block"
-            key={tag}
-            onClick={() => handleTagSearch(tag)}
-          >
-            {tag}
-          </button>
+          <Link key={tag} to={`/Products/search?tag=:${tag}`}>
+            <span
+              className="p-2 border my-1 w-full rounded opacity-70 hover:border-darkbrown block"
+              onClick={() => handleTagSearch(tag)}
+            >
+              {tag}
+            </span>
+          </Link>
         ))}
       </section>
     );
@@ -70,7 +88,11 @@ const ProductPage = () => {
   return (
     <div className=" flex w-full bg-palebg">
       <ProductFinder />
-      <ProductViewer toFindItems={toFindItems} failedToFind={failedToFind} />
+      <ProductViewer
+        tag={query.get("tag")}
+        toFindItems={toFindItems}
+        failedToFind={failedToFind}
+      />
     </div>
   );
 };
