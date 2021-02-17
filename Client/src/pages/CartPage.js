@@ -1,9 +1,9 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
 const CartPage = () => {
-  const cart = useSelector((state) => state.cartItems);
-
+  const { cart } = useContext(CartContext);
+  console.log(cart);
   return (
     <>
       <CartContainer cart={cart} />

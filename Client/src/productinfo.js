@@ -1,12 +1,10 @@
-import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useRef, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import { addItemToCart } from "./actions";
 import products from "./products";
+import { CartContext } from "./context/CartContext";
 
 export const ProductInfo = ({ match }) => {
   const { product_name } = useParams(); // change to match when api is available
-  //const product = useSelector(state => state.itemlist.find(item=>item.name===product_name))
   const _item = products.find((item) => item.name === product_name);
 
   const { imgs, type, name, options, preferences, details } = _item;
@@ -15,10 +13,9 @@ export const ProductInfo = ({ match }) => {
     pref,
     preferences[pref],
   ]);
-
   const low = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.min(a, b));
   const high = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.max(a, b));
-  const optionsrange = `${low}  - \u20b1${high}`;
+  const optionsrange = `${low} - \u20b1${high}`;
   const qtyInp = useRef();
 
   const [choices, setChoice] = useState({
@@ -70,11 +67,27 @@ export const ProductInfo = ({ match }) => {
         <Link to="/Products">{`< PRODUCTS / `}</Link>
         {`${name.toUpperCase()}`}
       </div>
-      <div className=" w-5/12 my-auto  float-left ml-10">
-        <img src={imgs[0]} alt={name} />
-      </div>
+      <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
+        <div className="block h-96 w-full relative">
+          <button className="p-3 top-40 absolute left-0">{"<"}</button>
+          <img src={imgs[0]} alt={name} className="block m-auto h-96 w-96" />
+          <button className="p-3 absolute bottom-44 right-0">{">"}</button>
+        </div>
 
-      <div className="float-right w-5/12  absolute pr-5 h-page right-12 flex shadow-lg font-work flex-col bg-white p-6">
+        <div className=" bg-gray-500 w-full">
+          {imgs.map((img) => {
+            return (
+              <img
+                src={img}
+                alt={name}
+                key={name + img}
+                className="w-24 mt-3 mr-3 inline-block"
+              />
+            );
+          })}
+        </div>
+      </div>
+      <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-6">
         <h1 className=" text-2xl font-medium font-poppins pb-1">
           {name.toUpperCase()}
         </h1>
@@ -83,14 +96,14 @@ export const ProductInfo = ({ match }) => {
         <p className="my-5 font-light w-96 text-sm ">{details}</p>
 
         <span className="my-2 flex-col font-semibold font-poppins flex justify-between">
-          <p className="font-normal pt-1">OPTIONS: </p>
+          <p className="font-normal my-2">OPTIONS: </p>
           <Radiospan
             name={name}
             grpname="optionsOpt"
             handleSelect={handleOptionsSelect}
             entries={optionsEntries}
           />
-          <p className="font-normal pt-1">BEANS: </p>
+          <p className="font-normal my-2">BEANS: </p>
           <Radiospan
             name={name}
             grpname="prefOpt"
@@ -98,7 +111,7 @@ export const ProductInfo = ({ match }) => {
             entries={prefEntries}
           />
         </span>
-        <span className="w-full flex h-12  border-b">
+        <span className=" flex h-12 justify-between mx-5  border-b">
           <input
             disabled
             ref={qtyInp}
@@ -107,9 +120,9 @@ export const ProductInfo = ({ match }) => {
             min="1"
             max="50"
             onChange={(e) => handleQtySelect(e)}
-            className="w-10 mx-auto"
+            className="w-20 h-10 "
           />
-          <p className=" text-coffee text-2xl mt-2 mr-6 ">
+          <p className=" text-coffee text-2xl my-auto ">
             {"\u20b1" + choices.price}
           </p>
         </span>
@@ -141,7 +154,7 @@ const Radiospan = ({ name, grpname, handleSelect, entries }) => {
                   : handleSelect(value);
               }}
             />
-            <span className="border inline-block mt-1 border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
+            <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
               {key}
             </span>
           </label>
@@ -152,18 +165,20 @@ const Radiospan = ({ name, grpname, handleSelect, entries }) => {
 };
 
 const AddtoCartBtn = ({ choices }) => {
-  const dispatch = useDispatch();
+  const { dispatch } = useContext(CartContext);
+
   const handleAdd = (e) => {
     e.preventDefault();
     if (choices.selected && choices.selected_preference) {
-      const selecteditem = {
+      const selectedItem = {
         id: new Date().getTime().toString(),
         name: choices.selected,
         quantity: choices.quantity,
         price: choices.price,
         preference: choices.selected_preference,
       };
-      dispatch(addItemToCart(selecteditem));
+      console.log(selectedItem);
+      dispatch({ type: "ADD_TO_CART", payload: selectedItem });
     }
   };
 

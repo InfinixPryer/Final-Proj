@@ -1,16 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import bag from "./images/bag.png";
 import logo from "./images/logo.jpg";
-import { useSelector } from "react-redux";
+import { CartContext } from "./context/CartContext";
 
 const Navbar = () => {
-  const cart = useSelector((state) => state.cartItems);
+  const { cart } = useContext(CartContext);
 
   return (
-    <nav className="flex sticky z-50 top-0 h-10 w-full justify-between font-poppins shadow-sm">
+    <nav className="flex sticky z-50 top-0 h-14 bg-white w-full justify-between font-source shadow-sm">
       <img src={logo} alt="logo" id="my-logo" className="pl-5 my-auto h-3/6" />
-      <div className=" w-5/12 justify-between flex-row flex text-darkbrown">
+      <div className=" w-4/12 justify-between flex-row flex">
         <Link to="/" className="m-auto">
           Home
         </Link>

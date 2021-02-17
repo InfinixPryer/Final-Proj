@@ -1,45 +1,46 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { createStore } from "redux";
-import { Provider } from "react-redux";
-import reducers from "./reducers";
+import axios from "axios";
+import CartProvider from "./context/CartContext";
+import ProductProvider from "./context/ProductContext";
 
 import Products from "./pages/ProductsPage.js";
 import About from "./pages/AboutPage.js";
 import Navbar from "./navbar.js";
-import Home from "./pages/Home.js";
+import Home from "./pages/LandingPage.js";
 import Cart from "./pages/CartPage.js";
 import ProductInfo from "./productinfo.js";
 
-const store = createStore(
-  reducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+export const api = axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com/",
+});
 
 const ReactRouterSetup = () => {
   return (
-    <Provider store={store}>
-      <Router>
-        <Navbar />
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/Products">
-            <Products />
-          </Route>
-          <Route
-            path="/Products/:product_name"
-            children={<ProductInfo />}
-          ></Route>
-          <Route path="/About">
-            <About />
-          </Route>
-          <Route path="/My-Cart">
-            <Cart />
-          </Route>
-        </Switch>
-      </Router>
-    </Provider>
+    <ProductProvider>
+      <CartProvider>
+        <Router>
+          <Navbar />
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/Products">
+              <Products />
+            </Route>
+            <Route
+              path="/Products/:product_name"
+              children={<ProductInfo />}
+            ></Route>
+            <Route path="/About">
+              <About />
+            </Route>
+            <Route path="/My-Cart">
+              <Cart />
+            </Route>
+          </Switch>
+        </Router>
+      </CartProvider>
+    </ProductProvider>
   );
 };
 

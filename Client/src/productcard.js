@@ -1,43 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 const ProductCard = (props) => {
   const { imgs, type, name, options } = props;
   const optionsEntries = Object.keys(options).map((key) => [key, options[key]]);
   const low = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.min(a, b));
   const high = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.max(a, b));
-  const optionsrange = `\u20b1 ${low}  - \u20b1 ${high}`;
-
+  const optionsrange = `\u20b1${low} - \u20b1${high}`;
   const [img, setImg] = useState(0);
-  const [hover, sethover] = useState(false);
+  const [slide, setSlide] = useState(null);
 
   const checkTitleLength = (name) => {
     if (name.length > 45) {
       return name.slice(0, 45) + "...";
     } else return name;
   };
-  const handleHover = () => {};
+
+  const handleHover = () => {
+    setSlide(
+      setInterval(() => {
+        setImg((prev) => (prev < imgs.length - 1 ? prev + 1 : 0));
+      }, 850)
+    );
+  };
+
+  const handleLeave = () => {
+    clearInterval(slide);
+    setImg(0);
+  };
+
+  useEffect(() => {
+    return () => {
+      setSlide(null);
+      setImg(0);
+    };
+  }, []);
 
   return (
     <article
       onMouseEnter={() => {
-        sethover(true);
+        handleHover();
       }}
-      onMouseOver={() => handleHover()}
       onMouseLeave={() => {
-        sethover(false);
-        setImg(0);
+        handleLeave();
       }}
-      className="product-box shadow-clean cursor-pointer font-work rounded group transform hover:-translate-y-1 hover:shadow-light w-full relative pb-2 bg-white"
+      className="product-box shadow-clean cursor-pointer font-work rounded-sm group transform hover:-translate-y-1 hover:shadow-light w-full relative bg-white"
     >
-      <div className="w-full overflow-hidden rounded-t">
+      <div className="w-full overflow-hidden rounded-t-sm">
         <img src={imgs[img]} alt={name} className="m-auto" />
       </div>
       <div className="pl-3 pr-4  flex flex-col py-1 md:py-2 mb-10 max-h-32">
-        <h3 className="sm:text-norm leading-snug text-sm">
-          {checkTitleLength(name)}
-        </h3>
+        <h3 className="sm:text-norm text-sm font">{checkTitleLength(name)}</h3>
         <p className=" text-xs md:text-sm text-coffee">{type}</p>
-        <p className="text-coffee left-3 font-poppins text-xs sm:text-base mt-3">
+        <p className="text-coffee left-3 font-poppins text-xs sm:text-base mt-2">
           {optionsrange}
         </p>
       </div>
