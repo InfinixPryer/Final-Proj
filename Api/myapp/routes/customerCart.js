@@ -42,16 +42,19 @@ router.post('/', (req, res, next) => {
                 const newCart = new Cart({
                     cartId: new mongoose.Types.ObjectId(),
                     orderIds: results.map((result) => result.orderId),
-                    totalPrice: results.totalPrice 
+                    totalPrice: req.body.totalPrice 
                 })
                 return newCart.save()
             })
             .then(result => {
+                console.log(result);
                 res.status(201).json({
+                    message: 'Successfully created cart',
                     createdCart: {
                         cartId: result.cartId,
-                        orderIds: result.orderIds,
-                        totalPrice: result.totalPrice
+                        totalPrice: result.totalPrice,
+                        approved: result.approved,
+                        orderIds: result.orderIds
                     }
                 })
             })
@@ -88,6 +91,33 @@ router.delete('/:cartId', (req, res, next) => {
                     error: err
                 })
             })
+    })
+});
+
+router.patch('/:cartId/status',(req, res) => {
+    Cart.find({cartId: req.params.cartId})
+    .then(cart => {
+        if(cart.length === 0)
+        {
+            res.status(404).json({
+                message: 'Product not fouuuuuuuuuund.'
+            })
+        }
+        const { approved } = req.body;
+        Cart.updateOne({cartId: req.params.cartId}, {$set: { approved }})
+        .exec()
+        .then(result => {
+            res.status(200).json({
+                message:'Cart status successfully updated',
+                result: result
+            })
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error:err
+        })
     })
 });
 
