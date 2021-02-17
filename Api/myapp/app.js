@@ -21,7 +21,6 @@ mongoose.connect('mongodb://localhost:27017/database');
 
 
 app.use(logger('dev'));
-app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
@@ -29,9 +28,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/user', userRouter);
 app.use('/products', productRouter);
 app.use('/orders', orderRouter);
