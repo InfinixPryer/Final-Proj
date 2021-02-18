@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 import CartProvider from "./context/CartContext";
 import ProductProvider from "./context/ProductContext";
+import DeviceProvider from "./context/DeviceContext";
 
 import Products from "./pages/ProductsPage.js";
 import About from "./pages/AboutPage.js";
@@ -20,33 +21,35 @@ const ReactRouterSetup = () => {
   return (
     <ProductProvider>
       <CartProvider>
-        <Router>
-          <Navbar />
-          <Switch>
-            <Route exact path="/">
-              <Home />
-            </Route>
-            <Route
-              exact
-              path="/Products/search=:all"
-              component={Products}
-            ></Route>
-            <Route
-              exact
-              path="/Product=:product_name"
-              children={<ProductInfo />}
-            ></Route>
-            <Route path="/About">
-              <About />
-            </Route>
-            <Route path="/My-Cart">
-              <Cart />
-            </Route>
-            <Route path="/Checkout">
-              <Checkout />
-            </Route>
-          </Switch>
-        </Router>
+        <DeviceProvider>
+          <Router>
+            <Navbar />
+            <Switch>
+              <Route exact path="/">
+                <Home />
+              </Route>
+              <Route
+                exact
+                path="/Products/search=:all"
+                component={Products}
+              ></Route>
+              <Route
+                exact
+                path="/Product=:product_name"
+                children={<ProductInfo />}
+              ></Route>
+              <Route path="/About">
+                <About />
+              </Route>
+              <Route path="/My-Cart">
+                <Cart />
+              </Route>
+              <Route path="/Checkout">
+                <Checkout />
+              </Route>
+            </Switch>
+          </Router>
+        </DeviceProvider>
       </CartProvider>
     </ProductProvider>
   );

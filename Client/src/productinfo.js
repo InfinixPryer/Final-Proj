@@ -1,25 +1,27 @@
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import products from "./products";
 import { CartContext } from "./context/CartContext";
 
 export const ProductInfo = ({ match }) => {
-  const { product_name } = useParams();
-  console.log(product_name); // change to match when api is available
-  const _item = products.find((item) => item.name === product_name);
+  const { product_name } = useParams(); // change to match when api is available
+  const _item = products.find((item) => item.productName === product_name);
 
-  const { imgs, type, name, options, preferences, details } = _item;
-  const optionsEntries = Object.keys(options).map((key) => [key, options[key]]);
-  const prefEntries = Object.keys(preferences).map((pref) => [
-    pref,
-    preferences[pref],
-  ]);
-  const low = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.min(a, b));
-  const high = optionsEntries.map((a) => a[1]).reduce((a, b) => Math.max(a, b));
+  const {
+    productImage,
+    type,
+    productName,
+    options,
+    preferences,
+    details,
+  } = _item;
+
+  const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
+  const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
   const optionsrange = `${low} - \u20b1${high}`;
   const qtyInp = useRef();
 
-  const [display, setDisplay] = useState(imgs[0]);
+  const [display, setDisplay] = useState(0);
 
   const [choices, setChoice] = useState({
     selected: "",
@@ -35,26 +37,38 @@ export const ProductInfo = ({ match }) => {
     setChoice({
       ...choices,
       quantity: qty,
-      price: choices.selected_option * qty,
+      price: choices.selected_option.price * qty,
     });
   };
 
-  const handleOptionsSelect = (option, weight) => {
+  const handleOptionsSelect = (option) => {
     qtyInp.current.disabled = false;
     setChoice({
       ...choices,
-      selected: name + " " + weight,
-      price: option * choices.quantity,
+      selected: productName + " " + option.name,
+      price: option.price * choices.quantity,
       selected_option: option,
     });
   };
 
-  const handlePrefSelect = (pref) => {
+  const handlePrefSelect = (e) => {
     setChoice({
       ...choices,
-      selected_preference: pref,
+      selected_preference: e.target.value,
     });
   };
+
+  const handleDisplayState = (state) => {
+    if (display < productImage.length - 1 && state === "next") {
+      setDisplay((prev) => prev + 1);
+    }
+    if (display > 0 && state === "prev") {
+      setDisplay((prev) => prev - 1);
+    } else return null;
+  };
+  useEffect(() => {
+    console.log(choices);
+  }, [choices]);
   /* 
   if (!product) {
     return (
@@ -68,36 +82,46 @@ export const ProductInfo = ({ match }) => {
     <section className="flex w-full h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
         <Link to="/Products/search=all">{`< Products / `}</Link>
-        {`${name}`}
+        {`${productName}`}
       </div>
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
         <div className="block h-96 w-full relative">
-          <span className="p-3 top-40 absolute left-0 cursor-pointer">
+          <span
+            className="p-3 top-40 absolute left-0 cursor-pointer"
+            onClick={() => handleDisplayState("prev")}
+          >
             {"<"}
           </span>
-          <img src={display} alt={name} className="block m-auto h-96 w-96" />
-          <span className="p-3 absolute bottom-44 right-0 cursor-pointer">
+          <img
+            src={productImage[display]}
+            alt={productName}
+            className="block m-auto h-96 w-96"
+          />
+          <span
+            className="p-3 absolute bottom-44 right-0 cursor-pointer"
+            onClick={() => handleDisplayState("next")}
+          >
             {">"}
           </span>
         </div>
 
         <div className=" w-96 mx-auto">
-          {imgs.map((img) => {
+          {productImage.map((img, index) => {
             return (
               <div
                 className="w-24 mt-1 mr-1 inline-block cursor-pointer border-2 border-white hover:border-darkbrown"
-                onClick={() => setDisplay(img)}
-                key={img + name}
+                onClick={() => setDisplay(index)}
+                key={img + productName}
               >
-                <img src={img} alt={name} key={name + img} />
+                <img src={img} alt={productName} key={productName + img} />
               </div>
             );
           })}
         </div>
       </div>
-      <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-6">
+      <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-4">
         <h1 className=" text-2xl font-medium font-poppins pb-1">
-          {name.toUpperCase()}
+          {productName.toUpperCase()}
         </h1>
         <p>{type.toUpperCase()}</p>
 
@@ -105,18 +129,16 @@ export const ProductInfo = ({ match }) => {
 
         <span className="my-2 flex-col font-semibold font-poppins flex justify-between">
           <p className="font-normal my-2">OPTIONS: </p>
-          <Radiospan
-            name={name}
-            grpname="optionsOpt"
+          <OptionsSpan
+            productName={productName}
             handleSelect={handleOptionsSelect}
-            entries={optionsEntries}
+            entries={options}
           />
           <p className="font-normal my-2">BEANS: </p>
-          <Radiospan
-            name={name}
-            grpname="prefOpt"
+          <PreferenceSpan
+            productName={productName}
             handleSelect={handlePrefSelect}
-            entries={prefEntries}
+            entries={preferences}
           />
         </span>
         <span className=" flex h-12 justify-between mx-5  border-b">
@@ -143,23 +165,45 @@ export const ProductInfo = ({ match }) => {
   );
 };
 
-const Radiospan = ({ name, grpname, handleSelect, entries }) => {
+const PreferenceSpan = ({ productName, handleSelect, entries }) => {
   return (
     <span className="w-full">
       {entries.map((entry) => {
-        const value = entry[1];
-        let key = entry[0];
-
         return (
-          <label className="radcon" key={name + key}>
+          <label className="radcon" key={productName + entry}>
             <input
               type="radio"
-              name={name + grpname}
+              name={productName + "-bean"}
+              value={entry}
+              onChange={(e) => {
+                handleSelect(e);
+              }}
+            />
+            <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
+              {entry}
+            </span>
+          </label>
+        );
+      })}
+    </span>
+  );
+};
+
+const OptionsSpan = ({ productName, handleSelect, entries }) => {
+  return (
+    <span className="w-full">
+      {entries.map((entry) => {
+        const key = entry.name;
+        const value = entry.price;
+
+        return (
+          <label className="radcon" key={productName + key}>
+            <input
+              type="radio"
+              name={productName + "-option"}
               value={value}
               onChange={() => {
-                grpname === "optionsOpt"
-                  ? handleSelect(value, key)
-                  : handleSelect(value);
+                handleSelect(entry);
               }}
             />
             <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">

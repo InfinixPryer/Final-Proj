@@ -12,7 +12,7 @@ export const productsReducer = (state, action) => {
     case "SET_ITEMS":
       return action.payload;
     case "DELETE_ITEM":
-      return state.filter((obj) => obj.product_id !== action.payload);
+      return state.filter((obj) => obj.productId !== action.payload);
     default:
       return state;
   }
@@ -48,15 +48,13 @@ export const sortItemsReducer = (state = "", action) => {
   }
 };
 
-//ADD FOR MOBILE DEVICES
-/* 
 export const screenReducer = (state = "", action) => {
   switch (action.type) {
     case "MOBILE":
-      return state.concat(action.payload); 
+      return (state = "md");
     case "DESKTOP":
-      return action.payload.toLowerCase();
+      return (state = "sm");
     default:
       return state;
   }
-}; */
+};

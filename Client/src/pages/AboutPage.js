@@ -87,7 +87,7 @@ const AdminItemTable = ({ itemList, handleSelect }) => {
             return (
               <TableRow
                 item={item}
-                key={item.product_id}
+                key={item.productId}
                 handleSelect={handleSelect}
               />
             );
@@ -101,26 +101,31 @@ const AdminItemTable = ({ itemList, handleSelect }) => {
 
 const TableRow = ({ item, handleSelect }) => {
   return (
-    <tr className="border-1 bg-white" key={item.product_id}>
+    <tr className="border-1 bg-white" key={item.productId}>
       <td className="m-auto">
         <label className="w-10 h-20 flex">
           <input
             type="checkbox"
             className="m-auto"
-            value={item.product_id}
+            value={item.productId}
             onChange={(e) => handleSelect(e)}
           />
         </label>
       </td>
-      <td className="p-2">{item.product_id}</td>
-      <td className="w-2/12 p-2">{item.name}</td>
+      <td className="p-2">{item.productId}</td>
+      <td className="w-2/12 p-2">{item.productName}</td>
       <td className="w-3/12"></td>
       <td className="w-2/12"></td>
       <td className="w-5/12">
         <span className="flex w-full h-20">
-          {item.imgs.map((img) => {
+          {item.productImage.map((img) => {
             return (
-              <img src={img} key={img} className="p-1 w-20" alt={item.name} />
+              <img
+                src={img}
+                key={img}
+                className="p-1 w-20"
+                alt={item.productName}
+              />
             );
           })}
         </span>
