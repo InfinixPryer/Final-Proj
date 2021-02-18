@@ -1,13 +1,29 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext.js";
 
 const CartPage = () => {
   const { cart } = useContext(CartContext);
-  console.log(cart);
+  const checkout = useRef();
+
+  useEffect(() => {
+    cart.length !== 0
+      ? (checkout.current.disabled = false)
+      : (checkout.current.disabled = true);
+  }, [cart]);
+
   return (
     <>
       <CartContainer cart={cart} />
+      <div>
+        <button
+          disabled
+          ref={checkout}
+          className=" disabled:bg-gray-400 rounded-md float-right py-2 px-5 text-white bg-coffee"
+        >
+          <Link to="/Checkout">Checkout</Link>
+        </button>
+      </div>
     </>
   );
 };
@@ -42,12 +58,6 @@ const CartContainer = ({ cart }) => {
       ) : (
         <span className=" w-32 m-auto text-center leading-8">No Items</span>
       )}
-      <div>
-        <button className="border rounded-md float-right py-2 px-5 text-white bg-coffee">
-          <Link to="/Checkout">Checkout</Link>
-        </button>
-      </div>
-      <div></div>
     </>
   );
 };

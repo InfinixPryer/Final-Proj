@@ -1,48 +1,54 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
-import { ProductContext } from "./context/ProductContext";
 import axios from "axios";
-import { GET_ITEMS } from "./types";
-import products from "./products.js";
+import { Loading } from "./pages/LandingPage.js";
 
-export const ProductInfo = ({ match }) => {
+export const ProductInfo = () => {
+  const { product_name } = useParams();
+
   useEffect(() => {
     fetchProduct();
   }, []);
-  const [_item, setItem] = useState({});
+
+  const [item, setItem] = useState(null);
 
   const fetchProduct = async () => {
     const product = await axios.get(
-      `http://localhost:9000/products/${match.params.productName}`
+      `http://localhost:9000/products/${product_name}`
     );
-    setItem(product);
-    console.log(product);
+    setItem(product.data.product);
   };
 
-  const {
-    productImage,
-    type,
-    productName,
-    options,
-    preferences,
-    details,
-  } = _item;
-
-  const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
-  const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
-  const optionsrange = `${low} - \u20b1${high}`;
+  return <>{item === null ? <Loading /> : <ItemPage {...item} />}</>;
+};
+const ItemPage = ({
+  productImage,
+  type,
+  productName,
+  options,
+  preferences,
+  details,
+}) => {
   const qtyInp = useRef();
-
   const [display, setDisplay] = useState(0);
 
   const [choices, setChoice] = useState({
     selected: "",
     quantity: 1,
-    price: optionsrange,
+    price: ``,
     selected_option: 0,
     selected_preference: "",
   });
+
+  useEffect(() => {
+    const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
+    const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
+    setChoice({ ...choices, price: `${low} - \u20b1${high}` });
+    return () => {
+      setChoice({});
+    };
+  }, [options]);
 
   const handleQtySelect = (e) => {
     const qty = e.target.value;
@@ -79,18 +85,6 @@ export const ProductInfo = ({ match }) => {
       setDisplay((prev) => prev - 1);
     } else return null;
   };
-  useEffect(() => {
-    console.log(choices);
-  }, [choices]);
-  /* 
-  if (!product) {
-    return (
-      <section className="flex w-full h-page overflow-hidden bg-white ">
-        <h1>Sorry that item does not exist!</h1>
-      </section>
-    );
-  } */
-
   return (
     <section className="flex w-full h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
@@ -237,7 +231,7 @@ const AddtoCartBtn = ({ choices }) => {
     if (choices.selected && choices.selected_preference) {
       const selectedItem = {
         id: new Date().getTime().toString(),
-        ProductName: choices.selected,
+        name: choices.selected,
         quantity: choices.quantity,
         price: choices.price,
         preference: choices.selected_preference,

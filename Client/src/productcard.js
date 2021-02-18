@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const ProductCard = (props) => {
-  const { productImage, type, productName, options } = props;
+  const { productId, productImage, type, productName, options } = props;
   const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
   const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
   const optionsrange = `\u20b1${low} - \u20b1${high}`;
@@ -45,7 +45,7 @@ const ProductCard = (props) => {
       className="product-box shadow-clean cursor-pointer font-work rounded-sm group transform hover:-translate-y-1 hover:shadow-light w-full relative bg-white"
     >
       <div className="w-full overflow-hidden rounded-t-sm">
-        <img src={productImage[img]} alt={productName} className="m-auto" />
+        <img src={productImage[img]} alt={productId} className="m-auto" />
       </div>
       <div className="pl-3 pr-4  flex flex-col py-1 md:py-2 mb-10 max-h-32">
         <h3 className="sm:text-norm text-sm font">
