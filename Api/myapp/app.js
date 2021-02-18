@@ -17,7 +17,10 @@ var app = express();
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
 //Mongoose connection
-mongoose.connect("mongodb://localhost:27017/database");
+//mongoose.connect("mongodb://localhost:27017/database");
+
+mongoose.connect("mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
+                { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 app.use(logger('dev'));
