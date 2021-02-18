@@ -52,6 +52,30 @@ router.get('/', (req, res, next) => {
     
 });
 
+router.get('/:productName', (req, res, next) => {
+    const name = req.params.productName;
+    Product.find({productName:name})
+    .select('-__v -_id -options._id')
+    .exec()
+    .then( doc => {
+        if(doc.length > 0){
+            res.status(200).json({
+                product: doc[0],
+                request: {
+                    type: 'GET'
+                }
+            })
+        }
+    })
+    .catch(error => {
+        res.status(500).json({
+            error
+        })
+    })
+
+    next()
+})
+
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.find({productId:id})
@@ -73,6 +97,8 @@ router.get('/:productId', (req, res, next) => {
         })
     })
 })
+
+
 
 router.post('/'/*, upload.single('productImage')*/, (req, res, next) => {
     console.log(req.file);
