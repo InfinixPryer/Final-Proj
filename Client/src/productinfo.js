@@ -1,9 +1,10 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import products from "./products";
 import { CartContext } from "./context/CartContext";
+import { ProductContext } from "./context/ProductContext";
 
 export const ProductInfo = ({ match }) => {
+<<<<<<< Updated upstream
   const { product_name } = useParams(); // change to match when api is available
   const _item = products.find((item) => item.productName === product_name);
 
@@ -11,6 +12,19 @@ export const ProductInfo = ({ match }) => {
     productImage,
     type,
     productName,
+=======
+  const { product_ProductName } = useParams();
+  console.log(product_ProductName); // change to match when api is available
+  const { itemList } = useContext(itemList);
+  const _item = itemList.find(
+    (item) => item.ProductProductName === product_ProductName
+  );
+
+  const {
+    ProductImage,
+    type,
+    ProductName,
+>>>>>>> Stashed changes
     options,
     preferences,
     details,
@@ -45,8 +59,13 @@ export const ProductInfo = ({ match }) => {
     qtyInp.current.disabled = false;
     setChoice({
       ...choices,
+<<<<<<< Updated upstream
       selected: productName + " " + option.name,
       price: option.price * choices.quantity,
+=======
+      selected: ProductName + " " + weight,
+      price: option * choices.quantity,
+>>>>>>> Stashed changes
       selected_option: option,
     });
   };
@@ -82,7 +101,11 @@ export const ProductInfo = ({ match }) => {
     <section className="flex w-full h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
         <Link to="/Products/search=all">{`< Products / `}</Link>
+<<<<<<< Updated upstream
         {`${productName}`}
+=======
+        {`${ProductName}`}
+>>>>>>> Stashed changes
       </div>
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
         <div className="block h-96 w-full relative">
@@ -93,6 +116,7 @@ export const ProductInfo = ({ match }) => {
             {"<"}
           </span>
           <img
+<<<<<<< Updated upstream
             src={productImage[display]}
             alt={productName}
             className="block m-auto h-96 w-96"
@@ -101,19 +125,36 @@ export const ProductInfo = ({ match }) => {
             className="p-3 absolute bottom-44 right-0 cursor-pointer"
             onClick={() => handleDisplayState("next")}
           >
+=======
+            src={ProductImage[display]}
+            alt={ProductName}
+            className="block m-auto h-96 w-96"
+          />
+          <span className="p-3 absolute bottom-44 right-0 cursor-pointer">
+>>>>>>> Stashed changes
             {">"}
           </span>
         </div>
 
         <div className=" w-96 mx-auto">
+<<<<<<< Updated upstream
           {productImage.map((img, index) => {
+=======
+          {ProductImage.map((img, index) => {
+>>>>>>> Stashed changes
             return (
               <div
                 className="w-24 mt-1 mr-1 inline-block cursor-pointer border-2 border-white hover:border-darkbrown"
                 onClick={() => setDisplay(index)}
+<<<<<<< Updated upstream
                 key={img + productName}
               >
                 <img src={img} alt={productName} key={productName + img} />
+=======
+                key={img + ProductName}
+              >
+                <img src={img} alt={ProductName} key={ProductName + img} />
+>>>>>>> Stashed changes
               </div>
             );
           })}
@@ -121,7 +162,11 @@ export const ProductInfo = ({ match }) => {
       </div>
       <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-4">
         <h1 className=" text-2xl font-medium font-poppins pb-1">
+<<<<<<< Updated upstream
           {productName.toUpperCase()}
+=======
+          {ProductName.toUpperCase()}
+>>>>>>> Stashed changes
         </h1>
         <p>{type.toUpperCase()}</p>
 
@@ -129,14 +174,26 @@ export const ProductInfo = ({ match }) => {
 
         <span className="my-2 flex-col font-semibold font-poppins flex justify-between">
           <p className="font-normal my-2">OPTIONS: </p>
+<<<<<<< Updated upstream
           <OptionsSpan
             productName={productName}
+=======
+          <Radiospan
+            ProductName={ProductName}
+            grpProductName="optionsOpt"
+>>>>>>> Stashed changes
             handleSelect={handleOptionsSelect}
             entries={options}
           />
           <p className="font-normal my-2">BEANS: </p>
+<<<<<<< Updated upstream
           <PreferenceSpan
             productName={productName}
+=======
+          <Radiospan
+            ProductName={ProductName}
+            grpProductName="prefOpt"
+>>>>>>> Stashed changes
             handleSelect={handlePrefSelect}
             entries={preferences}
           />
@@ -165,6 +222,7 @@ export const ProductInfo = ({ match }) => {
   );
 };
 
+<<<<<<< Updated upstream
 const PreferenceSpan = ({ productName, handleSelect, entries }) => {
   return (
     <span className="w-full">
@@ -190,6 +248,9 @@ const PreferenceSpan = ({ productName, handleSelect, entries }) => {
 };
 
 const OptionsSpan = ({ productName, handleSelect, entries }) => {
+=======
+const Radiospan = ({ ProductName, grpProductName, handleSelect, entries }) => {
+>>>>>>> Stashed changes
   return (
     <span className="w-full">
       {entries.map((entry) => {
@@ -197,6 +258,7 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
         const value = entry.price;
 
         return (
+<<<<<<< Updated upstream
           <label className="radcon" key={productName + key}>
             <input
               type="radio"
@@ -204,6 +266,17 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
               value={value}
               onChange={() => {
                 handleSelect(entry);
+=======
+          <label className="radcon" key={ProductName + key}>
+            <input
+              type="radio"
+              ProductName={ProductName + grpProductName}
+              value={value}
+              onChange={() => {
+                grpProductName === "optionsOpt"
+                  ? handleSelect(value, key)
+                  : handleSelect(value);
+>>>>>>> Stashed changes
               }}
             />
             <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
@@ -224,7 +297,7 @@ const AddtoCartBtn = ({ choices }) => {
     if (choices.selected && choices.selected_preference) {
       const selectedItem = {
         id: new Date().getTime().toString(),
-        name: choices.selected,
+        ProductName: choices.selected,
         quantity: choices.quantity,
         price: choices.price,
         preference: choices.selected_preference,
