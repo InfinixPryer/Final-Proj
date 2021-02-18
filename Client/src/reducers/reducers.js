@@ -1,3 +1,4 @@
+import { GET_ITEMS, FIND_ITEM } from "../types.js";
 export const adminLoggedReducer = (state = false, action) => {
   switch (action.type) {
     case "ADMIN_LOGGED":
@@ -9,7 +10,7 @@ export const adminLoggedReducer = (state = false, action) => {
 
 export const productsReducer = (state, action) => {
   switch (action.type) {
-    case "SET_ITEMS":
+    case GET_ITEMS:
       return action.payload;
     case "DELETE_ITEM":
       return state.filter((obj) => obj.productId !== action.payload);

@@ -10,7 +10,11 @@ const HomePage = () => {
 
   useEffect(() => {
     callApi();
+    return () => {
+      setData("");
+    };
   }, []);
+
   if (!data) {
     return <Loading />;
   }
