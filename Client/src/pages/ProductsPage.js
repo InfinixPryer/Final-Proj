@@ -4,23 +4,24 @@ import ProductViewer from "../productsviewer.js";
 import { ProductContext } from "../context/ProductContext";
 import { api } from "../App.js";
 import products from "../products";
+import axios from "axios";
 
 const ProductPage = () => {
-  const { itemList, dispatch } = useContext(ProductContext);
-  const [toFindItems, settoFindItems] = useState(itemList);
+  const { itemList, getItems, getItemInfo } = useContext(ProductContext);
+  const [toFindItems, settoFindItems] = useState(null);
   const [failedToFind, setFailed] = useState(false);
 
-  const useQuery = () => {
-    return new URLSearchParams(useLocation().search);
-  };
-  const query = useQuery();
+  useEffect(() => {
+    getItems();
+  }, []);
 
-  /*   useEffect(() => {
-    api.get("/photos/1").then((res) => {
-      console.log(res.data);
-      dispatch({ type: "SET_ITEMS", payload: res.data });
-    });
-  }, []); */
+  useEffect(() => {
+    settoFindItems(itemList);
+    console.log(itemList);
+    return () => {
+      settoFindItems(null);
+    };
+  }, [itemList]);
 
   const ProductFinder = () => {
     const [toFind, settofind] = useState("");
@@ -89,7 +90,7 @@ const ProductPage = () => {
     <div className=" flex w-full bg-palebg">
       <ProductFinder />
       <ProductViewer
-        tag={query.get("tag")}
+        //tag={query.get("tag")}
         toFindItems={toFindItems}
         failedToFind={failedToFind}
       />

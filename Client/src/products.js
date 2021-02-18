@@ -54,7 +54,7 @@ const products = [
   {
     productId: "COFE02",
     availability: true,
-    productName: "Benguet",
+    productName: "Kalinga",
     productImage: [benguetdark, macadamia, sagada],
     type: "Dark Blend",
     details:
