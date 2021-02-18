@@ -19,11 +19,11 @@ export const api = axios.create({
 
 const ReactRouterSetup = () => {
   return (
-    <ProductProvider>
+    <DeviceProvider>
       <CartProvider>
-        <DeviceProvider>
-          <Router>
-            <Navbar />
+        <Router>
+          <Navbar />
+          <ProductProvider>
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -35,7 +35,7 @@ const ReactRouterSetup = () => {
               ></Route>
               <Route
                 exact
-                path="/Product/:productName"
+                path="/Product/:product_name"
                 children={<ProductInfo />}
               ></Route>
               <Route path="/About">
@@ -48,10 +48,10 @@ const ReactRouterSetup = () => {
                 <Checkout />
               </Route>
             </Switch>
-          </Router>
-        </DeviceProvider>
+          </ProductProvider>
+        </Router>
       </CartProvider>
-    </ProductProvider>
+    </DeviceProvider>
   );
 };
 

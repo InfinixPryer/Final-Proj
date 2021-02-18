@@ -26,7 +26,7 @@ const ProductViewer = ({ toFindItems, failedToFind }) => {
         {toFindItems.map((item) => {
           return (
             <div key={item.productId}>
-              <Link to={`/Product=${item.productName}`}>
+              <Link to={`/Product/${item.productName}`}>
                 <ProductCard {...item} />
               </Link>
             </div>
