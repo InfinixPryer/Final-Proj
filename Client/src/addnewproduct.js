@@ -7,20 +7,20 @@ const handleSubmit = (event) => {
 
 export const AddNewItem = () => {
   const [newItem, setNewItem] = useState({
-    product_id: "",
-    available: false,
-    name: "",
-    imgs: [],
+    productId: "",
+    availability: false,
+    productName: "",
+    ProductImage: [],
     type: "",
     details: "",
-    options: {},
-    preferences: {},
+    options: [],
+    preferences: [],
     tags: [],
   });
   const [tag, setTag] = useState("");
-  const [option, setOption] = useState({
-    propName: "",
-    propVal: "",
+  const [newOption, setOption] = useState({
+    name: "",
+    price: "",
   });
   const {
     name,
@@ -49,10 +49,10 @@ export const AddNewItem = () => {
         setNewItem({ ...newItem, imgs: imgs.concat(data) });
         break;
       case "option":
-        setOption({ ...option, propName: data });
+        setOption({ ...newOption, name: data });
         break;
-      case "option-value":
-        setOption({ ...option, propVal: data });
+      case "option-price":
+        setOption({ ...newOption, price: data });
         break;
       case "tags":
         setTag(data);
@@ -62,11 +62,10 @@ export const AddNewItem = () => {
     }
   };
   const handleAddOption = () => {
-    const newOption = { ...options, [`${option.propName}`]: option.propVal };
-    setNewItem({ ...newItem, options: newOption });
+    setNewItem({ ...newItem, options: options.concat(newOption) });
     setOption({
-      propName: "",
-      propVal: "",
+      name: "",
+      price: "",
     });
   };
   const handleAddTag = () => {
@@ -123,16 +122,16 @@ export const AddNewItem = () => {
             <input
               type="text"
               id="option"
-              value={option.propName}
+              value={newOption.name}
               onChange={(e) => {
                 handleChange(e);
               }}
             />
-            Value:
+            Price:
             <input
               type="number"
-              id="option-value"
-              value={option.propVal}
+              id="option-price"
+              value={newOption.price}
               onChange={(e) => {
                 handleChange(e);
               }}

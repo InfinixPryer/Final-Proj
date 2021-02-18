@@ -3,9 +3,6 @@ import ProductCard from "./productcard.js";
 import { Link } from "react-router-dom";
 
 const ProductViewer = ({ toFindItems, failedToFind }) => {
-  useEffect(() => {
-    console.log(window.innerWidth);
-  }, []);
   if (!toFindItems) {
     return (
       <div className="flex w-32 justify-around relative">
@@ -28,8 +25,8 @@ const ProductViewer = ({ toFindItems, failedToFind }) => {
       <div className="grid grid-container md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-x-4 gap-y-6 font-type">
         {toFindItems.map((item) => {
           return (
-            <div key={item.product_id}>
-              <Link to={`/Product=${item.name}`}>
+            <div key={item.productId}>
+              <Link to={`/Product=${item.productName}`}>
                 <ProductCard {...item} />
               </Link>
             </div>
