@@ -9,7 +9,10 @@ const CustomerCartSchema = new mongoose.Schema({
     cusName:{ type: String, required: true},
     cusAddress: { type:String, required: true},
     cusPhone: { type:String, required: true, min:10},
-    cusEmail:{ type:String, required:true}
+    cusEmail:{ type:String, 
+                required:true, 
+                match:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+            }
 });
 
 module.exports = mongoose.model('CustomerCart', CustomerCartSchema);

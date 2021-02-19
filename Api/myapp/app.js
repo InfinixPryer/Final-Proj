@@ -7,10 +7,10 @@ var cors = require("cors");
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
-var userRouter = require("./routes/user");
-var productRouter = require("./routes/product");
-var orderRouter = require("./routes/order");
-var cartRouter = require("./routes/customerCart");
+var userRoutes = require("./routes/user");
+var productRoutes = require("./routes/product");
+var orderRoutes = require("./routes/order");
+var cartRoutes = require("./routes/customerCart");
 
 var app = express();
 
@@ -32,10 +32,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/user', userRouter);
-app.use('/products', productRouter);
-app.use('/orders', orderRouter.router);
-app.use('/carts', cartRouter);
+app.use('/user', userRoutes);
+app.use('/products', productRoutes);
+app.use('/orders', orderRoutes.router);
+app.use('/carts', cartRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
