@@ -57,13 +57,11 @@ router.get('/tags', (req, res, next) => {
     .select('tags -_id')
     .exec()
     .then(productTags => {
-        var result = []
+        var result = [];
         var tagArrays = [];
         productTags.forEach(tags => {
-            if(tags.tags.includes("Single Origins")){
-                tagArrays.push(tags.tags)
-            }
-        });
+            tagArrays.push(tags.tags)
+        })
         tagArrays.forEach(tagArray => {
             tagArray.forEach(tags => {
                 if(!result.includes(tags))
