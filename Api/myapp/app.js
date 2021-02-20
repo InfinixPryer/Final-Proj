@@ -20,7 +20,7 @@ mongoose.set("useNewUrlParser", true);
 //mongoose.connect("mongodb://localhost:27017/database");
 
 mongoose.connect(
-  "mongodb+srv://Boolean2731:CoffeeMonkey2731@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
+  "mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
