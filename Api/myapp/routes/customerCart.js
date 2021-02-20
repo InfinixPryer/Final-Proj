@@ -9,7 +9,7 @@ const PostOrder = require('../routes/order')
 
 router.get('/', (req, res, next) => {
     Cart.find()
-    .select('-__v')
+    .select('-__v -_id')
     .exec()
     .then(carts => {
         console.log(carts);
@@ -42,7 +42,11 @@ router.post('/', (req, res, next) => {
                 const newCart = new Cart({
                     cartId: new mongoose.Types.ObjectId(),
                     orderIds: results.map((result) => result.orderId),
-                    totalPrice: req.body.totalPrice 
+                    totalPrice: req.body.totalPrice,
+                    cusName: req.body.cusName,
+                    cusAddress: req.body.cusAddress,
+                    cusPhone: req.body.cusPhone,
+                    cusEmail: req.body.cusEmail
                 })
                 return newCart.save()
             })
@@ -54,11 +58,16 @@ router.post('/', (req, res, next) => {
                         cartId: result.cartId,
                         totalPrice: result.totalPrice,
                         approved: result.approved,
-                        orderIds: result.orderIds
+                        orderIds: result.orderIds,
+                        cusName: req.body.cusName,
+                        cusAddress: req.body.cusAddress,
+                        cusPhone: req.body.cusPhone,
+                        cusEmail: req.body.cusEmail
                     }
                 })
             })
             .catch(err => {
+                console.log(err);
                 res.status(500).json({
                     error: err
                 })
