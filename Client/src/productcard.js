@@ -42,7 +42,7 @@ const ProductCard = (props) => {
       onMouseLeave={() => {
         handleLeave();
       }}
-      className="product-box shadow-clean cursor-pointer font-work rounded-sm group transform hover:-translate-y-1 hover:shadow-light w-full relative bg-white"
+      className="product-box shadow-clean cursor-pointer font-work rounded group transform hover:-translate-y-1 hover:shadow-light w-full relative bg-white"
     >
       <div className="w-full overflow-hidden rounded-t-sm">
         <img src={productImage[img]} alt={productId} className="m-auto" />

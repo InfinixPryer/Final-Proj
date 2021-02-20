@@ -7,6 +7,7 @@ import { DeviceContext } from "./context/DeviceContext";
 
 const Navbar = () => {
   const { device, dispatch } = useContext(DeviceContext);
+
   useEffect(() => {
     const screensize = window.innerWidth;
     if (screensize < 450) {
@@ -15,13 +16,10 @@ const Navbar = () => {
       dispatch({ type: "DESKTOP" });
     }
     console.log(device);
-  }, [device]);
+  }, [device, dispatch]);
 
-  /*   if (device === "md") {
-    return <span>oajdsjgfytf</span>;
-  } */
   return (
-    <nav className="flex sticky z-50 top-0 h-14 bg-white w-full justify-between font-source shadow-sm">
+    <nav className="flex sticky z-50 top-0 h-14 bg-white w-full justify-between font-source">
       <img
         src={logo}
         alt="logo"
@@ -48,7 +46,7 @@ const NavbarMenu = () => {
         Home
       </NavLink>
       <NavLink
-        to="/Products/search=all"
+        to="/Products"
         activeStyle={{ color: "brown" }}
         exact
         className="m-auto"
@@ -72,9 +70,6 @@ const NavbarMenu = () => {
             <img src={bag} alt="cart" width="20px" className=" w-6" />
           </div>
         </NavLink>
-        <a href="#" className="m-auto">
-          <img src="./as" alt="" width="20px" className=" w-6" />
-        </a>
       </span>
     </div>
   );

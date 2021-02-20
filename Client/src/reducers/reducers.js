@@ -1,4 +1,5 @@
-import { GET_ITEMS, FIND_ITEM } from "../types.js";
+import { GET_ITEMS, DELETE_ITEMS } from "../types.js";
+
 export const adminLoggedReducer = (state = false, action) => {
   switch (action.type) {
     case "ADMIN_LOGGED":
@@ -11,8 +12,12 @@ export const adminLoggedReducer = (state = false, action) => {
 export const productsReducer = (state, action) => {
   switch (action.type) {
     case GET_ITEMS:
+      if (!action.payload) {
+        console.log(state);
+        return state;
+      }
       return action.payload;
-    case "DELETE_ITEM":
+    case DELETE_ITEMS:
       return state.filter((obj) => obj.productId !== action.payload);
     default:
       return state;
@@ -23,6 +28,8 @@ export const cartItemsReducer = (state, action) => {
   switch (action.type) {
     case "ADD_TO_CART":
       return [...state, action.payload];
+    case "DELETE_CART_ITEM":
+      return (state = state.filter((a) => a.id !== action.payload));
     default:
       return state;
   }

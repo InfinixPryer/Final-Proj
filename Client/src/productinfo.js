@@ -6,19 +6,21 @@ import { Loading } from "./pages/LandingPage.js";
 
 export const ProductInfo = () => {
   const { product_name } = useParams();
-
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-
   const [item, setItem] = useState(null);
 
-  const fetchProduct = async () => {
-    const product = await axios.get(
-      `http://localhost:9000/products/${product_name}`
-    );
-    setItem(product.data.product);
-  };
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const product = await axios.get(
+        `http://localhost:9000/products/${product_name}`
+      );
+      setItem(product.data.product);
+    };
+
+    fetchProduct();
+    return () => {
+      setItem({});
+    };
+  }, [product_name]);
 
   return <>{item === null ? <Loading /> : <ItemPage {...item} />}</>;
 };
@@ -30,21 +32,29 @@ const ItemPage = ({
   preferences,
   details,
 }) => {
-  const qtyInp = useRef();
   const [display, setDisplay] = useState(0);
-
   const [choices, setChoice] = useState({
     selected: "",
     quantity: 1,
     price: ``,
-    selected_option: 0,
+    selected_option: "",
     selected_preference: "",
   });
+  const qtyInp = useRef();
 
   useEffect(() => {
-    const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
-    const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
-    setChoice({ ...choices, price: `${low} - \u20b1${high}` });
+    const update = () => {
+      const high = options.reduce((obj, curr) =>
+        Math.max(obj.price, curr.price)
+      );
+      const low = options.reduce((obj, curr) =>
+        Math.min(obj.price, curr.price)
+      );
+      setChoice((prev) => {
+        return { ...prev, price: `${low} - \u20b1${high}` };
+      });
+    };
+    update();
     return () => {
       setChoice({});
     };
@@ -52,12 +62,19 @@ const ItemPage = ({
 
   const handleQtySelect = (e) => {
     const qty = e.target.value;
-    console.log(qty);
-    setChoice({
-      ...choices,
-      quantity: qty,
-      price: choices.selected_option.price * qty,
-    });
+    if (qty > 50) {
+      qtyInp.current.value = 50;
+      setChoice({
+        ...choices,
+        quantity: qty,
+        price: choices.selected_option.price * 50,
+      });
+    } else
+      setChoice({
+        ...choices,
+        quantity: qty,
+        price: choices.selected_option.price * qty,
+      });
   };
 
   const handleOptionsSelect = (option) => {
@@ -88,7 +105,7 @@ const ItemPage = ({
   return (
     <section className="flex w-full h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
-        <Link to="/Products/search=all">{`< Products / `}</Link>
+        <Link to="/Products">{`< Products / `}</Link>
         {`${productName}`}
       </div>
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">

@@ -43,9 +43,7 @@
     @apply border-black;
     @apply bg-black;
   }
-  .grid-container {
-    padding: 0.5rem 2rem 5rem 0.2rem;
-  }
+
   .product-box {
     transition: box-shadow 0.1s, transform 0.125s;
   }

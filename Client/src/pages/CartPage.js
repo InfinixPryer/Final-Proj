@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext.js";
 
 const CartPage = () => {
-  const { cart } = useContext(CartContext);
+  const { cart, dispatch } = useContext(CartContext);
   const checkout = useRef();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const CartPage = () => {
 
   return (
     <>
-      <CartContainer cart={cart} />
+      <CartContainer cart={cart} dispatch={dispatch} />
       <div>
         <button
           disabled
@@ -28,13 +28,13 @@ const CartPage = () => {
   );
 };
 
-const CartContainer = ({ cart }) => {
+const CartContainer = ({ cart, dispatch }) => {
+  const handleDelete = (cart_item) => {
+    dispatch({ type: "DELETE_CART_ITEM", payload: cart_item });
+  };
   return (
     <>
-      {" "}
-      <div className="flex border-gray-300 border-b-2 shadow w-full bg-gray-100 ">
-        <h1 className="font-work leading-9 ml-2.5">CART</h1>
-      </div>
+      <h1 className="font-work leading-9 ml-2.5">CART</h1>
       {cart.length !== 0 ? (
         <article className="p-5">
           {cart.map((item) => {
@@ -51,6 +51,12 @@ const CartContainer = ({ cart }) => {
                   " " +
                   "\u20b1" +
                   item.price}
+                <span
+                  className="p-2 cursor-pointer"
+                  onClick={() => handleDelete(item.id)}
+                >
+                  x
+                </span>
               </div>
             );
           })}
