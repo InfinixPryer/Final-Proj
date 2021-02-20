@@ -76,7 +76,6 @@
     @apply w-0;
   }
   .radcon input:checked + span {
-    @apply border-none;
     @apply text-white;
     @apply bg-darkbrown;
   }

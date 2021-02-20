@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
 import axios from "axios";
@@ -25,15 +25,17 @@ export default ProductPage;
 
 const FinderBar = ({ setFind, setCateg, int_state }) => {
   const [query, setQuery] = useState("");
-  const [tags, setTags] = useState([""]);
+  const [tags, setTags] = useState([int_state]);
   const [hidden, setHide] = useState(true);
+  const int_btn = useRef();
 
   useEffect(() => {
     const getTags = async () => {
       const res = await axios.get("http://localhost:9000/products/tags");
-      setTags(res.data);
+      setTags((prev) => prev.concat(res.data));
     };
     getTags();
+    int_btn.current.checked = true;
   }, []);
 
   const handleChange = (e) => {
@@ -55,57 +57,43 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
     <>
       <span className="category-bar inline-block overflow-x-scroll w-9/12">
         <span className="w-full h-12 flex">
-          {tags.length === 0 ? (
-            <label className="radcon">
-              <input
-                key={int_state}
-                type="radio"
-                name={"Categories"}
-                value={int_state}
-                onChange={(e) => {
-                  handleTagSel(e);
-                }}
-              />
-              <span className="border min-w-max block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
-                {int_state}
-              </span>
-            </label>
-          ) : (
-            <>
+          {tags.map((tag) => {
+            if (tag === int_state) {
+              return (
+                <label className="radcon">
+                  <input
+                    ref={int_btn}
+                    key={tag}
+                    type="radio"
+                    name={"Categories"}
+                    value={tag}
+                    onChange={(e) => {
+                      handleTagSel(e);
+                    }}
+                  />
+                  <span className="border min-w-max max-w-lg block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
+                    {tag}
+                  </span>
+                </label>
+              );
+            }
+            return (
               <label className="radcon">
                 <input
-                  key={int_state}
+                  key={tag}
                   type="radio"
                   name={"Categories"}
-                  value={int_state}
+                  value={tag}
                   onChange={(e) => {
                     handleTagSel(e);
                   }}
                 />
                 <span className="border min-w-max block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
-                  {int_state}
+                  {tag}
                 </span>
               </label>
-              {tags.map((tag) => {
-                return (
-                  <label className="radcon">
-                    <input
-                      key={tag}
-                      type="radio"
-                      name={"Categories"}
-                      value={tag}
-                      onChange={(e) => {
-                        handleTagSel(e);
-                      }}
-                    />
-                    <span className="border min-w-max block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
-                      {tag}
-                    </span>
-                  </label>
-                );
-              })}
-            </>
-          )}
+            );
+          })}
         </span>
       </span>
 
