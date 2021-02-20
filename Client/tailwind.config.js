@@ -26,12 +26,12 @@ module.exports = {
         "1/4": "25%",
       },
       height: {
-        page: "90vh",
+        page: "85vh",
         smpage: "60vh",
       },
       boxShadow: {
         light: "0px 2px 6px rgb(226, 226, 226)",
-        clean: "0px 2px 6px rgb(238, 238, 238)",
+        clean: "0px 2px 3px rgb(238, 238, 238)",
       },
     },
   },

@@ -29,7 +29,7 @@ export const AddNewItem = () => {
     type,
     details,
     options,
-    preferences,
+    /*  preferences, */
     tags,
   } = newItem;
 

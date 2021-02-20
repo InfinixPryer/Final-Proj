@@ -19,12 +19,13 @@ mongoose.set("useNewUrlParser", true);
 //Mongoose connection
 //mongoose.connect("mongodb://localhost:27017/database");
 
-mongoose.connect("mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
-                { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(
+  "mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
+  { useNewUrlParser: true, useUnifiedTopology: true }
+);
 
-
-app.use(logger('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(logger("dev"));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
@@ -32,10 +33,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
 app.use('/user', userRoutes);
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes.router);
 app.use('/carts', cartRoutes);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

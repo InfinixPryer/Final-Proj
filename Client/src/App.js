@@ -10,8 +10,8 @@ import Navbar from "./navbar.js";
 import Home from "./pages/LandingPage.js";
 import Cart from "./pages/CartPage.js";
 import Checkout from "./pages/CheckoutPage .js";
-import ProductViewer from "./productsviewer.js";
 import ProductInfo from "./productinfo.js";
+import Admin from "./pages/AdminPage ";
 
 export const api = axios.create({
   baseURL: "https://jsonplaceholder.typicode.com/",
@@ -28,11 +28,7 @@ const ReactRouterSetup = () => {
               <Route exact path="/">
                 <Home />
               </Route>
-              <Route
-                exact
-                path="/Products/search=:all"
-                component={Products}
-              ></Route>
+              <Route exact path="/Products" children={<Products />}></Route>
               <Route
                 exact
                 path="/Product/:product_name"
@@ -46,6 +42,9 @@ const ReactRouterSetup = () => {
               </Route>
               <Route path="/Checkout">
                 <Checkout />
+              </Route>
+              <Route path="/Admin">
+                <Admin />
               </Route>
             </Switch>
           </ProductProvider>
