@@ -4,41 +4,33 @@ import { Link } from "react-router-dom";
 import { Loading } from "./pages/LandingPage.js";
 import { ProductContext } from "./context/ProductContext";
 
-const ProductViewer = ({ find }) => {
+const CategoryViewer = ({ tag }) => {
   const [items, setItems] = useState("");
   const { itemList } = useContext(ProductContext);
 
   useEffect(() => {
-    const filterList = (item, item_name) => {
-      if (
-        item.productName.toLowerCase().includes(item_name) ||
-        item.type.toLowerCase().includes(item_name)
-      ) {
+    const filterList = (item) => {
+      if (item.tags.includes(tag)) {
         return item;
       }
     };
-
-    if (!find) {
+    if (!tag) {
       setItems(itemList);
     } else {
-      const item_name = find.toLowerCase();
-      console.log(item_name);
-      const search_array = itemList.filter((item) =>
-        filterList(item, item_name)
-      );
+      const items_array = itemList.filter((item) => filterList(item));
 
-      setItems(search_array);
+      setItems(items_array);
     }
-  }, [itemList, find]);
+  }, [itemList, tag]);
 
   if (!items) {
     return <Loading />;
   }
   if (items.length === 0) {
     return (
-      <span className="m-auto text-center col-span-full">
-        <h1>{"Sorry that item doesn't exist"}</h1>
-      </span>
+      <section className="w-full h-page flex overflow-auto float-right px-4">
+        <h1 className="m-auto w-52 h-5">Sorry that item doesn't exist</h1>
+      </section>
     );
   }
 
@@ -57,4 +49,4 @@ const ProductViewer = ({ find }) => {
   );
 };
 
-export default ProductViewer;
+export default CategoryViewer;

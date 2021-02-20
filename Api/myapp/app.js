@@ -33,12 +33,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-
-app.use('/user', userRoutes);
-app.use('/products', productRoutes);
-app.use('/orders', orderRoutes.router);
-app.use('/carts', cartRoutes);
-
+app.use("/user", userRoutes);
+app.use("/products", productRoutes);
+app.use("/orders", orderRoutes.router);
+app.use("/carts", cartRoutes);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

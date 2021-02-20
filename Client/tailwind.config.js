@@ -45,6 +45,7 @@ module.exports = {
       borderRadius: ["group-hover"],
       fontSize: ["group-hover"],
       translate: ["group-hover", "hover"],
+      outline: ["active", "focus"],
     },
   },
   plugins: [],
