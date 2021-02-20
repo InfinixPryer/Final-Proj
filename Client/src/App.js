@@ -31,7 +31,7 @@ const ReactRouterSetup = () => {
               <Route exact path="/Products" children={<Products />}></Route>
               <Route
                 exact
-                path="/Product/:product_name"
+                path="/Products/:product_name"
                 children={<ProductInfo />}
               ></Route>
               <Route path="/About">

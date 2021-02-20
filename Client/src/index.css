@@ -21,19 +21,24 @@
   }
   input {
     @apply border;
-    @apply p-1;
-    @apply m-1;
+    @apply border-gray-400;
+    @apply px-2;
+    @apply py-1;
+    @apply outline-none;
     @apply rounded;
+    @apply text-sm;
+    @apply focus:border-gray-800;
   }
   .addnew input {
     @apply w-1/6;
   }
   button {
+    @apply focus:outline-none;
     @apply border;
     @apply ml-2;
     @apply px-2;
     @apply rounded;
-    @apply text-lg;
+    @apply text-sm;
     @apply font-medium;
     @apply border-gray-400;
     @apply text-gray-400;
@@ -54,6 +59,14 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+  }
+  .category-bar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+  }
+  .category-bar::-webkit-scrollbar {
+    width: 0;
+    height: 0;
   }
   .radcon input {
     @apply absolute;
