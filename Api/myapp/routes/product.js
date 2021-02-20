@@ -52,6 +52,36 @@ router.get('/', (req, res, next) => {
     
 });
 
+router.get('/tags', (req, res, next) => {
+    Product.find()
+    .select('tags -_id')
+    .exec()
+    .then(productTags => {
+        var result = []
+        var tagArrays = [];
+        productTags.forEach(tags => {
+            if(tags.tags.includes("Single Origins")){
+                tagArrays.push(tags.tags)
+            }
+        });
+        tagArrays.forEach(tagArray => {
+            tagArray.forEach(tags => {
+                if(!result.includes(tags))
+                {
+                    console.log(tags);
+                    result.push(tags);
+                }
+            })
+        });
+
+        res.status(200).json(result)
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({err})
+    })
+});
+
 router.get('/:productName', (req, res, next) => {
     const name = req.params.productName;
     Product.find({productName:name})
