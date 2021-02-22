@@ -264,7 +264,7 @@ const AddtoCartBtn = ({ choices }) => {
         onClick={(e) => {
           handleAdd(e);
         }}
-        className=" w-11/12 mt-3 m-auto text-darkbrown  active:bg-gray-800 flex text-sm justify-center bg-white rounded-md border-darkbrown border py-3 font-poppins btn-focus hover:text-white hover:bg-darkbrown hover:btn-focus-hover "
+        className=" w-11/12 mt-3 m-auto text-espresso  flex text-sm justify-center bg-white rounded-md border-espresso border py-3 font-poppins btn-focus hover:text-white hover:bg-espresso hover:btn-focus-hover "
       >
         ADD TO BAG
       </button>

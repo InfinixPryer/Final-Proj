@@ -12,7 +12,7 @@ module.exports = {
         mybrown: "rgb(169, 164, 163)",
         darkbrown: "#5A342C",
         coffee: "#715046",
-        color1: "#E2744B",
+        espresso: "#412F2B",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
@@ -20,18 +20,17 @@ module.exports = {
         work: ["Work Sans", "sans-serif"],
       },
       fontSize: {
-        norm: "0.97rem",
+        norm: "0.95rem",
       },
       minWidth: {
         "1/4": "25%",
       },
       height: {
-        page: "85vh",
         smpage: "60vh",
       },
       boxShadow: {
-        light: "0px 2px 6px rgb(226, 226, 226)",
-        clean: "0px 2px 3px rgb(238, 238, 238)",
+        light: "0px 2px 4px rgb(210, 210, 210)",
+        clean: "0px 1px 2px rgb(228, 228, 228)",
       },
     },
   },
@@ -46,6 +45,8 @@ module.exports = {
       fontSize: ["group-hover"],
       translate: ["group-hover", "hover"],
       outline: ["active", "focus"],
+      borderWidth: ["hover"],
+      scale: ["group-hover"],
     },
   },
   plugins: [],

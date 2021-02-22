@@ -6,6 +6,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@200;300;400&display=swap");
 
 @layer utilities {
+  body {
+    @apply font-work;
+  }
   tr:nth-child(even) {
     @apply bg-gray-100;
   }
@@ -21,13 +24,13 @@
   }
   input {
     @apply border;
-    @apply border-gray-400;
+    @apply border-gray-200;
     @apply px-2;
     @apply py-1;
     @apply outline-none;
     @apply rounded;
     @apply text-sm;
-    @apply focus:border-gray-800;
+    @apply focus:border-gray-600;
   }
   .addnew input {
     @apply w-1/6;
@@ -36,9 +39,9 @@
     @apply focus:outline-none;
     @apply border;
     @apply ml-2;
-    @apply px-2;
+    @apply p-1;
     @apply rounded;
-    @apply text-sm;
+    @apply text-xs;
     @apply font-medium;
     @apply border-gray-400;
     @apply text-gray-400;
@@ -53,8 +56,8 @@
     transition: box-shadow 0.1s, transform 0.125s;
   }
   .radcon {
-    @apply cursor-pointer;
-    @apply w-3/6;
+    cursor: pointer;
+    width: 50%;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -75,11 +78,16 @@
     @apply h-0;
     @apply w-0;
   }
-  .radcon input:checked + span {
-    @apply border-none;
+  .radcon input:checked + span,
+  .radcon span:hover {
     @apply text-white;
-    @apply bg-darkbrown;
+    @apply bg-gradient-to-tr;
+    @apply from-darkbrown;
+    @apply to-coffee;
+    @apply shadow-lg;
+    @apply border-coffee;
   }
+
   .btn-focus {
     transition: width 0.6s, font-size 0.1s, border-radius 0.2s;
   }

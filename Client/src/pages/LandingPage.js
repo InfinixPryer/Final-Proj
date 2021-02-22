@@ -12,10 +12,13 @@ const HomePage = () => {
     return <Loading />;
   }
   return (
-    <>
+    <div className="mb-96">
+      <span className="text-7xl p-4 font-bold bg-clip-text bg-gradient-to-r text-transparent from-blue-700 to-color1 font-poppins">
+        {"HELLO!"}
+      </span>
       <img src={h1} alt="" />
       <p>{data}</p>
-    </>
+    </div>
   );
 };
 

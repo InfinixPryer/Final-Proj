@@ -22,7 +22,6 @@ const ProductViewer = ({ find }) => {
       setItems(itemList);
     } else {
       const item_name = find.toLowerCase();
-      console.log(item_name);
       const search_array = itemList.filter((item) =>
         filterList(item, item_name)
       );
@@ -36,24 +35,26 @@ const ProductViewer = ({ find }) => {
   }
   if (items.length === 0) {
     return (
-      <span className="m-auto text-center col-span-full">
+      <span className="text-center p-20 h-full w-full absolute">
         <h1>{"Sorry that item doesn't exist"}</h1>
       </span>
     );
   }
 
   return (
-    <>
-      {items.map((item) => {
-        return (
-          <div key={item.productId}>
-            <Link to={`/Products/${item.productName}`}>
-              <ProductCard {...item} />
-            </Link>
-          </div>
-        );
-      })}
-    </>
+    <span className="">
+      <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 mb-14 font-type">
+        {items.map((item) => {
+          return (
+            <div key={item.productId}>
+              <Link to={`/Products/${item.productName}`}>
+                <ProductCard {...item} />
+              </Link>
+            </div>
+          );
+        })}
+      </section>
+    </span>
   );
 };
 
