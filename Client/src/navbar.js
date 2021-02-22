@@ -19,7 +19,7 @@ const Navbar = () => {
   }, [device, dispatch]);
 
   return (
-    <nav className="flex sticky z-50 top-0 h-14 bg-white w-full justify-between font-source">
+    <nav className="flex z-50 top-0 h-20 mx-10 bg-white justify-between">
       <img
         src={logo}
         alt="logo"
@@ -29,7 +29,7 @@ const Navbar = () => {
       {device === "sm" ? (
         <NavbarMenu />
       ) : (
-        <div className="flex flex-col justify-center float-right h-full px-4  bg-darkbrown">
+        <div className="flex flex-col justify-center float-right h-full bg-darkbrown">
           <span className="w-7 m-1 block bg-white h-1  rounded-md"></span>
           <span className="w-7 m-1 bg-white h-1 block rounded-md"></span>
           <span className="w-7 m-1 bg-white h-1 block rounded-md"></span>
@@ -41,24 +41,15 @@ const Navbar = () => {
 const NavbarMenu = () => {
   const { cart } = useContext(CartContext);
   return (
-    <div className=" w-4/12 justify-between flex-row flex">
-      <NavLink to="/" activeStyle={{ color: "brown" }} exact className="m-auto">
+    <div className=" w-5/12 justify-between font-bold text-base flex-row flex">
+      <NavLink to="/" exact className="m-auto active:text-coffee">
         Home
       </NavLink>
-      <NavLink
-        to="/Products"
-        activeStyle={{ color: "brown" }}
-        exact
-        className="m-auto"
-      >
+
+      <NavLink to="/Products" exact className="m-auto active:text-coffee">
         Products
       </NavLink>
-      <NavLink
-        to="/About"
-        activeStyle={{ color: "brown" }}
-        exact
-        className="m-auto"
-      >
+      <NavLink to="/About" exact className="m-auto active:text-coffee">
         About us
       </NavLink>
       <span className="m-auto flex-row flex w-2/12 justify-between">

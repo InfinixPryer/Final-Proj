@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
+import Footer from "../footer.js";
 import axios from "axios";
 
 const ProductPage = () => {
@@ -9,16 +10,21 @@ const ProductPage = () => {
   const [tag, setCateg] = useState(int_state);
 
   return (
-    <section className="w-full h-page overflow-auto p-4">
-      <FinderBar setFind={setFind} setCateg={setCateg} int_state={int_state} />
-      <section className="grid grid-container pt-3 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-x-4 gap-y-6 font-type">
+    <>
+      <section className="mx-1 sm:mx-12 flex-1 relative">
+        <FinderBar
+          setFind={setFind}
+          setCateg={setCateg}
+          int_state={int_state}
+        />
         {tag === int_state ? (
           <ProductViewer find={findthis} />
         ) : (
           <CategoryViewer tag={tag} />
         )}
       </section>
-    </section>
+      <Footer />
+    </>
   );
 };
 export default ProductPage;
@@ -32,7 +38,15 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
   useEffect(() => {
     const getTags = async () => {
       const res = await axios.get("http://localhost:9000/products/tags");
-      setTags((prev) => prev.concat(res.data));
+      setTags((prev) => {
+        let arr = [];
+        res.data.some((tag) => {
+          if (!prev.includes(tag)) {
+            arr.push(tag);
+          }
+        });
+        return prev.concat(arr);
+      });
     };
     getTags();
     int_btn.current.checked = true;
@@ -55,15 +69,26 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
 
   return (
     <>
-      <span className="category-bar inline-block overflow-x-scroll w-9/12">
+      {hidden && (
+        <>
+          <div className="w-8/12 p-5 my-10 text-center hover:scale-150 m-auto">
+            <img src="" className="w-48 h-48 mb-10 mx-auto" />
+            <h1>
+              {
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo venenatis neque eu tincidunt. Morbi eget ornare nisl, nec auctor velit. Sed fringilla at enim luctus pellentesque. Suspendisse suscipit neque maximus, laoreet velit quis, congue magna. Sed volutpat fermentum nulla, vel ultricies turpis ullamcorper sit amet."
+              }
+            </h1>
+          </div>
+        </>
+      )}
+      <span className="category-bar px-5 z-10 py-3 m-auto block overflow-x-scroll w-9/12">
         <span className="w-full h-12 flex">
           {tags.map((tag) => {
             if (tag === int_state) {
               return (
-                <label className="radcon">
+                <label className="radcon" key={tag}>
                   <input
                     ref={int_btn}
-                    key={tag}
                     type="radio"
                     name={"Categories"}
                     value={tag}
@@ -71,16 +96,15 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                       handleTagSel(e);
                     }}
                   />
-                  <span className="border min-w-max max-w-lg block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
+                  <span className="min-w-max border text-coffee border-gray-50 block rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm py-2 px-6 mx-2">
                     {tag}
                   </span>
                 </label>
               );
             }
             return (
-              <label className="radcon">
+              <label className="radcon" key={tag}>
                 <input
-                  key={tag}
                   type="radio"
                   name={"Categories"}
                   value={tag}
@@ -88,7 +112,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                     handleTagSel(e);
                   }}
                 />
-                <span className="border min-w-max block cursor-pointer text-center border-darkbrown font-normal font-work text-sm rounded py-2 px-6 mx-2">
+                <span className="min-w-max block text-coffee border border-gray-50 rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm  py-2 px-6 mx-2">
                   {tag}
                 </span>
               </label>
@@ -96,23 +120,24 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
           })}
         </span>
       </span>
-
-      {hidden ? (
-        <span className="float-right">
+      {hidden && (
+        <span className="flex w-7/12 relative justify-center pb-2 m-auto">
           <input
             type="text"
             value={query}
             onChange={(e) => handleChange(e)}
-            className="rounded-full"
-          ></input>
-          <button
+            className="rounded-full focus:shadow-md w-3/6 p-2 px-4 text-norm"
+            onKeyUp={() => setFind(query)}
+            placeholder={"Looking for something?"}
+          />
+          <span
             onClick={() => setFind(query)}
-            className="active:outline-none"
+            className="rounded-full bg-gray-100 cursor-pointer text-center w-10 mx-2"
           >
-            search
-          </button>
+            {"p"}
+          </span>
         </span>
-      ) : null}
+      )}
     </>
   );
 };
