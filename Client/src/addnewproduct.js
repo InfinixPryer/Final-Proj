@@ -1,31 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 //import { api } from "./App.js";
 import axios from "axios";
-/* {
-    "productId": "COFE033",
-    "productName": "Kibungan1",
-    "productImage": "1023190ja1231sa",
-    "availability": "true",
-    "type": "Arabica",
-    "details": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim, autem.",
-    "options": [
-        {
-            "name":"100g",
-            "price": 192
-        },
-        {
-            "name":"250g",
-            "price":396
-        }
-    ],
-    "preferences":[
-        "Whole Beans", "Grounded Beans"
-    ],
-    "tags": [
-        "Single Origins", "Best Seller"
-    ]
-} */
-export const AddNewItem = ({ item }) => {
+const PatchItem = ({ item }) => {
   const [newItem, setNewItem] = useState({
     productId: "",
     productName: "",
@@ -50,7 +26,7 @@ export const AddNewItem = ({ item }) => {
       setNewItem(item);
     }
     console.log(newItem);
-  }, [item, newItem]);
+  }, []);
 
   const {
     productName,
@@ -324,3 +300,5 @@ export const AddNewItem = ({ item }) => {
     </>
   );
 };
+
+export default PatchItem;

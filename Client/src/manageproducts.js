@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { AddNewItem } from "./addnewproduct.js";
+import PatchItem from "./addnewproduct.js";
 import axios from "axios";
 import api from "./App.js";
 
 const ManageProducts = ({ itemList }) => {
-  const [adding, setadding] = useState(false);
+  const [adding, setAdding] = useState(false);
+  const [editing, setEditing] = useState({ state: false, item: "" });
   const [tableSelectList, setList] = useState([]);
   const [deleteNotif, setDeleted] = useState({
     display: false,
@@ -22,7 +23,15 @@ const ManageProducts = ({ itemList }) => {
   }, []);
 
   const handleAdd = () => {
-    setadding((state) => !state);
+    setAdding((state) => !state);
+  };
+  const handleEdit = (item) => {
+    setEditing((last) => {
+      return {
+        state: !last.state,
+        item: item,
+      };
+    });
   };
 
   const handleDelItems = async () => {
@@ -49,11 +58,23 @@ const ManageProducts = ({ itemList }) => {
       : (delSelBtn.current.disabled = true);
   }, [tableSelectList]);
 
+  useEffect(() => {
+    console.log(editing);
+  }, [editing]);
+
   if (adding) {
     return (
       <section className="w-full m-0 h-page absolute bg-gray-100">
         <div className="p-5 rounded-lg bg-white m-2 shadow-md">
-          <AddNewItem />
+          <PatchItem item={null} />
+        </div>
+      </section>
+    );
+  } else if (editing.state) {
+    return (
+      <section className="w-full m-0 h-page absolute bg-gray-100">
+        <div className="p-5 rounded-lg bg-white m-2 shadow-md">
+          <PatchItem item={editing.item} />
         </div>
       </section>
     );
@@ -79,13 +100,17 @@ const ManageProducts = ({ itemList }) => {
 
           <button onClick={() => handleAdd()}>ADD ITEM</button>
         </span>
-        <AdminItemTable itemList={itemList} handleSelect={handleSelect} />
+        <AdminItemTable
+          itemList={itemList}
+          handleEdit={handleEdit}
+          handleSelect={handleSelect}
+        />
       </div>
     </section>
   );
 };
 
-const AdminItemTable = ({ itemList, handleSelect }) => {
+const AdminItemTable = ({ itemList, handleSelect, handleEdit }) => {
   return (
     <div className="w-full h-smpage overflow-scroll border border-gray-100 text-sm ">
       <table>
@@ -107,6 +132,7 @@ const AdminItemTable = ({ itemList, handleSelect }) => {
                 item={item}
                 key={item.productId}
                 handleSelect={handleSelect}
+                handleEdit={handleEdit}
               />
             );
           })}
@@ -117,7 +143,7 @@ const AdminItemTable = ({ itemList, handleSelect }) => {
   );
 };
 
-const TableRow = ({ item, handleSelect }) => {
+const TableRow = ({ item, handleSelect, handleEdit }) => {
   return (
     <tr className="border-1 bg-white" key={item.productId}>
       <td className="m-auto">
@@ -149,7 +175,10 @@ const TableRow = ({ item, handleSelect }) => {
         </span>
       </td>
       <td className="">
-        <button className="bg-gray-300 text-white border-none text-sm hover:bg-black font-semibold ml-1 mr-3 rounded-sm">
+        <button
+          onClick={() => handleEdit(item)}
+          className="bg-gray-300 text-white border-none text-sm hover:bg-black font-semibold ml-1 mr-3 rounded-sm"
+        >
           EDIT
         </button>
       </td>
