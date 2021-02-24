@@ -143,6 +143,7 @@ export const AddNewItem = ({ item }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     axios.post("http://localhost:9000/products", newItem).then((res) => {
       console.log(res);
       console.log(res.data);
