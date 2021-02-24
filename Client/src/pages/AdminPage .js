@@ -4,16 +4,23 @@ import ManageProducts from "../manageproducts.js";
 import { Loading } from "./LandingPage.js";
 
 const Admin = () => {
-  const { itemList } = useContext(ProductContext);
+  const { itemList, getItems } = useContext(ProductContext);
   const [items, setItems] = useState(null);
 
   useEffect(() => {
+    getItems();
     setItems(itemList);
-  }, [itemList]);
+  }, []);
+
+  const reloader = () => {
+    getItems();
+    setItems(itemList);
+  };
+
   if (items === null) {
     return <Loading />;
   }
-  return <ManageProducts itemList={items} />;
+  return <ManageProducts itemList={itemList} reloader={reloader} />;
 };
 
 export default Admin;

@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import PatchItem from "./addnewproduct.js";
-import axios from "axios";
-import api from "./App.js";
+import { api } from "./App.js";
 
-const ManageProducts = ({ itemList }) => {
+const ManageProducts = ({ itemList, reloader }) => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState({ state: false, item: "" });
   const [tableSelectList, setList] = useState([]);
@@ -34,15 +33,18 @@ const ManageProducts = ({ itemList }) => {
     });
   };
 
-  const handleDelItems = async () => {
-    /*   if (tableSelectList.length !== 0) {
+  const handleDelItems = () => {
+    if (tableSelectList.length !== 0) {
       tableSelectList.forEach((item) => {
-        await api.delete(`/Products/${item.productId}`);
+        api
+          .delete(`Products/${item}`)
+          .then(setDeleted({ display: true, message: "Deleted selection" }));
       });
-      setDeleted({ display: true, message: "Deleted selection" });
     } else {
       setDeleted({ display: true, message: "No item selected" });
-    } */
+    }
+    setList([]);
+    reloader();
   };
 
   const handleSelect = (e) => {
@@ -57,10 +59,6 @@ const ManageProducts = ({ itemList }) => {
       ? (delSelBtn.current.disabled = false)
       : (delSelBtn.current.disabled = true);
   }, [tableSelectList]);
-
-  useEffect(() => {
-    console.log(editing);
-  }, [editing]);
 
   if (adding) {
     return (
