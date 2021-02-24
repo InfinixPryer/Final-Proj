@@ -35,26 +35,24 @@ const ProductViewer = ({ find }) => {
   }
   if (items.length === 0) {
     return (
-      <span className="text-center p-20 h-full w-full absolute">
+      <span className="text-center p-20 min-h-full block w-full absolute">
         <h1>{"Sorry that item doesn't exist"}</h1>
       </span>
     );
   }
 
   return (
-    <span className="">
-      <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 mb-14 font-type">
-        {items.map((item) => {
-          return (
-            <div key={item.productId}>
-              <Link to={`/Products/${item.productName}`}>
-                <ProductCard {...item} />
-              </Link>
-            </div>
-          );
-        })}
-      </section>
-    </span>
+    <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 mb-14 font-type">
+      {items.map((item) => {
+        return (
+          <div key={item.productId}>
+            <Link to={`/Products/${item.productName}`}>
+              <ProductCard {...item} />
+            </Link>
+          </div>
+        );
+      })}
+    </section>
   );
 };
 

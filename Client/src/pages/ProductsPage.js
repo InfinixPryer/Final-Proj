@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
 import Footer from "../footer.js";
-import axios from "axios";
+import { api } from "../App.js";
 
 const ProductPage = () => {
   const int_state = "All Products";
@@ -37,16 +37,20 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
 
   useEffect(() => {
     const getTags = async () => {
-      const res = await axios.get("http://localhost:9000/products/tags");
-      setTags((prev) => {
-        let arr = [];
-        res.data.some((tag) => {
-          if (!prev.includes(tag)) {
-            arr.push(tag);
-          }
+      try {
+        const res = await api.get("/products/tags");
+        setTags((prev) => {
+          let arr = [];
+          res.data.some((tag) => {
+            if (!prev.includes(tag)) {
+              arr.push(tag);
+            }
+          });
+          return prev.concat(arr);
         });
-        return prev.concat(arr);
-      });
+      } catch (error) {
+        console.error(error);
+      }
     };
     getTags();
     int_btn.current.checked = true;
@@ -96,7 +100,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                       handleTagSel(e);
                     }}
                   />
-                  <span className="min-w-max border text-coffee border-gray-50 block rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm py-2 px-6 mx-2">
+                  <span className="min-w-max  text-coffee border-gray-50 block rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm py-2 px-6 mx-2">
                     {tag}
                   </span>
                 </label>
@@ -112,7 +116,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                     handleTagSel(e);
                   }}
                 />
-                <span className="min-w-max block text-coffee border border-gray-50 rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm  py-2 px-6 mx-2">
+                <span className="min-w-max block text-coffee  border-gray-50 rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm  py-2 px-6 mx-2">
                   {tag}
                 </span>
               </label>

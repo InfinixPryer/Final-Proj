@@ -16,13 +16,15 @@ const CartPage = () => {
     <>
       <CartContainer cart={cart} dispatch={dispatch} />
       <div>
-        <button
-          disabled
-          ref={checkout}
-          className=" disabled:bg-gray-400 rounded-md float-right py-2 px-5 text-white bg-coffee"
-        >
-          <Link to="/Checkout">Checkout</Link>
-        </button>
+        <Link to="/Checkout">
+          <span
+            disabled
+            ref={checkout}
+            className="rounded-md float-right py-2 px-5 text-white bg-coffee"
+          >
+            Checkout
+          </span>
+        </Link>
       </div>
     </>
   );
