@@ -66,12 +66,10 @@ router.get('/tags', (req, res, next) => {
             tagArray.forEach(tags => {
                 if(!result.includes(tags))
                 {
-                    console.log(tags);
                     result.push(tags);
                 }
             })
         });
-
         res.status(200).json(result)
     })
     .catch(err => {
