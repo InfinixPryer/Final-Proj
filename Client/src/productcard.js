@@ -33,7 +33,6 @@ const ProductCard = (props) => {
   };
 
   useEffect(() => {
-    console.log(options);
     return () => {
       setSlide(null);
       setImg(0);

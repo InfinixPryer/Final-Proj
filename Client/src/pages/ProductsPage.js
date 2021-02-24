@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
 import Footer from "../footer.js";
-import { api } from "../App.js";
+import axios from "axios";
 
 const ProductPage = () => {
   const int_state = "All Products";
@@ -38,7 +38,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
   useEffect(() => {
     const getTags = async () => {
       try {
-        const res = await api.get("/products/tags");
+        const res = await axios.get("http://localhost:9000/products/tags");
         setTags((prev) => {
           let arr = [];
           res.data.some((tag) => {
