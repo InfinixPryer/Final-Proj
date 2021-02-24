@@ -44,14 +44,20 @@ const ItemPage = ({
 
   useEffect(() => {
     const update = () => {
-      const high = options.reduce((obj, curr) =>
-        Math.max(obj.price, curr.price)
-      );
-      const low = options.reduce((obj, curr) =>
-        Math.min(obj.price, curr.price)
-      );
+      let optionsrange = "";
+      if (options.length === 1) {
+        optionsrange = `${options[0].price}`;
+      } else {
+        const high = options.reduce((obj, curr) =>
+          Math.max(obj.price, curr.price)
+        );
+        const low = options.reduce((obj, curr) =>
+          Math.min(obj.price, curr.price)
+        );
+        optionsrange = `${low} - \u20b1${high}`;
+      }
       setChoice((prev) => {
-        return { ...prev, price: `${low} - \u20b1${high}` };
+        return { ...prev, price: `${optionsrange}` };
       });
     };
     update();

@@ -7,12 +7,13 @@ var cors = require("cors");
 var mongoose = require("mongoose");
 var bodyParser = require("body-parser");
 
+var app = express();
+app.use(cors());
+
 var userRoutes = require("./routes/user");
 var productRoutes = require("./routes/product");
 var orderRoutes = require("./routes/order");
 var cartRoutes = require("./routes/customerCart");
-
-var app = express();
 
 mongoose.set("useUnifiedTopology", true);
 mongoose.set("useNewUrlParser", true);
@@ -26,10 +27,9 @@ mongoose.connect(
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "500mb" }));
 
-app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
