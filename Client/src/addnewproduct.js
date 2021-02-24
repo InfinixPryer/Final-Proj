@@ -1,16 +1,36 @@
-import { useState, useEffect } from "react";
-
-const handleSubmit = (event) => {
-  event.preventDefault();
-  console.log(event.target.value);
-};
-
-export const AddNewItem = () => {
+import { useState, useEffect, useRef } from "react";
+//import { api } from "./App.js";
+import axios from "axios";
+/* {
+    "productId": "COFE033",
+    "productName": "Kibungan1",
+    "productImage": "1023190ja1231sa",
+    "availability": "true",
+    "type": "Arabica",
+    "details": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Enim, autem.",
+    "options": [
+        {
+            "name":"100g",
+            "price": 192
+        },
+        {
+            "name":"250g",
+            "price":396
+        }
+    ],
+    "preferences":[
+        "Whole Beans", "Grounded Beans"
+    ],
+    "tags": [
+        "Single Origins", "Best Seller"
+    ]
+} */
+export const AddNewItem = ({ item }) => {
   const [newItem, setNewItem] = useState({
     productId: "",
-    availability: false,
     productName: "",
-    ProductImage: [],
+    availability: false,
+    productImage: [],
     type: "",
     details: "",
     options: [],
@@ -18,18 +38,28 @@ export const AddNewItem = () => {
     tags: [],
   });
   const [tag, setTag] = useState("");
+  const [pref, setPref] = useState("");
+  const [image, setImage] = useState("");
   const [newOption, setOption] = useState({
     name: "",
     price: "",
   });
+
+  useEffect(() => {
+    if (item) {
+      setNewItem(item);
+    }
+    console.log(newItem);
+  }, [item, newItem]);
+
   const {
-    name,
-    product_id,
-    imgs,
+    productName,
+    productId,
+    productImage,
     type,
     details,
     options,
-    /*  preferences, */
+    preferences,
     tags,
   } = newItem;
 
@@ -37,16 +67,27 @@ export const AddNewItem = () => {
     const data = e.target.value;
     switch (e.target.id) {
       case "product_id":
-        setNewItem({ ...newItem, product_id: data });
+        setNewItem({ ...newItem, productId: data });
         break;
       case "details":
         setNewItem({ ...newItem, details: data });
         break;
       case "name":
-        setNewItem({ ...newItem, name: data });
+        setNewItem({ ...newItem, productName: data });
+        break;
+      case "type":
+        setNewItem({ ...newItem, type: data });
         break;
       case "imgs":
-        setNewItem({ ...newItem, imgs: imgs.concat(data) });
+        const reader = new FileReader();
+        const imgToUp = e.target.files[0];
+
+        if (imgToUp) {
+          reader.addEventListener("loadend", () => {
+            setImage(reader.result);
+          });
+          reader.readAsDataURL(imgToUp);
+        }
         break;
       case "option":
         setOption({ ...newOption, name: data });
@@ -57,6 +98,8 @@ export const AddNewItem = () => {
       case "tags":
         setTag(data);
         break;
+      case "prefs":
+        setPref(data);
       default:
         break;
     }
@@ -74,37 +117,121 @@ export const AddNewItem = () => {
       setTag("");
     }
   };
+  const handleAddPref = () => {
+    if (pref) {
+      setNewItem({ ...newItem, preferences: preferences.concat(pref) });
+      setPref("");
+    }
+  };
 
-  useEffect(() => {
-    console.log(newItem);
-  }, [newItem]);
+  const handleAddImg = () => {
+    if (image) {
+      setNewItem({ ...newItem, productImage: productImage.concat(image) });
+      setImage("");
+    }
+  };
+
+  const handleDel = (val, name, prop) => {
+    const nVal = prop.filter((i) => i !== val);
+    setNewItem({ ...newItem, [name]: nVal });
+  };
+
+  const handleDelOpt = (opt) => {
+    const nOpts = options.filter((o) => o.name !== opt);
+    setNewItem({ ...newItem, options: nOpts });
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios.post("http://localhost:9000/products", newItem).then((res) => {
+      console.log(res);
+      console.log(res.data);
+    });
+  };
 
   return (
     <>
-      <div>
-        <h1>Product id: {product_id}</h1>
-        <h1>Name: {name}</h1>
-        <h1>Type: {type}</h1>
+      <div className="flex h-40 w-full">
+        {productImage.map((im) => {
+          return (
+            <span key={im} className="h-40 w-40">
+              <img src={im} alt="preview" />
+              <span
+                onClick={() => handleDel(im, `productImage`, productImage)}
+                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+              >
+                {`\u2715`}
+              </span>{" "}
+            </span>
+          );
+        })}
+      </div>
+      <div className="flex items-center h-14">
         Tags:
-        <span className="flex">
-          {tags.map((tag) => {
-            return (
-              <h3 className="mr-1" key={tag}>
-                {tag}
-              </h3>
-            );
-          })}
-        </span>
-        <h1>Details: {details}</h1>
+        {tags.map((tag) => {
+          return (
+            <span
+              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+              key={tag}
+            >
+              {tag}
+              <span
+                onClick={() => handleDel(tag, `tags`, tags)}
+                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+              >
+                {`\u2715`}
+              </span>
+            </span>
+          );
+        })}
+      </div>
+      <div className="flex items-center h-14">
+        Preferences:
+        {preferences.map((pref) => {
+          return (
+            <span
+              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+              key={pref}
+            >
+              {pref}
+              <span
+                onClick={() => handleDel(pref, `preferences`, preferences)}
+                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+              >
+                {`\u2715`}
+              </span>
+            </span>
+          );
+        })}
+      </div>
+      <div className="flex items-center h-14">
+        Options:
+        {options.map((opt) => {
+          const { name, price } = opt;
+          return (
+            <span
+              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+              key={name}
+            >
+              {`${name} : ${price}`}
+              <span
+                onClick={() => handleDelOpt(name)}
+                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+              >
+                {`\u2715`}
+              </span>
+            </span>
+          );
+        })}
       </div>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div className="addnew flex flex-col">
+        <div className="addnew ">
           <label>
             Id:
             <input
               type="text"
               id="product_id"
-              value={newItem.product_id}
+              value={productId}
               onChange={(e) => handleChange(e)}
             />
           </label>
@@ -113,7 +240,16 @@ export const AddNewItem = () => {
             <input
               type="text"
               id="name"
-              value={newItem.name}
+              value={productName}
+              onChange={(e) => handleChange(e)}
+            />
+          </label>
+          <label>
+            Type:
+            <input
+              type="text"
+              id="type"
+              value={type}
               onChange={(e) => handleChange(e)}
             />
           </label>
@@ -132,12 +268,13 @@ export const AddNewItem = () => {
               type="number"
               id="option-price"
               value={newOption.price}
+              min="1"
               onChange={(e) => {
                 handleChange(e);
               }}
             />
             <button type="button" onClick={() => handleAddOption()}>
-              ADD OPTION
+              ADD
             </button>
           </label>
           <label>
@@ -149,7 +286,19 @@ export const AddNewItem = () => {
               onChange={(e) => handleChange(e)}
             />
             <button type="button" onClick={() => handleAddTag()}>
-              ADD TAG
+              ADD
+            </button>
+          </label>
+          <label>
+            Preferences:
+            <input
+              type="text"
+              id="prefs"
+              value={pref}
+              onChange={(e) => handleChange(e)}
+            />
+            <button type="button" onClick={() => handleAddPref()}>
+              ADD
             </button>
           </label>
 
@@ -158,15 +307,16 @@ export const AddNewItem = () => {
             type="text"
             className="border w-3/6 h-32"
             id="details"
-            value={newItem.details}
+            value={details}
             onChange={(e) => handleChange(e)}
           />
-          <input
-            type="file"
-            id="imgs"
-            value={newItem.imgs}
-            onChange={(e) => handleChange(e)}
-          />
+          <label className="flex">
+            Images:
+            <input type="file" id="imgs" onChange={(e) => handleChange(e)} />
+            <button type="button" onClick={() => handleAddImg()}>
+              ADD
+            </button>
+          </label>
         </div>
         <button type="submit">ADD</button>
       </form>

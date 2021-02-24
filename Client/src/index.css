@@ -33,7 +33,11 @@
     @apply focus:border-gray-600;
   }
   .addnew input {
-    @apply w-1/6;
+    @apply m-2;
+  }
+  .addnew label {
+    @apply block;
+    @apply max-w-max;
   }
   button {
     @apply focus:outline-none;

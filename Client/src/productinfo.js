@@ -158,7 +158,6 @@ const ItemPage = ({
             handleSelect={handleOptionsSelect}
             entries={options}
           />
-          <p className="font-normal my-2">BEANS: </p>
           <PreferenceSpan
             productName={productName}
             handleSelect={handlePrefSelect}
@@ -215,7 +214,7 @@ const PreferenceSpan = ({ productName, handleSelect, entries }) => {
 
 const OptionsSpan = ({ productName, handleSelect, entries }) => {
   return (
-    <span className="w-full">
+    <span className="w-full mb-6">
       {entries.map((entry) => {
         const key = entry.name;
         const value = entry.price;
@@ -249,11 +248,11 @@ const AddtoCartBtn = ({ choices }) => {
       const selectedItem = {
         id: new Date().getTime().toString(),
         name: choices.selected,
-        quantity: choices.quantity,
+        quantity: parseInt(choices.quantity),
         price: choices.price,
         preference: choices.selected_preference,
       };
-      console.log(selectedItem);
+      //console.log(selectedItem);
       dispatch({ type: "ADD_TO_CART", payload: selectedItem });
     }
   };

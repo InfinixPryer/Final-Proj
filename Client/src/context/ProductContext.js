@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import { productsReducer } from "../reducers/reducers";
-import axios from "axios";
+import { api } from "../App";
 import { GET_ITEMS } from "../types.js";
 
 export const ProductContext = createContext();
@@ -26,8 +26,8 @@ const ProductProvider = ({ children }) => {
 
   const getItems = async () => {
     try {
-      let response = await axios.get("http://localhost:9000/Products");
-      let data = response.data.products;
+      const response = await api.get("/products");
+      const data = response.data.products;
       dispatch({ type: GET_ITEMS, payload: data });
     } catch (error) {
       console.error(error);

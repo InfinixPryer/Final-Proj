@@ -1,23 +1,39 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import { ProductContext } from "./context/ProductContext";
+import React, { useEffect, useRef, useState } from "react";
 import { AddNewItem } from "./addnewproduct.js";
-import { DELETE_ITEMS } from "./types";
+import axios from "axios";
+import api from "./App.js";
 
 const ManageProducts = ({ itemList }) => {
   const [adding, setadding] = useState(false);
   const [tableSelectList, setList] = useState([]);
-  const { dispatch } = useContext(ProductContext);
+  const [deleteNotif, setDeleted] = useState({
+    display: false,
+    message: "",
+  });
   const delSelBtn = useRef();
+
+  useEffect(() => {
+    return () => {
+      setDeleted({
+        display: false,
+        message: "",
+      });
+    };
+  }, []);
 
   const handleAdd = () => {
     setadding((state) => !state);
   };
 
-  const handleDelItems = () => {
-    for (let item of tableSelectList) {
-      dispatch({ type: DELETE_ITEMS, payload: item });
-    }
-    setList([]);
+  const handleDelItems = async () => {
+    /*   if (tableSelectList.length !== 0) {
+      tableSelectList.forEach((item) => {
+        await api.delete(`/Products/${item.productId}`);
+      });
+      setDeleted({ display: true, message: "Deleted selection" });
+    } else {
+      setDeleted({ display: true, message: "No item selected" });
+    } */
   };
 
   const handleSelect = (e) => {
@@ -46,7 +62,9 @@ const ManageProducts = ({ itemList }) => {
     <section className="w-full h-page m-0 absolute bg-gray-100">
       <div className="p-5 rounded bg-white m-2 shadow-clean">
         <h1 className="">MANAGE PRODUCTS</h1>
-
+        {deleteNotif.display && (
+          <div className="w-full">{deleteNotif.message}</div>
+        )}
         <span className="float-right font-poppins my-2 text-md">
           <button
             onClick={() => handleDelItems()}
