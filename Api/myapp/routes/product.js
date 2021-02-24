@@ -63,13 +63,15 @@ router.get("/tags", (req, res, next) => {
       tagArrays.forEach((tagArray) => {
         tagArray.forEach((tags) => {
           if (!result.includes(tags)) {
-            console.log(tags);
             result.push(tags);
           }
         });
       });
-
       res.status(200).json(result);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({ err });
     })
     .catch((err) => {
       console.log(err);
