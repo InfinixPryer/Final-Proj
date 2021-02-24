@@ -14,7 +14,7 @@ import ProductInfo from "./productinfo.js";
 import Admin from "./pages/AdminPage ";
 
 export const api = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: "http://localhost:9000/",
 });
 
 const ReactRouterSetup = () => {

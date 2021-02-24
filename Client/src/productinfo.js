@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
 import axios from "axios";
 import { Loading } from "./pages/LandingPage.js";
+import { api } from "./App.js";
 
 export const ProductInfo = () => {
   const { product_name } = useParams();
@@ -10,9 +11,7 @@ export const ProductInfo = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const product = await axios.get(
-        `http://localhost:9000/products/${product_name}`
-      );
+      const product = await api.get(`products/${product_name}`);
       setItem(product.data.product);
     };
 

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-//import { api } from "./App.js";
-import axios from "axios";
+import { api } from "./App.js";
 const PatchItem = ({ item }) => {
+  const [patchedProps, setPatch] = useState({});
   const [newItem, setNewItem] = useState({
     productId: "",
     productName: "",
@@ -13,6 +13,7 @@ const PatchItem = ({ item }) => {
     preferences: [],
     tags: [],
   });
+  const [urlId, setUrl] = useState("");
   const [tag, setTag] = useState("");
   const [pref, setPref] = useState("");
   const [image, setImage] = useState("");
@@ -24,9 +25,13 @@ const PatchItem = ({ item }) => {
   useEffect(() => {
     if (item) {
       setNewItem(item);
+      setUrl(item.productId);
     }
-    console.log(newItem);
   }, []);
+
+  useEffect(() => {
+    console.log(patchedProps);
+  }, [patchedProps]);
 
   const {
     productName,
@@ -119,11 +124,34 @@ const PatchItem = ({ item }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    try {
+      api.post("products", newItem);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    axios.post("http://localhost:9000/products", newItem).then((res) => {
-      console.log(res);
-      console.log(res.data);
-    });
+  const handleSave = (event) => {
+    event.preventDefault();
+    if (item && newItem !== item) {
+      for (const key in newItem) {
+        if (newItem.hasOwnProperty(key) && item[key] !== newItem[key]) {
+          const patch = Object.assign(patchedProps, {
+            [key]: newItem[key],
+          });
+          console.log(patch);
+          setPatch(patch);
+        }
+      }
+
+      try {
+        api
+          .patch(`products/${urlId}`, patchedProps)
+          .then((success) => console.log(success));
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -201,7 +229,15 @@ const PatchItem = ({ item }) => {
           );
         })}
       </div>
-      <form onSubmit={(e) => handleSubmit(e)}>
+      <form
+        onSubmit={(e) => {
+          if (item) {
+            handleSave(e);
+          } else {
+            handleSubmit(e);
+          }
+        }}
+      >
         <div className="addnew ">
           <label>
             Id:
@@ -295,7 +331,11 @@ const PatchItem = ({ item }) => {
             </button>
           </label>
         </div>
-        <button type="submit">ADD</button>
+        {item ? (
+          <button type="submit">SAVE</button>
+        ) : (
+          <button type="submit">ADD</button>
+        )}
       </form>
     </>
   );

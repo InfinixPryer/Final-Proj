@@ -9,7 +9,7 @@ const ProductProvider = ({ children }) => {
   const initialState = [
     {
       productId: "",
-      productName: "a",
+      productName: "",
       productImage: [],
       typr: "",
       options: [
