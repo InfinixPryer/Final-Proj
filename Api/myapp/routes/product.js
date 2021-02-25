@@ -76,6 +76,7 @@ router.get('/tags', (req, res, next) => {
         console.log(err);
         res.status(500).json({err})
     })
+    next();
 });
 
 router.get('/:productName', (req, res, next) => {
@@ -108,6 +109,9 @@ router.get('/:productId', (req, res, next) => {
     .select('-__v -_id -options._id')
     .exec()
     .then( doc => {
+        if(doc.length <= 0){
+            res.status(404).json()
+        }
         if(doc.length > 0){
             res.status(200).json({
                 product: doc[0],
