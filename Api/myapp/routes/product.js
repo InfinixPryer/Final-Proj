@@ -109,6 +109,9 @@ router.get("/:productId", (req, res, next) => {
     .select("-__v -_id -options._id")
     .exec()
     .then((doc) => {
+        if(doc.length <= 0){
+            res.status(200).json();
+        }
       if (doc.length > 0) {
         res.status(200).json({
           product: doc[0],
