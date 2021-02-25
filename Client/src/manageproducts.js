@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import PatchItem from "./addnewproduct.js";
 import { api } from "./App.js";
+import { Loading } from "./pages/LandingPage.js";
 
-const ManageProducts = ({ itemList, reloader }) => {
-  const [adding, setAdding] = useState(false);
-  const [editing, setEditing] = useState({ state: false, item: "" });
+const ManageProducts = ({ itemList, getItems, handleAdd, handleEdit }) => {
   const [tableSelectList, setList] = useState([]);
+  const [isloading, setLoading] = useState(true);
   const [deleteNotif, setDeleted] = useState({
     display: false,
     message: "",
@@ -21,17 +20,12 @@ const ManageProducts = ({ itemList, reloader }) => {
     };
   }, []);
 
-  const handleAdd = () => {
-    setAdding((state) => !state);
-  };
-  const handleEdit = (item) => {
-    setEditing((last) => {
-      return {
-        state: !last.state,
-        item: item,
-      };
-    });
-  };
+  useEffect(() => {
+    console.log(itemList);
+    if (itemList.length > 1) {
+      setLoading(false);
+    }
+  }, [itemList]);
 
   const handleDelItems = () => {
     if (tableSelectList.length !== 0) {
@@ -44,7 +38,7 @@ const ManageProducts = ({ itemList, reloader }) => {
       setDeleted({ display: true, message: "No item selected" });
     }
     setList([]);
-    reloader();
+    getItems();
   };
 
   const handleSelect = (e) => {
@@ -60,35 +54,18 @@ const ManageProducts = ({ itemList, reloader }) => {
       : (delSelBtn.current.disabled = true);
   }, [tableSelectList]);
 
-  if (adding) {
-    return (
-      <section className="w-full m-0 h-page absolute bg-gray-100">
-        <div className="p-5 rounded-lg bg-white m-2 shadow-md">
-          <PatchItem item={null} />
-        </div>
-      </section>
-    );
-  } else if (editing.state) {
-    return (
-      <section className="w-full m-0 h-page absolute bg-gray-100">
-        <div className="p-5 rounded-lg bg-white m-2 shadow-md">
-          <PatchItem item={editing.item} />
-        </div>
-      </section>
-    );
-  }
   return (
-    <section className="w-full h-page m-0 absolute bg-gray-100">
+    <section className="w-full h-page bg-gray-100">
       <div className="p-5 rounded bg-white m-2 shadow-clean">
-        <h1 className="">MANAGE PRODUCTS</h1>
+        <h1 className="">MANAGE PRODUCTS</h1>{" "}
         {deleteNotif.display && (
           <div className="w-full">{deleteNotif.message}</div>
         )}
-        <span className="float-right font-poppins my-2 text-md">
+        <span className="float-right my-2 text-md">
           <button
             onClick={() => handleDelItems()}
             ref={delSelBtn}
-            className="text-white w-52  rounded border border-red-500  disabled:bg-red-100 disabled:border-red-100 bg-red-500"
+            className="text-white w-52 border border-red-500  disabled:bg-red-100 disabled:border-red-100 bg-red-500"
           >
             DELETE SELECTED
             {tableSelectList.length !== 0 ? (
@@ -98,11 +75,15 @@ const ManageProducts = ({ itemList, reloader }) => {
 
           <button onClick={() => handleAdd()}>ADD ITEM</button>
         </span>
-        <AdminItemTable
-          itemList={itemList}
-          handleEdit={handleEdit}
-          handleSelect={handleSelect}
-        />
+        {!isloading ? (
+          <AdminItemTable
+            itemList={itemList}
+            handleEdit={handleEdit}
+            handleSelect={handleSelect}
+          />
+        ) : (
+          <Loading />
+        )}
       </div>
     </section>
   );
@@ -110,34 +91,32 @@ const ManageProducts = ({ itemList, reloader }) => {
 
 const AdminItemTable = ({ itemList, handleSelect, handleEdit }) => {
   return (
-    <div className="w-full h-smpage overflow-scroll border border-gray-100 text-sm ">
-      <table>
-        <thead>
-          <tr className=" font-poppins text-xs bottom top-0 h-8 bg-black z-10 text-white shadow-lg">
-            <th>{`\u2713`}</th>
-            <th>ID</th>
-            <th className="w-40">ITEM NAME</th>
-            <th>OPTIONS</th>
-            <th>TAGS</th>
-            <th>IMAGES</th>
-            <th> </th>
-          </tr>
-        </thead>
-        <tbody>
-          {itemList.map((item) => {
-            return (
-              <TableRow
-                item={item}
-                key={item.productId}
-                handleSelect={handleSelect}
-                handleEdit={handleEdit}
-              />
-            );
-          })}
-        </tbody>
-        <tfoot></tfoot>
-      </table>
-    </div>
+    <table className="w-full">
+      <thead>
+        <tr className="text-xs bottom top-0 h-8 bg-black z-10 text-white shadow-lg">
+          <th>{`\u2713`}</th>
+          <th>ID</th>
+          <th className="w-40">ITEM NAME</th>
+          <th>OPTIONS</th>
+          <th>TAGS</th>
+          <th>IMAGES</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        {itemList.map((item) => {
+          return (
+            <TableRow
+              item={item}
+              key={item.productId}
+              handleSelect={handleSelect}
+              handleEdit={handleEdit}
+            />
+          );
+        })}
+      </tbody>
+      <tfoot></tfoot>
+    </table>
   );
 };
 

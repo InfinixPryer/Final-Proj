@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
-import axios from "axios";
 import { Loading } from "./pages/LandingPage.js";
 import { api } from "./App.js";
 
@@ -24,6 +23,7 @@ export const ProductInfo = () => {
   return <>{item === null ? <Loading /> : <ItemPage {...item} />}</>;
 };
 const ItemPage = ({
+  productId,
   productImage,
   type,
   productName,
@@ -33,11 +33,11 @@ const ItemPage = ({
 }) => {
   const [display, setDisplay] = useState(0);
   const [choices, setChoice] = useState({
-    selected: "",
     quantity: 1,
     price: ``,
     selected_option: "",
     selected_preference: "",
+    single_item_price: ``,
   });
   const qtyInp = useRef();
 
@@ -86,9 +86,9 @@ const ItemPage = ({
     qtyInp.current.disabled = false;
     setChoice({
       ...choices,
-      selected: productName + " " + option.name,
       price: option.price * choices.quantity,
       selected_option: option,
+      single_item_price: option.price,
     });
   };
 
@@ -186,7 +186,11 @@ const ItemPage = ({
         </span>
 
         <div className="relative bottom-1">
-          <AddtoCartBtn choices={choices} />
+          <AddtoCartBtn
+            choices={choices}
+            productId={productId}
+            productName={productName}
+          />
         </div>
       </div>
     </section>
@@ -244,21 +248,26 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
   );
 };
 
-const AddtoCartBtn = ({ choices }) => {
+const AddtoCartBtn = ({ choices, productId, productName }) => {
   const { dispatch } = useContext(CartContext);
+  const [current, setCurrent] = useState([]);
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (choices.selected && choices.selected_preference) {
+    if (choices.selected_option && choices.selected_preference) {
       const selectedItem = {
-        id: new Date().getTime().toString(),
-        name: choices.selected,
+        key: `${productId}${choices.selected_option.name}${choices.selected_preference}`,
+        productId: productId,
+        selectedOption: choices.selected_option.name,
+        selectedPreference: choices.selected_preference,
+        name: productName,
         quantity: parseInt(choices.quantity),
-        price: choices.price,
-        preference: choices.selected_preference,
+        totalPrice: choices.price,
       };
-      //console.log(selectedItem);
-      dispatch({ type: "ADD_TO_CART", payload: selectedItem });
+      if (!current.includes(selectedItem.key)) {
+        setCurrent(current.concat(selectedItem.key));
+        dispatch({ type: "ADD_TO_CART", payload: selectedItem });
+      }
     }
   };
 

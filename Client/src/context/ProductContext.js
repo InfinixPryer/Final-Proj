@@ -22,7 +22,7 @@ const ProductProvider = ({ children }) => {
       tags: [],
     },
   ];
-  const [itemList, dispatch] = useReducer(productsReducer, initialState);
+  const [itemList, dispatch] = useReducer(productsReducer, []);
 
   const getItems = async () => {
     try {

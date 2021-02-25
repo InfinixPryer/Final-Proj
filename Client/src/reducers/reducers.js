@@ -29,7 +29,10 @@ export const cartItemsReducer = (state, action) => {
     case "ADD_TO_CART":
       return [...state, action.payload];
     case "DELETE_CART_ITEM":
-      return (state = state.filter((a) => a.id !== action.payload));
+      return (state = state.filter((a) => a.key !== action.payload));
+    case "CLEAR_CART":
+      const clr = [];
+      return clr;
     default:
       return state;
   }
@@ -42,9 +45,10 @@ export const tagsReducer = (state = [], action) => {
     case "DELETE_TAG":
       return state.concat(action.payload);
     default:
-      return state;
+      return state.splice(0, state.length);
   }
 };
+
 export const sortItemsReducer = (state = "", action) => {
   switch (action.type) {
     case "FIND_BY_TAG":
