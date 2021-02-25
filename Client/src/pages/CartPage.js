@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext.js";
 
@@ -31,37 +31,42 @@ const CartPage = () => {
 };
 
 const CartContainer = ({ cart, dispatch }) => {
+  const [total, setTotal] = useState(0);
   const handleDelete = (cart_item) => {
     dispatch({ type: "DELETE_CART_ITEM", payload: cart_item });
   };
+  useEffect(() => {
+    if (cart.length !== 0) {
+      setTotal(cart.map((i) => i.price).reduce((p, t) => p + t));
+    }
+  }, [cart]);
   return (
     <>
-      <h1 className="font-work leading-9 ml-2.5">CART</h1>
+      <h1 className="font-work text-xl"></h1>
       {cart.length !== 0 ? (
         <article className="p-5">
           {cart.map((item) => {
+            const { id, name, preference, price, quantity } = item;
             return (
               <div
-                className="text-sm font-type font-extralight border-b-2 w-full border-gray-200"
-                key={item.id}
+                className=" text-base font-light my-2 font-type border rounded-md max-w-max hover:border-espresso shadow-sm p-3 border-gray-100"
+                key={id}
               >
-                {item.quantity +
-                  "" +
-                  item.name +
-                  " " +
-                  item.preference +
-                  " " +
-                  "\u20b1" +
-                  item.price}
+                {`${quantity} 
+                  ${name} 
+                  ${preference} 
+                  \u20b1
+                  ${price}`}
                 <span
                   className="p-2 cursor-pointer"
-                  onClick={() => handleDelete(item.id)}
+                  onClick={() => handleDelete(id)}
                 >
                   x
                 </span>
               </div>
             );
           })}
+          <h3>{`Total: \u20b1${total}`}</h3>
         </article>
       ) : (
         <span className=" w-32 m-auto text-center leading-8">No Items</span>

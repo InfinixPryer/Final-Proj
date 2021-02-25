@@ -1,7 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
-import axios from "axios";
 import { Loading } from "./pages/LandingPage.js";
 import { api } from "./App.js";
 
@@ -38,6 +37,7 @@ const ItemPage = ({
     price: ``,
     selected_option: "",
     selected_preference: "",
+    single_item_price: ``,
   });
   const qtyInp = useRef();
 
@@ -89,6 +89,7 @@ const ItemPage = ({
       selected: productName + " " + option.name,
       price: option.price * choices.quantity,
       selected_option: option,
+      single_item_price: option.price,
     });
   };
 
@@ -245,8 +246,7 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
 };
 
 const AddtoCartBtn = ({ choices }) => {
-  const { dispatch } = useContext(CartContext);
-
+  const { cart, dispatch } = useContext(CartContext);
   const handleAdd = (e) => {
     e.preventDefault();
     if (choices.selected && choices.selected_preference) {
@@ -256,8 +256,8 @@ const AddtoCartBtn = ({ choices }) => {
         quantity: parseInt(choices.quantity),
         price: choices.price,
         preference: choices.selected_preference,
+        single_item: choices.single_item_price,
       };
-      //console.log(selectedItem);
       dispatch({ type: "ADD_TO_CART", payload: selectedItem });
     }
   };
