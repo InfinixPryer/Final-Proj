@@ -62,7 +62,8 @@ router.post('/', (req, res, next) => {
                         cusName: req.body.cusName,
                         cusAddress: req.body.cusAddress,
                         cusPhone: req.body.cusPhone,
-                        cusEmail: req.body.cusEmail
+                        cusEmail: req.body.cusEmail,
+                        orderDate: result.orderDate
                     }
                 })
             })
