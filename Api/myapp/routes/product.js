@@ -85,22 +85,21 @@ router.get("/:productName", (req, res, next) => {
     .select("-__v -_id -options._id")
     .exec()
     .then((doc) => {
-      if (doc.length > 0) {
+      if(doc.length <= 0 ){
+        res.status(404).json()
+      }else{
         res.status(200).json({
-          product: doc[0],
-          request: {
-            type: "GET",
-          },
-        });
+          product: doc
+        })
       }
+      next();
     })
-    .catch((error) => {
+    .catch((err) => {
       res.status(500).json({
-        error,
+        error: err
       });
+      next();
     });
-
-  next();
 });
 
 router.get("/:productId", (req, res, next) => {
@@ -110,14 +109,11 @@ router.get("/:productId", (req, res, next) => {
     .exec()
     .then((doc) => {
         if(doc.length <= 0){
-            res.status(200).json();
+            res.status(404).json();
         }
       if (doc.length > 0) {
         res.status(200).json({
-          product: doc[0],
-          request: {
-            type: "GET",
-          },
+          product: doc[0]
         });
       }
     })
