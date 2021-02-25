@@ -12,7 +12,8 @@ const CustomerCartSchema = new mongoose.Schema({
     cusEmail:{ type:String, 
                 required:true, 
                 match:/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-            }
+            },
+    orderDate: {type: Date, default:Date.now }
 });
 
 module.exports = mongoose.model('CustomerCart', CustomerCartSchema);
