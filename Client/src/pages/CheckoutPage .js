@@ -1,5 +1,6 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
+import { CartContainer } from "./CartPage";
 import { api } from "../App.js";
 
 const Checkout = () => {
@@ -8,8 +9,18 @@ const Checkout = () => {
     fname: "",
     lname: "",
   });
+  const orderArr = cart.map((item) => {
+    const order = {
+      productId: item.productId,
+      selectedOption: item.selectedOption,
+      selectedPreference: item.selectedPreference,
+      quantity: item.quantity,
+      totalPrice: item.totalPrice,
+    };
+    return order;
+  });
   const [orderInfo, setOrder] = useState({
-    orderItems: cart,
+    orderItems: orderArr,
     totalPrice: 0,
     cusName: ``,
     cusAddress: "",
@@ -21,19 +32,14 @@ const Checkout = () => {
     setOrder({ ...orderInfo, cusName: `${fullname.fname} ${fullname.lname}` });
   }, [fullname]);
 
-  const { cusAddress, cusPhone, cusEmail } = orderInfo;
-
   useEffect(() => {
     if (cart.length !== 0) {
-      const total = cart.map((i) => i.price).reduce((p, t) => p + t);
-      console.log(total);
+      const total = cart.map((i) => i.totalPrice).reduce((p, t) => p + t);
       setOrder({ ...orderInfo, totalPrice: total });
-    }
+    } else setOrder({ ...orderInfo, totalPrice: 0 });
   }, [cart]);
 
-  const handleDelete = (cart_item) => {
-    dispatch({ type: "DELETE_CART_ITEM", payload: cart_item });
-  };
+  const { cusAddress, cusPhone, cusEmail } = orderInfo;
 
   const handleChange = (e) => {
     const data = e.target.value;
@@ -67,41 +73,29 @@ const Checkout = () => {
       orderInfo.cusPhone.length < 14
     ) {
       try {
-        api.post("carts", orderInfo).then((res) => {
+        /* api.post("carts", orderInfo).then((res) => {
           console.log(res);
-        });
+        }); */
       } catch (err) {
         console.error(err);
+      } finally {
+        dispatch({ type: "CLEAR_CART" });
+        setOrder({
+          orderItems: orderArr,
+          totalPrice: 0,
+          cusName: ``,
+          cusAddress: "",
+          cusPhone: "",
+          cusEmail: "",
+        });
       }
     }
   };
   return (
     <>
       <form onSubmit={(e) => handlePlaceOrder(e)}>
-        {cart.map((item) => {
-          const { id, name, preference, price, quantity } = item;
-
-          return (
-            <div
-              className="text-sm font-type m-2 font-light border rounded-md max-w-max hover:border-espresso shadow p-3 border-gray-100"
-              key={id}
-            >
-              {`${quantity} 
-                  ${name} 
-                  ${preference} 
-                  \u20b1
-                  ${price}`}
-              <span
-                className="p-2 cursor-pointer"
-                onClick={() => handleDelete(id)}
-              >
-                x
-              </span>
-            </div>
-          );
-        })}
+        <CartContainer />
         <div className="flex justify-center p-5 shadow-clean rounded text-sm h-full m-auto flex-col w-56 ">
-          <h3>{`\u20b1${orderInfo.totalPrice}`}</h3>
           <label>
             First Name:
             <input

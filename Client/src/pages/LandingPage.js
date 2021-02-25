@@ -31,9 +31,9 @@ export const Loading = () => {
   const randGen = Math.floor(Math.random() * messageArray.length);
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center absolute z-50 ">
+    <div className="w-full block bg-black text-center center absolute ">
       <h1 className="mb-10">{messageArray[randGen]}</h1>
-      <span className="flex w-24 justify-around relative">
+      <span className="flex w-24 m-auto justify-around relative">
         <span className="p-2 rounded-full absolute left-0 animate-bounce bg-gray-400"></span>
         <span className="p-2 rounded-full absolute  animate-bounce  bg-gray-400"></span>
         <span className="p-2 rounded-full absolute right-0 animate-bounce bg-gray-400"></span>

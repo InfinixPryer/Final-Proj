@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { api } from "./App.js";
 const PatchItem = ({ item }) => {
   const [patchedProps, setPatch] = useState({});
@@ -155,189 +155,191 @@ const PatchItem = ({ item }) => {
   };
 
   return (
-    <>
-      <div className="flex h-40 w-full">
-        {productImage.map((im) => {
-          return (
-            <span key={im} className="h-40 w-40">
-              <img src={im} alt="preview" />
-              <span
-                onClick={() => handleDel(im, `productImage`, productImage)}
-                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
-              >
-                {`\u2715`}
-              </span>{" "}
-            </span>
-          );
-        })}
-      </div>
-      <div className="flex items-center h-14">
-        Tags:
-        {tags.map((tag) => {
-          return (
-            <span
-              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
-              key={tag}
-            >
-              {tag}
-              <span
-                onClick={() => handleDel(tag, `tags`, tags)}
-                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
-              >
-                {`\u2715`}
+    <section className="w-full h-page absolute bg-gray-100">
+      <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
+        <div className="grid grid-cols-2 h-full float-right w-3/6">
+          {productImage.map((im) => {
+            return (
+              <span key={im} className=" max-h-64 overflow-auto relative">
+                <img src={im} alt="preview" />
+                <span
+                  onClick={() => handleDel(im, `productImage`, productImage)}
+                  className="rounded-full absolute bottom-3 cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+                >
+                  {`\u2715`}
+                </span>{" "}
               </span>
-            </span>
-          );
-        })}
-      </div>
-      <div className="flex items-center h-14">
-        Preferences:
-        {preferences.map((pref) => {
-          return (
-            <span
-              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
-              key={pref}
-            >
-              {pref}
-              <span
-                onClick={() => handleDel(pref, `preferences`, preferences)}
-                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
-              >
-                {`\u2715`}
-              </span>
-            </span>
-          );
-        })}
-      </div>
-      <div className="flex items-center h-14">
-        Options:
-        {options.map((opt) => {
-          const { name, price } = opt;
-          return (
-            <span
-              className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
-              key={name}
-            >
-              {`${name} : ${price}`}
-              <span
-                onClick={() => handleDelOpt(name)}
-                className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
-              >
-                {`\u2715`}
-              </span>
-            </span>
-          );
-        })}
-      </div>
-      <form
-        onSubmit={(e) => {
-          if (item) {
-            handleSave(e);
-          } else {
-            handleSubmit(e);
-          }
-        }}
-      >
-        <div className="addnew ">
-          <label>
-            Id:
-            <input
-              type="text"
-              id="product_id"
-              value={productId}
-              onChange={(e) => handleChange(e)}
-            />
-          </label>
-          <label>
-            Name:
-            <input
-              type="text"
-              id="name"
-              value={productName}
-              onChange={(e) => handleChange(e)}
-            />
-          </label>
-          <label>
-            Type:
-            <input
-              type="text"
-              id="type"
-              value={type}
-              onChange={(e) => handleChange(e)}
-            />
-          </label>
-          <label>
-            Option:
-            <input
-              type="text"
-              id="option"
-              value={newOption.name}
-              onChange={(e) => {
-                handleChange(e);
-              }}
-            />
-            Price:
-            <input
-              type="number"
-              id="option-price"
-              value={newOption.price}
-              min="1"
-              onChange={(e) => {
-                handleChange(e);
-              }}
-            />
-            <button type="button" onClick={() => handleAddOption()}>
-              ADD
-            </button>
-          </label>
-          <label>
-            Tags:
-            <input
-              type="text"
-              id="tags"
-              value={tag}
-              onChange={(e) => handleChange(e)}
-            />
-            <button type="button" onClick={() => handleAddTag()}>
-              ADD
-            </button>
-          </label>
-          <label>
-            Preferences:
-            <input
-              type="text"
-              id="prefs"
-              value={pref}
-              onChange={(e) => handleChange(e)}
-            />
-            <button type="button" onClick={() => handleAddPref()}>
-              ADD
-            </button>
-          </label>
-
-          <label className="flex">details</label>
-          <textarea
-            type="text"
-            className="border w-3/6 h-32"
-            id="details"
-            value={details}
-            onChange={(e) => handleChange(e)}
-          />
-          <label className="flex">
-            Images:
-            <input type="file" id="imgs" onChange={(e) => handleChange(e)} />
-            <button type="button" onClick={() => handleAddImg()}>
-              ADD
-            </button>
-          </label>
+            );
+          })}
         </div>
-        {item ? (
-          <button type="submit">SAVE</button>
-        ) : (
-          <button type="submit">ADD</button>
-        )}
-      </form>
-    </>
+        <div className="flex items-center h-14">
+          Tags:
+          {tags.map((tag) => {
+            return (
+              <span
+                className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+                key={tag}
+              >
+                {tag}
+                <span
+                  onClick={() => handleDel(tag, `tags`, tags)}
+                  className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+                >
+                  {`\u2715`}
+                </span>
+              </span>
+            );
+          })}
+        </div>
+        <div className="flex items-center h-14">
+          Preferences:
+          {preferences.map((pref) => {
+            return (
+              <span
+                className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+                key={pref}
+              >
+                {pref}
+                <span
+                  onClick={() => handleDel(pref, `preferences`, preferences)}
+                  className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+                >
+                  {`\u2715`}
+                </span>
+              </span>
+            );
+          })}
+        </div>
+        <div className="flex items-center h-14">
+          Options:
+          {options.map((opt) => {
+            const { name, price } = opt;
+            return (
+              <span
+                className="mr-1 inline-block /border shadow-sm hover:bg-gray-200 /border-gray-300 p-1 my-2 rounded"
+                key={name}
+              >
+                {`${name} : ${price}`}
+                <span
+                  onClick={() => handleDelOpt(name)}
+                  className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+                >
+                  {`\u2715`}
+                </span>
+              </span>
+            );
+          })}
+        </div>
+        <form
+          onSubmit={(e) => {
+            if (item) {
+              handleSave(e);
+            } else {
+              handleSubmit(e);
+            }
+          }}
+        >
+          <div className="addnew ">
+            <label>
+              Id:
+              <input
+                type="text"
+                id="product_id"
+                value={productId}
+                onChange={(e) => handleChange(e)}
+              />
+            </label>
+            <label>
+              Name:
+              <input
+                type="text"
+                id="name"
+                value={productName}
+                onChange={(e) => handleChange(e)}
+              />
+            </label>
+            <label>
+              Type:
+              <input
+                type="text"
+                id="type"
+                value={type}
+                onChange={(e) => handleChange(e)}
+              />
+            </label>
+            <label>
+              Option:
+              <input
+                type="text"
+                id="option"
+                value={newOption.name}
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              Price:
+              <input
+                type="number"
+                id="option-price"
+                value={newOption.price}
+                min="1"
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+              <button type="button" onClick={() => handleAddOption()}>
+                ADD
+              </button>
+            </label>
+            <label>
+              Tags:
+              <input
+                type="text"
+                id="tags"
+                value={tag}
+                onChange={(e) => handleChange(e)}
+              />
+              <button type="button" onClick={() => handleAddTag()}>
+                ADD
+              </button>
+            </label>
+            <label>
+              Preferences:
+              <input
+                type="text"
+                id="prefs"
+                value={pref}
+                onChange={(e) => handleChange(e)}
+              />
+              <button type="button" onClick={() => handleAddPref()}>
+                ADD
+              </button>
+            </label>
+
+            <label className="flex">details</label>
+            <textarea
+              type="text"
+              className="border w-3/6 h-32"
+              id="details"
+              value={details}
+              onChange={(e) => handleChange(e)}
+            />
+            <label className="flex">
+              Images:
+              <input type="file" id="imgs" onChange={(e) => handleChange(e)} />
+              <button type="button" onClick={() => handleAddImg()}>
+                ADD
+              </button>
+            </label>
+          </div>
+          {item ? (
+            <button type="submit">SAVE</button>
+          ) : (
+            <button type="submit">ADD</button>
+          )}
+        </form>
+      </div>
+    </section>
   );
 };
 

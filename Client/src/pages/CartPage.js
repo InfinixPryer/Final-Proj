@@ -1,12 +1,14 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { CartContext } from "../context/CartContext.js";
 
 const CartPage = () => {
   const { cart, dispatch } = useContext(CartContext);
   const checkout = useRef();
+  const chkPage = useHistory();
 
   useEffect(() => {
+    console.log(cart);
     cart.length !== 0
       ? (checkout.current.disabled = false)
       : (checkout.current.disabled = true);
@@ -15,29 +17,29 @@ const CartPage = () => {
   return (
     <>
       <CartContainer cart={cart} dispatch={dispatch} />
-      <div>
-        <Link to="/Checkout">
-          <span
-            disabled
-            ref={checkout}
-            className="rounded-md float-right py-2 px-5 text-white bg-coffee"
-          >
-            Checkout
-          </span>
-        </Link>
-      </div>
+      <span
+        disabled
+        ref={checkout}
+        className="rounded-md float-right py-2 px-5 cursor-pointer text-white bg-coffee"
+        onClick={() => {
+          chkPage.push("/Checkout");
+        }}
+      >
+        Checkout
+      </span>
     </>
   );
 };
 
-const CartContainer = ({ cart, dispatch }) => {
+export const CartContainer = () => {
+  const { cart, dispatch } = useContext(CartContext);
   const [total, setTotal] = useState(0);
-  const handleDelete = (cart_item) => {
-    dispatch({ type: "DELETE_CART_ITEM", payload: cart_item });
+  const handleDelete = (key) => {
+    dispatch({ type: "DELETE_CART_ITEM", payload: key });
   };
   useEffect(() => {
     if (cart.length !== 0) {
-      setTotal(cart.map((i) => i.price).reduce((p, t) => p + t));
+      setTotal(cart.map((i) => i.totalPrice).reduce((p, t) => p + t));
     }
   }, [cart]);
   return (
@@ -46,20 +48,28 @@ const CartContainer = ({ cart, dispatch }) => {
       {cart.length !== 0 ? (
         <article className="p-5">
           {cart.map((item) => {
-            const { id, name, preference, price, quantity } = item;
+            const {
+              key,
+              name,
+              selectedOption,
+              selectedPreference,
+              totalPrice,
+              quantity,
+            } = item;
             return (
               <div
                 className=" text-base font-light my-2 font-type border rounded-md max-w-max hover:border-espresso shadow-sm p-3 border-gray-100"
-                key={id}
+                key={key}
               >
                 {`${quantity} 
-                  ${name} 
-                  ${preference} 
-                  \u20b1
-                  ${price}`}
+                ${name} 
+                ${selectedOption} 
+                ${selectedPreference} 
+                \u20b1
+                ${totalPrice}`}
                 <span
                   className="p-2 cursor-pointer"
-                  onClick={() => handleDelete(id)}
+                  onClick={() => handleDelete(key)}
                 >
                   x
                 </span>

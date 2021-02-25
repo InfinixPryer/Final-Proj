@@ -12,7 +12,7 @@ module.exports = {
         mybrown: "rgb(169, 164, 163)",
         darkbrown: "#5A342C",
         coffee: "#715046",
-        espresso: "#412F2B",
+        espresso: "#403735",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
