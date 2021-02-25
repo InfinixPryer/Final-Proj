@@ -50,10 +50,10 @@ router.post("/signup", (req, res, next) => {
 });
 
 router.post("/login", (req, res, next) => {
-  User.find({ username: req.params.username })
+  User.find({ username: req.body.username })
     .exec()
     .then((user) => {
-      if (user.length === 0) {
+      if (user.length <= 0) {
         return res.status(404).json({
           message: "Login failed",
         });
