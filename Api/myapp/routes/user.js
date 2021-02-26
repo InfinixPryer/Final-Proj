@@ -5,9 +5,10 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/userModel");
+const authenticate = require('../middleware/authentication');
 
 /* GET users listing. */
-router.get("/", function (req, res, next) {
+router.get("/", authenticate, function (req, res, next) {
   User.find()
   .select('-__v -_id')
   .exec()
@@ -81,7 +82,7 @@ router.post("/login", (req, res, next) => {
               username: user[0].username,
               userId: user[0].userId,
             },
-            "secreeet",
+            process.env.JWT_KEY,
             {
               expiresIn: "24h",
             }
@@ -104,7 +105,7 @@ router.post("/login", (req, res, next) => {
     });
 });
 
-router.delete("/:username", (req, res, next) => {
+router.delete("/:username", authenticate,(req, res, next) => {
   User.deleteOne({ username: req.params.username })
     .exec()
     .then((result) => {

@@ -7,7 +7,7 @@ const Product = require('../models/productModel');
 const Cart = require('../models/customerCartModel');
 const PostOrder = require('../routes/order')
 
-router.get('/', (req, res, next) => {
+router.get('/', authenticate ,(req, res, next) => {
     Cart.find()
     .select('-__v -_id')
     .exec()
@@ -25,7 +25,7 @@ router.get('/', (req, res, next) => {
     })
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', authenticate, (req, res, next) => {
     Promise.all(req.body.orderItems.map((orderItem) => {
        return PostOrder.postOrder(orderItem);
     }))
@@ -76,7 +76,7 @@ router.post('/', (req, res, next) => {
         })
 });
 
-router.delete('/:cartId', (req, res, next) => {
+router.delete('/:cartId', authenticate, (req, res, next) => {
     Cart.find({cartId: req.params.cartId})
     .then(cart => {
         return (cart.length > 0) ? cart[0].orderIds : [];
@@ -104,7 +104,7 @@ router.delete('/:cartId', (req, res, next) => {
     })
 });
 
-router.patch('/:cartId/status',(req, res) => {
+router.patch('/:cartId/status', authenticate, (req, res) => {
     Cart.find({cartId: req.params.cartId})
     .then(cart => {
         if(cart.length === 0)
