@@ -1,31 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-// const multer = require('multer');
-
-// const storage = multer.diskStorage({
-//     destination: function(req, file, cb){
-//         cb(null, './public/images/');
-//     },
-//     filename: function(req, file, cb){
-//         cb(null, new Date().toISOString().replace(/:/g, '-') + file.originalname);
-//     }
-// });
-
-// const fileFilter = (req, file, cb) => {
-//     if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png')
-//     {
-//         cb(null, true);
-//     }
-//     else{
-//         cb(null, false);
-//     }
-// }
-
-// const upload = multer({
-//     storage: storage,
-//     fileFilter: fileFilter
-//     });
 
 const Product = require("../models/productModel");
 const authenticate = require("../middleware/authentication")
@@ -85,7 +60,6 @@ router.get("/:productName", async(req, res, next) => {
     .then((doc) => {
       if(doc.length <= 0 ){
         next();
-        //res.status(404).json()
       }else{
         res.status(200).json({
           product: doc
@@ -122,8 +96,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.post("/" /*, upload.single('productImage')*/,authenticate, (req, res, next) => {
-  //console.log(req.file);
+router.post("/", authenticate, (req, res, next) => {
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
@@ -176,10 +149,6 @@ router.post("/" /*, upload.single('productImage')*/,authenticate, (req, res, nex
 
 router.patch("/:productId", authenticate, (req, res, next) => {
   const id = req.params.productId;
-  // const updateOps = {};
-  // for(const ops of req.body){
-  //     updateOps[ops.propName] = ops.value;
-  // }
   const updateBody = req.body;
   Product.updateOne({ productId: id }, { $set: updateBody })
     .exec()
@@ -193,7 +162,6 @@ router.patch("/:productId", authenticate, (req, res, next) => {
     });
 });
 
-//TEST: Deletes a single product using productID
 router.delete("/:productId", authenticate, (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ productId: id })
