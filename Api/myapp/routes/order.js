@@ -9,7 +9,6 @@ const authenticate = require('../middleware/authentication');
 router.get('/', authenticate, (req, res, next) => {
     Order.find()
     .select('-__v -_id')
-    // .populate('productObjectId')
     .exec()
     .then(orders => {
         res.status(200).json({
@@ -120,7 +119,6 @@ const postOrder = async (order) => {
             orderId: newId,
             quantity : order.quantity,
             productId: order.productId,
-            // productObjectId: product[0]._id,
             selectedPreference: order.selectedPreference,
             selectedOption: order.selectedOption,
             totalPrice: order.totalPrice

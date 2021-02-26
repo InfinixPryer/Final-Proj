@@ -24,7 +24,14 @@ router.get("/", authenticate, function (req, res, next) {
 });
 
 router.post("/signup", (req, res, next) => {
-  User.find({ username: req.body.username })
+  const users = User.find().exec().then(users => users);
+
+  if(users.length >= 1){
+    res.status(409).json({
+      message: "Admin already exists"
+    })
+  }else{
+    User.find({ username: req.body.username })
     .exec()
     .then((user) => {
       if (user.length >= 1) {
@@ -59,6 +66,7 @@ router.post("/signup", (req, res, next) => {
         });
       }
     });
+  }
 });
 
 router.post("/login", (req, res, next) => {
