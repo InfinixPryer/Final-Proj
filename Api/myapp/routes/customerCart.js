@@ -6,6 +6,7 @@ const Order = require('../models/orderItemModel');
 const Product = require('../models/productModel');
 const Cart = require('../models/customerCartModel');
 const PostOrder = require('../routes/order')
+const authenticate = require('../middleware/authentication');
 
 router.get('/', authenticate ,(req, res, next) => {
     Cart.find()
