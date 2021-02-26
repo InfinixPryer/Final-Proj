@@ -8,7 +8,7 @@ const Cart = require('../models/customerCartModel');
 const PostOrder = require('../routes/order')
 const authenticate = require('../middleware/authentication');
 
-router.get('/', authenticate ,(req, res, next) => {
+router.get('/' ,(req, res, next) => {
     Cart.find()
     .select('-__v -_id')
     .exec()
@@ -26,7 +26,7 @@ router.get('/', authenticate ,(req, res, next) => {
     })
 });
 
-router.post('/', authenticate, (req, res, next) => {
+router.post('/', (req, res, next) => {
     Promise.all(req.body.orderItems.map((orderItem) => {
        return PostOrder.postOrder(orderItem);
     }))
