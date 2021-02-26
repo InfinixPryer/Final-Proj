@@ -40,7 +40,7 @@ const HomePage = () => {
   }
   return (
     <>
-      <div className="mb-40 flex overflow-hidden rounded-xl mx-3 relative h-page items-center">
+      <div className="mb-40 flex overflow-hidden .rounded-xl mx-16. relative h-page items-center">
         <span
           className="py-20 rounded-full z-50 px-4 absolute transition-all hover:rounded-none transform hover:bg-opacity-50 hover:py-32 text-white bg-black bg-opacity-10"
           onClick={() => handleDisplayState("prev")}

@@ -18,7 +18,7 @@ const Navbar = () => {
   }, [device, dispatch]);
 
   return (
-    <nav className="flex z-50 top-0 h-10 m-5 bg-white justify-between">
+    <nav className="flex z-50 top-0 h-10 mx-16 my-5 bg-white justify-between">
       <span className="my-auto">
         <NavLink to="/">
           <img src={logo} alt="logo" id="my-logo" className="w-52" />
