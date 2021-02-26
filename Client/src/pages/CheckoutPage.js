@@ -41,6 +41,12 @@ const Checkout = () => {
     } else setOrder({ ...orderInfo, totalPrice: 0 });
   }, [cart]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      window.location.reload();
+    }
+  }, [isSuccess]);
+
   const { cusAddress, cusPhone, cusEmail } = orderInfo;
 
   const handleChange = (e) => {
@@ -74,12 +80,11 @@ const Checkout = () => {
       orderInfo.cusPhone.length < 14
     ) {
       try {
-        api.post("/carts", orderInfo).then(() => {
-          setSuccess(true);
-        });
+        api.post("/carts", orderInfo).then(() => {});
       } catch (err) {
         console.error(err);
       } finally {
+        setSuccess(true);
         dispatch({ type: CLEAR_CART });
         setOrder({
           orderItems: orderArr,
@@ -98,15 +103,15 @@ const Checkout = () => {
   };
   return (
     <>
-      <div className="w-full">
-        {isSuccess && (
-          <span className="absolute z-50 shadow-xl rounded-lg bg-white p-2 border m-auto w-1/2 ">
-            {`Success! your order has been placed.`}
-          </span>
-        )}
-        <div className="w-7/12 h-96 overflow-scroll rounded-lg relative border shadow-lg m-auto p-5">
+      <div className="w-full h-screen">
+        <div className="w-7/12 h-96 overflow-scroll rounded-lg relative bg-white border shadow-lg m-auto p-5">
           <form onSubmit={(e) => handlePlaceOrder(e)}>
             <CartContainer />
+            {isSuccess && (
+              <span className="shadow-xl z-50 rounded-lg bg-white p-2 w-28  border m-auto ">
+                {`Success! your order has been placed.`}
+              </span>
+            )}
             <div className="flex checkout justify-center p-5 absolute text-sm h-full top-0 right-0 flex-col w-4/12 ">
               <label>
                 First Name:
