@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
+import { ProductContext } from "./context/ProductContext";
 import { api } from "./App.js";
 import { Loading } from "./pages/LandingPage.js";
 
-const ManageProducts = ({ itemList, getItems, handleAdd, handleEdit }) => {
+const ManageProducts = ({ handleAdd, handleEdit }) => {
+  const { itemList } = useContext(ProductContext);
   const [tableSelectList, setList] = useState([]);
-  const [isloading, setLoading] = useState(true);
   const [deleteNotif, setDeleted] = useState({
     display: false,
     message: "",
   });
   const delSelBtn = useRef();
+  const adminToken = localStorage.getItem("token");
 
   useEffect(() => {
     return () => {
@@ -21,24 +23,28 @@ const ManageProducts = ({ itemList, getItems, handleAdd, handleEdit }) => {
   }, []);
 
   useEffect(() => {
-    console.log(itemList);
-    // if (itemList.length > 1 || ) {
-    setLoading(false);
-    //}
+    if (itemList.length > 1) {
+      //setLoading((prev) => !prev);
+    }
   }, [itemList]);
 
   const handleDelItems = () => {
     if (tableSelectList.length !== 0) {
       tableSelectList.forEach((item) => {
         api
-          .delete(`Products/${item}`)
-          .then(setDeleted({ display: true, message: "Deleted selection" }));
+          .delete(`Products/${item}`, {
+            headers: {
+              Authorization: adminToken,
+            },
+          })
+          .then(() => {
+            setDeleted({ display: true, message: "Deleted selection" });
+            window.location.reload();
+          });
       });
     } else {
       setDeleted({ display: true, message: "No item selected" });
     }
-    setList([]);
-    getItems();
   };
 
   const handleSelect = (e) => {
@@ -55,41 +61,41 @@ const ManageProducts = ({ itemList, getItems, handleAdd, handleEdit }) => {
   }, [tableSelectList]);
 
   return (
-    <section className="w-full h-page bg-gray-100">
-      <div className="p-5 rounded bg-white m-2 shadow-clean">
-        <h1 className="">MANAGE PRODUCTS</h1>{" "}
-        {deleteNotif.display && (
-          <div className="w-full">{deleteNotif.message}</div>
-        )}
-        <span className="float-right my-2 text-md">
-          <button
-            onClick={() => handleDelItems()}
-            ref={delSelBtn}
-            className="text-white w-52 border border-red-500  disabled:bg-red-100 disabled:border-red-100 bg-red-500"
-          >
-            DELETE SELECTED
-            {tableSelectList.length !== 0 ? (
-              <h1 className="inline-block">: {tableSelectList.length}</h1>
-            ) : null}
-          </button>
+    <div className="p-5 rounded flex flex-col bg-white m-2 shadow">
+      <h1 className="">MANAGE PRODUCTS</h1>{" "}
+      {deleteNotif.display && (
+        <div className="w-full">{deleteNotif.message}</div>
+      )}
+      <span className="ml-auto my-2">
+        <button
+          onClick={() => handleDelItems()}
+          ref={delSelBtn}
+          className="text-white w-52 border border-red-500  disabled:bg-red-100 disabled:border-red-100 bg-red-500"
+        >
+          DELETE SELECTED
+          {tableSelectList.length !== 0 ? (
+            <h1 className="inline-block">: {tableSelectList.length}</h1>
+          ) : null}
+        </button>
 
-          <button onClick={() => handleAdd()}>ADD ITEM</button>
-        </span>
-        {!isloading ? (
-          <AdminItemTable
-            itemList={itemList}
-            handleEdit={handleEdit}
-            handleSelect={handleSelect}
-          />
-        ) : (
-          <Loading />
-        )}
-      </div>
-    </section>
+        <button onClick={() => handleAdd()}>ADD ITEM</button>
+      </span>
+      <AdminItemTable
+        itemList={itemList}
+        handleEdit={handleEdit}
+        handleSelect={handleSelect}
+      />
+    </div>
   );
 };
 
 const AdminItemTable = ({ itemList, handleSelect, handleEdit }) => {
+  const [tableItems, setItems] = useState([]);
+
+  useEffect(() => {
+    setItems(itemList);
+  }, [itemList]);
+
   return (
     <table className="w-full">
       <thead>
@@ -104,7 +110,7 @@ const AdminItemTable = ({ itemList, handleSelect, handleEdit }) => {
         </tr>
       </thead>
       <tbody>
-        {itemList.map((item) => {
+        {tableItems.map((item) => {
           return (
             <TableRow
               item={item}
@@ -122,7 +128,7 @@ const AdminItemTable = ({ itemList, handleSelect, handleEdit }) => {
 
 const TableRow = ({ item, handleSelect, handleEdit }) => {
   return (
-    <tr className="border-1 bg-white" key={item.productId}>
+    <tr className="border font-source text-sm bg-white" key={item.productId}>
       <td className="m-auto">
         <label className="w-10 h-20 flex">
           <input
@@ -145,7 +151,15 @@ const TableRow = ({ item, handleSelect, handleEdit }) => {
           );
         })}
       </td>
-      <td className="w-2/12"></td>
+      <td className="w-2/12">
+        {item.tags.map((tag) => {
+          return (
+            <span key={item.productId + tag}>
+              <h1>{tag}</h1>
+            </span>
+          );
+        })}
+      </td>
       <td className="w-5/12">
         <span className="flex w-full h-20">
           {item.productImage.map((img) => {

@@ -3,6 +3,7 @@ import axios from "axios";
 import CartProvider from "./context/CartContext";
 import ProductProvider from "./context/ProductContext";
 import DeviceProvider from "./context/DeviceContext";
+import PrivateRoute from "./pages/PrivateRoute";
 
 import Products from "./pages/ProductsPage";
 import Navbar from "./navbar";
@@ -21,9 +22,9 @@ const ReactRouterSetup = () => {
   return (
     <DeviceProvider>
       <CartProvider>
-        <Router>
-          <Navbar />
-          <ProductProvider>
+        <ProductProvider>
+          <Router>
+            <Navbar />
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -40,15 +41,13 @@ const ReactRouterSetup = () => {
               <Route path="/Checkout">
                 <Checkout />
               </Route>
-              <Route exact path="/Admin">
-                <Admin />
-              </Route>
+              <PrivateRoute exact path="/Admin" component={Admin} />
               <Route path="/Admin/Login">
                 <Login />
               </Route>
             </Switch>
-          </ProductProvider>
-        </Router>
+          </Router>
+        </ProductProvider>
       </CartProvider>
     </DeviceProvider>
   );

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import bag from "./images/bag.png";
-import logo from "./images/logo.jpg";
+import bag from "./assets/bag.png";
+import logo from "./assets/logo.jpg";
 import { CartContext } from "./context/CartContext";
 import { DeviceContext } from "./context/DeviceContext";
 

@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="w-full h-32 flex flex-shrink-0 text-white bottom-0 bg-espresso">
       <span
         onClick={() => {
-          toLogin.push("./Admin/Login");
+          toLogin.push("./Admin");
         }}
         className="p-5 cursor-pointer"
       >

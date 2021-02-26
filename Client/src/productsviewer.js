@@ -34,7 +34,7 @@ const ProductViewer = ({ find }) => {
     return <Loading />;
   } else if (items.length === 0) {
     return (
-      <span className="text-center p-20 min-h-full block w-full absolute">
+      <span className="text-center p-20 min-h-screen block w-full ">
         <h1>{"Sorry that item doesn't exist"}</h1>
       </span>
     );
