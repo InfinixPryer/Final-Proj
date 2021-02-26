@@ -134,12 +134,12 @@ const ItemPage = ({
     } else return null;
   };
   return (
-    <section className="flex w-full h-page overflow-hidden bg-white ">
+    <section className="flex w-full mx-10 h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
         <Link to="/Products">{`< Products / `}</Link>
         {`${productName}`}
       </div>
-      <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
+      <div className=" w-6/12 flex flex-wrap  float-left m-10">
         <div className="flex items-center h-96 w-full relative">
           <span
             className="p-5 absolute left-0 text-gray-400 rounded shadow-md cursor-pointer"
@@ -174,13 +174,13 @@ const ItemPage = ({
           })}
         </div>
       </div>
-      <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-4">
+      <div className="float-right w-4/12 absolute h-page right-12 mx-5 flex font-work flex-col bg-white p-4">
         <h1 className=" text-3xl font-medium font-poppins pb-1">
           {productName.toUpperCase()}
         </h1>
         <p>{type.toUpperCase()}</p>
 
-        <p className="my-5 font-light w-96 text-sm ">{details}</p>
+        <p className="my-5 font-light text-sm ">{details}</p>
 
         <span className="my-2 flex-col font-semibold font-poppins flex justify-between">
           <p className="font-normal my-2">OPTIONS: </p>

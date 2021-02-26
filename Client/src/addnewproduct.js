@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { api } from "./App.js";
-const PatchItem = ({ item, handleAdding }) => {
+const PatchItem = ({ item }) => {
   const [patchedProps, setPatch] = useState({});
   const [newItem, setNewItem] = useState({
     productId: "",
@@ -104,7 +104,7 @@ const PatchItem = ({ item, handleAdding }) => {
     }
   };
   const handleAddTag = () => {
-    if (tag !== "") {
+    if (tag !== "" && !tags.includes(tag)) {
       setNewItem({ ...newItem, tags: tags.concat(tag) });
       setTag("");
     }
@@ -177,7 +177,7 @@ const PatchItem = ({ item, handleAdding }) => {
   return (
     <section className="w-full h-page absolute bg-gray-100">
       <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
-        <div className="grid grid-cols-2 h-full float-right w-3/6">
+        <div className="grid grid-cols-2 overflow-y-scroll px-4 float-right w-3/6">
           {productImage.map((im) => {
             return (
               <span key={im} className=" max-h-64 overflow-auto relative">
