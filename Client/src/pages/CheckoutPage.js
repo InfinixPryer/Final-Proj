@@ -5,6 +5,7 @@ import { api } from "../App.js";
 
 const Checkout = () => {
   const { cart, dispatch } = useContext(CartContext);
+  const [isSuccess, setSuccess] = useState(false);
   const [fullname, setName] = useState({
     fname: "",
     lname: "",
@@ -64,7 +65,6 @@ const Checkout = () => {
   };
   const handlePlaceOrder = (e) => {
     e.preventDefault();
-    console.log(orderInfo);
 
     if (
       cart.length !== 0 &&
@@ -73,8 +73,8 @@ const Checkout = () => {
       orderInfo.cusPhone.length < 14
     ) {
       try {
-        api.post("carts", orderInfo).then((res) => {
-          console.log(res);
+        api.post("/carts", orderInfo).then(() => {
+          setSuccess(true);
         });
       } catch (err) {
         console.error(err);
@@ -97,64 +97,71 @@ const Checkout = () => {
   };
   return (
     <>
-      <form onSubmit={(e) => handlePlaceOrder(e)}>
-        <CartContainer />
-        <div className="flex justify-center p-5 shadow-clean rounded text-sm h-full m-auto flex-col w-56 ">
-          <label>
-            First Name:
-            <input
-              type="text"
-              value={fullname.fname}
-              id="fname"
-              onChange={(e) => handleChange(e)}
-              required
-            />
-          </label>
-          <label>
-            Last Name:
-            <input
-              type="text"
-              value={fullname.lname}
-              id="lname"
-              onChange={(e) => handleChange(e)}
-              required
-            />
-          </label>
-          <label>
-            Address:
-            <input
-              type="text"
-              value={cusAddress}
-              id="address"
-              onChange={(e) => handleChange(e)}
-              required
-            />
-          </label>
-          <label>
-            Contact No:
-            <input
-              type="text"
-              value={cusPhone}
-              id="contact"
-              onChange={(e) => handleChange(e)}
-              required
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="email"
-              value={cusEmail}
-              id="email"
-              onChange={(e) => handleChange(e)}
-              required
-            />
-          </label>
-          <button type="submit" className="p-2">
-            PLACE ORDER
-          </button>
-        </div>
-      </form>
+      <div className="w-full">
+        {isSuccess && (
+          <span className="absolute z-50 bg-gray-300 m-auto w-1/2 h-72">
+            {`Success! your order has been placed.`}
+          </span>
+        )}
+        <form onSubmit={(e) => handlePlaceOrder(e)}>
+          <CartContainer />
+          <div className="flex  justify-center p-5 shadow-clean rounded text-sm h-full m-auto flex-col w-56 ">
+            <label>
+              First Name:
+              <input
+                type="text"
+                value={fullname.fname}
+                id="fname"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <label>
+              Last Name:
+              <input
+                type="text"
+                value={fullname.lname}
+                id="lname"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <label>
+              Address:
+              <input
+                type="text"
+                value={cusAddress}
+                id="address"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <label>
+              Contact No:
+              <input
+                type="text"
+                value={cusPhone}
+                id="contact"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <label>
+              Email:
+              <input
+                type="email"
+                value={cusEmail}
+                id="email"
+                onChange={(e) => handleChange(e)}
+                required
+              />
+            </label>
+            <button type="submit" className="m-0">
+              PLACE ORDER
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   );
 };

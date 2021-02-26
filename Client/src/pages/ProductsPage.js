@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
 import Footer from "../footer.js";
-import { api, Loading } from "../App.js";
-import search from "../images/search.png";
+import { api } from "../App.js";
+import search from "../assets/search.png";
 
 const ProductPage = () => {
   const int_state = "All Products";

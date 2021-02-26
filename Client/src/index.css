@@ -14,6 +14,7 @@
   }
   td {
     @apply border;
+    @apply text-center;
     @apply border-gray-200;
   }
   thead th {
@@ -43,7 +44,7 @@
     @apply focus:outline-none;
     @apply border;
     @apply ml-2;
-    @apply p-1;
+    @apply p-2;
     @apply rounded;
     @apply text-xs;
     @apply font-medium;

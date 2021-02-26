@@ -1,25 +1,17 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
+import { ProductContext } from "./context/ProductContext";
 import { Loading } from "./pages/LandingPage.js";
-import { api } from "./App.js";
 
 export const ProductInfo = () => {
   const { product_name } = useParams();
+  const { itemList } = useContext(ProductContext);
   const [item, setItem] = useState(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        await api.get(`/products/${product_name}`).then((res) => {
-          setItem(res.data.product[0]);
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchProduct();
+    const pageItem = itemList.find((item) => item.productName === product_name);
+    setItem(pageItem);
     return () => {
       setItem({});
     };
@@ -195,6 +187,8 @@ const ItemPage = ({
             choices={choices}
             productId={productId}
             productName={productName}
+            options={options}
+            preferences={preferences}
           />
         </div>
       </div>
@@ -253,13 +247,16 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
   );
 };
 
-const AddtoCartBtn = ({ choices, productId, productName }) => {
+const AddtoCartBtn = ({ choices, productId, productName, preferences }) => {
   const { dispatch } = useContext(CartContext);
   const [current, setCurrent] = useState([]);
 
   const handleAdd = (e) => {
     e.preventDefault();
-    if (choices.selected_option && choices.selected_preference) {
+    if (
+      (choices.selected_option && preferences.length === 0) ||
+      (choices.selected_option && choices.selected_preference)
+    ) {
       const selectedItem = {
         key: `${productId}${choices.selected_option.name}${choices.selected_preference}`,
         productId: productId,

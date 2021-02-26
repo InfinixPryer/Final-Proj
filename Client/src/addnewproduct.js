@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { api } from "./App.js";
-const PatchItem = ({ item }) => {
+const PatchItem = ({ item, handleAdding }) => {
   const [patchedProps, setPatch] = useState({});
   const [newItem, setNewItem] = useState({
     productId: "",
@@ -45,6 +45,13 @@ const PatchItem = ({ item }) => {
     preferences,
     tags,
   } = newItem;
+
+  const adminToken = localStorage.getItem("token");
+  const config = {
+    headers: {
+      Authorization: adminToken,
+    },
+  };
 
   const handleChange = (e) => {
     const data = e.target.value;
@@ -128,15 +135,17 @@ const PatchItem = ({ item }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (newItem.options.length > 0 && newItem.tags.length > 0) {
+    if (newItem.options.length > 0) {
       try {
-        api.post("products", newItem);
-        messpan.current.hidden = true;
+        api.post("products", newItem, config).then(() => {
+          setMes("Added!");
+          messpan.current.hidden = false;
+          window.location.reload();
+        });
       } catch (error) {
         console.error(error);
       }
-    }
-    {
+    } else {
       setMes("Lacking value for input fields");
       messpan.current.hidden = false;
     }
@@ -157,8 +166,8 @@ const PatchItem = ({ item }) => {
 
       try {
         api
-          .patch(`products/${urlId}`, patchedProps)
-          .then((success) => console.log(success));
+          .patch(`products/${urlId}`, patchedProps, config)
+          .then(() => window.location.reload());
       } catch (error) {
         console.error(error);
       }
@@ -354,7 +363,7 @@ const PatchItem = ({ item }) => {
           <span
             ref={messpan}
             hidden
-            className="p-2 bg-red-500 text-white rounded mx-3"
+            className="p-2 bg-gray-400 text-white rounded mx-3"
           >
             {message}
           </span>

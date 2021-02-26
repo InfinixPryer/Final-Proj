@@ -1,39 +1,51 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { api } from "../App";
+import { useHistory } from "react-router-dom";
 
 const Login = () => {
-  const [auth, setAuth] = useState({
+  const [auth, setAuth] = useState({ status: false, mess: "" });
+  const [userLogin, setUserLogin] = useState({
     username: "",
     password: "",
   });
+  const errspan = useRef();
+  const toAdmin = useHistory();
+
   const handleUserChange = (e) => {
-    setAuth({ ...auth, username: e.target.value });
+    setUserLogin({ ...userLogin, username: e.target.value });
   };
   const handlePassChange = (e) => {
-    setAuth({ ...auth, password: e.target.value });
+    setUserLogin({ ...userLogin, password: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const Login = (e) => {
     e.preventDefault();
-    if (auth.username && auth.password) {
+    if (userLogin.username && userLogin.password) {
       try {
-        api.post("/admin", auth).then((res) => {
-          console.log(res);
-        });
-      } catch {}
+        api
+          .post("/admin/login", userLogin)
+          .then((res) => {
+            if (res.data.message === "Login successful") {
+              setUserLogin({ username: "", password: "" });
+              localStorage.setItem("token", res.data.token);
+              toAdmin.push("/Admin");
+            }
+          })
+          .then((errspan.current.hidden = false));
+      } catch (err) {
+        console.error(err);
+      }
     }
+    setAuth({ status: false, mess: "Incorrect username or password" });
   };
-  useEffect(() => {
-    console.log(auth);
-  }, [auth]);
 
   return (
-    <form onSubmit={(e) => handleSubmit(e)}>
+    <form onSubmit={(e) => Login(e)}>
       <div className=" w-6/12 h-64">
         <label>
           Username:
           <input
-            value={auth.username}
+            value={userLogin.username}
             required
             autoComplete="cc-csc"
             onChange={(e) => handleUserChange(e)}
@@ -43,7 +55,7 @@ const Login = () => {
           Password:
           <input
             type="password"
-            value={auth.password}
+            value={userLogin.password}
             required
             autoComplete="cc-csc"
             onChange={(e) => handlePassChange(e)}
@@ -51,6 +63,13 @@ const Login = () => {
         </label>
         <button type="submit">Login</button>
       </div>
+      <span
+        ref={errspan}
+        hidden
+        className="p-2  bg-gray-500 text-white rounded mx-3"
+      >
+        {auth.mess}
+      </span>
     </form>
   );
 };
