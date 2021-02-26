@@ -23,12 +23,11 @@ router.get("/", authenticate, function (req, res, next) {
   })
 });
 
-router.post("/signup", (req, res, next) => {
-  const users = User.find().exec().then(users => users);
-
+router.post("/signup", async(req, res, next) => {
+  const users = await User.find().then(users => {return users});
   if(users.length >= 1){
     res.status(409).json({
-      message: "Admin already exists"
+      message: "An admin already exists"
     })
   }else{
     User.find({ username: req.body.username })
