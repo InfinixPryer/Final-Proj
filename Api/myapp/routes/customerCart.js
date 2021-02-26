@@ -52,7 +52,6 @@ router.post('/', (req, res, next) => {
                 return newCart.save()
             })
             .then(result => {
-                console.log(result);
                 res.status(201).json({
                     message: 'Successfully created cart',
                     createdCart: {
