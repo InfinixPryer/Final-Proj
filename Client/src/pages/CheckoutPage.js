@@ -100,7 +100,7 @@ const Checkout = () => {
     <>
       <div className="w-full">
         {isSuccess && (
-          <span className="absolute z-50 bg-gray-300 m-auto w-1/2 h-72">
+          <span className="absolute z-50 shadow-xl rounded-lg bg-white p-2 border m-auto w-1/2 ">
             {`Success! your order has been placed.`}
           </span>
         )}

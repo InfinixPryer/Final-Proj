@@ -11,7 +11,7 @@ const ProductCard = (props) => {
     const low = Math.min(...arr);
     if (low === high) {
       optionsrange = `\u20b1${high}`;
-    } else optionsrange = `${low} - \u20b1${high}`;
+    } else optionsrange = `\u20b1${low} - \u20b1${high}`;
   }
   const [img, setImg] = useState(0);
   const [slide, setSlide] = useState(null);
