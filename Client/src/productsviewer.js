@@ -30,10 +30,9 @@ const ProductViewer = ({ find }) => {
     }
   }, [itemList, find]);
 
-  if (!items) {
+  if (itemList.length === 0) {
     return <Loading />;
-  }
-  if (items.length === 0) {
+  } else if (items.length === 0) {
     return (
       <span className="text-center p-20 min-h-full block w-full absolute">
         <h1>{"Sorry that item doesn't exist"}</h1>
@@ -42,7 +41,7 @@ const ProductViewer = ({ find }) => {
   }
 
   return (
-    <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 mb-14 font-type">
+    <section className="grid grid-container min-h-screen p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 mb-14">
       {items.map((item) => {
         return (
           <div key={item.productId}>

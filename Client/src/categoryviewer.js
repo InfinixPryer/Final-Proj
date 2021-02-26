@@ -47,11 +47,11 @@ const CategoryViewer = ({ tag }) => {
           }
         </p>
       </div>
-      {header && (
+      {/*       {header && (
         <img src={header} alt={header} ref={headEl} className="rounded-xl" />
-      )}
+      )} */}
       <div></div>
-      <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-6 font-type">
+      <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 mb-24 gap-6 font-type">
         {items.map((item) => {
           return (
             <div key={item.productId}>

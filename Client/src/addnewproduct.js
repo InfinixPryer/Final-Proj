@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "./App.js";
 const PatchItem = ({ item }) => {
   const [patchedProps, setPatch] = useState({});
@@ -21,6 +21,8 @@ const PatchItem = ({ item }) => {
     name: "",
     price: "",
   });
+  const [message, setMes] = useState("");
+  const messpan = useRef();
 
   useEffect(() => {
     if (item) {
@@ -86,20 +88,22 @@ const PatchItem = ({ item }) => {
     }
   };
   const handleAddOption = () => {
-    setNewItem({ ...newItem, options: options.concat(newOption) });
-    setOption({
-      name: "",
-      price: "",
-    });
+    if (newOption.name !== "" && newOption.price > 10) {
+      setNewItem({ ...newItem, options: options.concat(newOption) });
+      setOption({
+        name: "",
+        price: "",
+      });
+    }
   };
   const handleAddTag = () => {
-    if (tag) {
+    if (tag !== "") {
       setNewItem({ ...newItem, tags: tags.concat(tag) });
       setTag("");
     }
   };
   const handleAddPref = () => {
-    if (pref) {
+    if (pref !== "") {
       setNewItem({ ...newItem, preferences: preferences.concat(pref) });
       setPref("");
     }
@@ -124,10 +128,17 @@ const PatchItem = ({ item }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      api.post("products", newItem);
-    } catch (error) {
-      console.error(error);
+    if (newItem.options.length > 0 && newItem.tags.length > 0) {
+      try {
+        api.post("products", newItem);
+        messpan.current.hidden = true;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    {
+      setMes("Lacking value for input fields");
+      messpan.current.hidden = false;
     }
   };
 
@@ -247,6 +258,7 @@ const PatchItem = ({ item }) => {
                 id="product_id"
                 value={productId}
                 onChange={(e) => handleChange(e)}
+                required
               />
             </label>
             <label>
@@ -256,6 +268,7 @@ const PatchItem = ({ item }) => {
                 id="name"
                 value={productName}
                 onChange={(e) => handleChange(e)}
+                required
               />
             </label>
             <label>
@@ -282,7 +295,7 @@ const PatchItem = ({ item }) => {
                 type="number"
                 id="option-price"
                 value={newOption.price}
-                min="1"
+                min="10"
                 onChange={(e) => {
                   handleChange(e);
                 }}
@@ -323,6 +336,7 @@ const PatchItem = ({ item }) => {
               id="details"
               value={details}
               onChange={(e) => handleChange(e)}
+              required
             />
             <label className="flex">
               Images:
@@ -337,6 +351,13 @@ const PatchItem = ({ item }) => {
           ) : (
             <button type="submit">ADD</button>
           )}
+          <span
+            ref={messpan}
+            hidden
+            className="p-2 bg-red-500 text-white rounded mx-3"
+          >
+            {message}
+          </span>
         </form>
       </div>
     </section>

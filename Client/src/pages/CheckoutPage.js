@@ -73,9 +73,9 @@ const Checkout = () => {
       orderInfo.cusPhone.length < 14
     ) {
       try {
-        /* api.post("carts", orderInfo).then((res) => {
+        api.post("carts", orderInfo).then((res) => {
           console.log(res);
-        }); */
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -87,6 +87,10 @@ const Checkout = () => {
           cusAddress: "",
           cusPhone: "",
           cusEmail: "",
+        });
+        setName({
+          fname: "",
+          lname: "",
         });
       }
     }

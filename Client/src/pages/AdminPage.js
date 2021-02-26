@@ -31,7 +31,6 @@ const Admin = () => {
     });
   };
   useEffect(() => {
-    getItems();
     getOrders();
     setOrders(orders);
   }, []);

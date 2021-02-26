@@ -47,17 +47,21 @@ const ProductCard = (props) => {
       onMouseLeave={() => {
         handleLeave();
       }}
-      className="product-box cursor-pointer font-work rounded group shadow-clean transform hover:-translate-y-1  hover:shadow-light w-full relative bg-white"
+      className="product-box cursor-pointer rounded group shadow-clean transform hover:-translate-y-1  hover:shadow-light w-full relative bg-white"
     >
-      <div className="w-full overflow-hidden rounded-t-sm">
-        <img src={productImage[img]} alt={productId} className="m-auto" />
+      <div className="overflow-hidden max-w-64 h-64 rounded-t-sm">
+        <img
+          src={productImage[img]}
+          alt={productId}
+          className="m-auto w-full"
+        />
       </div>
-      <div className="pl-3 pr-3 py-1 md:py-2 mb-16 max-h-32">
+      <div className="pl-3 pr-3 py-1 md:py-2 max-h-32">
         <h3 className="sm:text-norm text-sm">
           {checkTitleLength(productName)}
         </h3>
         <p className=" text-xs md:text-sm text-coffee">{type}</p>
-        <p className="text-coffee left-3 font-poppins text-xs sm:text-lg float-right">
+        <p className="text-coffee left-3 mb-12 text-xs sm:text-lg float-right">
           {optionsrange}
         </p>
       </div>

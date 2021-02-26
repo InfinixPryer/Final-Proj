@@ -22,9 +22,9 @@ const ManageProducts = ({ itemList, getItems, handleAdd, handleEdit }) => {
 
   useEffect(() => {
     console.log(itemList);
-    if (itemList.length > 1) {
-      setLoading(false);
-    }
+    // if (itemList.length > 1 || ) {
+    setLoading(false);
+    //}
   }, [itemList]);
 
   const handleDelItems = () => {
@@ -135,7 +135,16 @@ const TableRow = ({ item, handleSelect, handleEdit }) => {
       </td>
       <td className="p-2">{item.productId}</td>
       <td className="w-2/12 p-2">{item.productName}</td>
-      <td className="w-3/12"></td>
+      <td className="w-3/12">
+        {item.options.map((opt) => {
+          return (
+            <span key={item.productId + opt.name}>
+              <h1>{`name: ${opt.name}`}</h1>
+              <h1>{`price: ${opt.price}`}</h1>
+            </span>
+          );
+        })}
+      </td>
       <td className="w-2/12"></td>
       <td className="w-5/12">
         <span className="flex w-full h-20">
@@ -154,7 +163,7 @@ const TableRow = ({ item, handleSelect, handleEdit }) => {
       <td className="">
         <button
           onClick={() => handleEdit(item)}
-          className="bg-gray-300 text-white border-none text-sm hover:bg-black font-semibold ml-1 mr-3 rounded-sm"
+          className="bg-gray-300 text-white border-none text-sm hover:bg-black ml-1 mr-3 rounded-sm"
         >
           EDIT
         </button>

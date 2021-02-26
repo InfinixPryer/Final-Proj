@@ -1,11 +1,19 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const Footer = () => {
-  //console.log(1);
+  const toLogin = useHistory();
+
   return (
     <footer className="w-full h-32 flex flex-shrink-0 text-white bottom-0 bg-espresso">
-      <NavLink to="/Admin">Admin</NavLink>
+      <span
+        onClick={() => {
+          toLogin.push("./Admin/Login");
+        }}
+        className="p-5 cursor-pointer"
+      >
+        Admin
+      </span>
     </footer>
   );
 };

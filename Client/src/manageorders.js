@@ -1,14 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
 import { api } from "./App.js";
 
-const ManageOrders = ({ orders, getOrders }) => {
+const ManageOrders = ({ orders }) => {
   const [ordArr, setArr] = useState([]);
   const [tableSelectList, setList] = useState([]);
   const delSelBtn = useRef();
 
-  useEffect(() => {
-    getOrders();
-  }, []);
   useEffect(() => {
     setArr(orders);
   }, [orders]);
