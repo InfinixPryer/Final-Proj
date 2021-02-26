@@ -33,7 +33,7 @@ app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/user", userRoutes);
+app.use("/admin", userRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes.router);
 app.use("/carts", cartRoutes);
