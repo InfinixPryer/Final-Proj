@@ -77,27 +77,26 @@ router.get("/tags", (req, res, next) => {
     })
 });
 
-router.get("/:productName", (req, res, next) => {
+router.get("/:productName", async(req, res, next) => {
   const name = req.params.productName;
   Product.find({ productName: name })
     .select("-__v -_id -options._id")
     .exec()
     .then((doc) => {
       if(doc.length <= 0 ){
-        res.status(404).json()
+        next();
+        //res.status(404).json()
       }else{
         res.status(200).json({
           product: doc
         })
       }
-      next();
     })
     .catch((err) => {
       console.log(err);
       res.status(500).json({
         error: err
       });
-      next();
     });
 });
 
@@ -107,18 +106,17 @@ router.get("/:productId", (req, res, next) => {
     .select("-__v -_id -options._id")
     .exec()
     .then((doc) => {
-        if(doc.length <= 0){
+        if(doc.length === 0){
             res.status(404).json();
-        }
-      if (doc.length > 0) {
-        res.status(200).json({
-          product: doc[0]
+        }else{
+          res.status(200).json({
+            product: doc[0]
         });
       }
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({
+        res.status(500).json({
         error: err,
       });
     });
