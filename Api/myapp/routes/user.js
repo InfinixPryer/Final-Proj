@@ -8,7 +8,18 @@ const User = require("../models/userModel");
 
 /* GET users listing. */
 router.get("/", function (req, res, next) {
-  res.send("respond with a resource");
+  User.find()
+  .select('-__v -_id')
+  .exec()
+  .then(users => {
+    if(users.length === 0){
+      res.status(404).json()
+    }else{
+      res.status(200).json({
+        users
+      })
+    }
+  })
 });
 
 router.post("/signup", (req, res, next) => {
@@ -17,7 +28,7 @@ router.post("/signup", (req, res, next) => {
     .then((user) => {
       if (user.length >= 1) {
         return res.status(409).json({
-          message: "User already exists",
+          message: "Admin already exists",
         });
       } else {
         bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -35,7 +46,7 @@ router.post("/signup", (req, res, next) => {
               .save()
               .then((result) => {
                 res.status(201).json({
-                  message: "User created",
+                  message: "Admin created",
                 });
               })
               .catch((err) => {
@@ -98,7 +109,7 @@ router.delete("/:username", (req, res, next) => {
     .exec()
     .then((result) => {
       res.status(200).json({
-        message: "User deleted",
+        message: "Admin deleted",
         result: result,
       });
     })
