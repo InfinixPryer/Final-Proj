@@ -4,14 +4,14 @@ import CartProvider from "./context/CartContext";
 import ProductProvider from "./context/ProductContext";
 import DeviceProvider from "./context/DeviceContext";
 
-import Products from "./pages/ProductsPage.js";
-import About from "./pages/AboutPage.js";
-import Navbar from "./navbar.js";
-import Home from "./pages/LandingPage.js";
-import Cart from "./pages/CartPage.js";
-import Checkout from "./pages/CheckoutPage .js";
-import ProductInfo from "./productinfo.js";
-import Admin from "./pages/AdminPage ";
+import Products from "./pages/ProductsPage";
+import Navbar from "./navbar";
+import Home from "./pages/LandingPage";
+import Cart from "./pages/CartPage";
+import Checkout from "./pages/CheckoutPage";
+import ProductInfo from "./productinfo";
+import Admin from "./pages/AdminPage";
+import Login from "./pages/LoginPage";
 
 export const api = axios.create({
   baseURL: "http://localhost:9000/",
@@ -34,17 +34,17 @@ const ReactRouterSetup = () => {
                 path="/Products/:product_name"
                 children={<ProductInfo />}
               ></Route>
-              <Route path="/About">
-                <About />
-              </Route>
               <Route path="/My-Cart">
                 <Cart />
               </Route>
               <Route path="/Checkout">
                 <Checkout />
               </Route>
-              <Route path="/Admin">
+              <Route exact path="/Admin">
                 <Admin />
+              </Route>
+              <Route path="/Admin/Login">
+                <Login />
               </Route>
             </Switch>
           </ProductProvider>

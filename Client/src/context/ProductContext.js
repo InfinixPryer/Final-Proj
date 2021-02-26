@@ -6,22 +6,6 @@ import { GET_ITEMS } from "../types.js";
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const initialState = [
-    {
-      productId: "",
-      productName: "",
-      productImage: [],
-      typr: "",
-      options: [
-        {
-          name: "",
-          price: null,
-        },
-      ],
-      preferences: [],
-      tags: [],
-    },
-  ];
   const [itemList, dispatch] = useReducer(productsReducer, []);
 
   const getItems = async () => {

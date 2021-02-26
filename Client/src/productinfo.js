@@ -10,8 +10,13 @@ export const ProductInfo = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const product = await api.get(`products/${product_name}`);
-      setItem(product.data.product);
+      try {
+        await api.get(`/products/${product_name}`).then((res) => {
+          setItem(res.data.product[0]);
+        });
+      } catch (err) {
+        console.error(err);
+      }
     };
 
     fetchProduct();
@@ -116,7 +121,7 @@ const ItemPage = ({
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
         <div className="block h-96 w-full relative">
           <span
-            className="p-3 top-40 absolute left-0 cursor-pointer"
+            className="p-5 top-40 absolute left-0 cursor-pointer"
             onClick={() => handleDisplayState("prev")}
           >
             {"<"}
@@ -127,14 +132,14 @@ const ItemPage = ({
             className="block m-auto h-96 w-96"
           />
           <span
-            className="p-3 absolute bottom-44 right-0 cursor-pointer"
+            className="p-5 absolute bottom-44 right-0 cursor-pointer"
             onClick={() => handleDisplayState("next")}
           >
             {">"}
           </span>
         </div>
 
-        <div className=" w-96 mx-auto">
+        <div className=" w-96 overflow-x-scroll mx-auto">
           {productImage.map((img, index) => {
             return (
               <div

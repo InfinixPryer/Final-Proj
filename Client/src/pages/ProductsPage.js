@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import ProductViewer from "../productsviewer.js";
 import CategoryViewer from "../categoryviewer.js";
 import Footer from "../footer.js";
-import { api } from "../App.js";
+import { api, Loading } from "../App.js";
+import search from "../images/search.png";
 
 const ProductPage = () => {
   const int_state = "All Products";
@@ -136,9 +137,9 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
           />
           <span
             onClick={() => setFind(query)}
-            className="rounded-full bg-gray-100 cursor-pointer text-center w-10 mx-2"
+            className="rounded-full flex justify-center items-center cursor-pointer text-center w-10"
           >
-            {"p"}
+            <img src={search} alt="search" className="w-4" />
           </span>
         </span>
       )}
