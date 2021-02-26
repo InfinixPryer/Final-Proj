@@ -28,6 +28,7 @@ const mongoose = require("mongoose");
 //     });
 
 const Product = require("../models/productModel");
+const authenticate = require("../middleware/authentication")
 
 router.get("/", (req, res, next) => {
   Product.find()
@@ -44,6 +45,7 @@ router.get("/", (req, res, next) => {
       res.status(200).json(response);
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         error: err,
       });
@@ -73,10 +75,6 @@ router.get("/tags", (req, res, next) => {
       console.log(err);
       res.status(500).json({ err });
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({ err });
-    });
 });
 
 router.get("/:productName", (req, res, next) => {
@@ -95,6 +93,7 @@ router.get("/:productName", (req, res, next) => {
       next();
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         error: err
       });
@@ -117,47 +116,6 @@ router.get("/:productId", (req, res, next) => {
         });
       }
     })
-    .catch((error) => {
-      res.status(500).json({
-        error,
-      });
-    });
-});
-
-router.post("/" /*, upload.single('productImage')*/, (req, res, next) => {
-  console.log(req.file);
-  const product = new Product({
-    productId: req.body.productId,
-    productName: req.body.productName,
-    productImage: req.body.productImage,
-    availability: req.body.availability,
-    type: req.body.type,
-    details: req.body.details,
-    options: req.body.options,
-    preferences: req.body.preferences,
-    bundleItems: req.body.bundleItems,
-    tags: req.body.tags,
-  });
-  product
-    .save()
-    .then((result) => {
-      res.status(201).json({
-        message: "Product saved successfully!",
-        createdProduct: {
-          productId: req.body.productId,
-          productName: req.body.productName,
-          price: req.body.price,
-          productImage: req.body.productImage,
-          availability: req.body.availability,
-          type: req.body.type,
-          details: req.body.details,
-          options: req.body.options,
-          preferences: req.body.preferences,
-          bundleItems: req.body.bundleItems,
-          tags: req.body.tags,
-        },
-      });
-    })
     .catch((err) => {
       console.log(err);
       res.status(500).json({
@@ -166,7 +124,59 @@ router.post("/" /*, upload.single('productImage')*/, (req, res, next) => {
     });
 });
 
-router.patch("/:productId", (req, res, next) => {
+router.post("/" /*, upload.single('productImage')*/,authenticate, (req, res, next) => {
+  //console.log(req.file);
+  Product.find({productId: req.body.productId})
+  .exec()
+  .then(product => {
+    if(product.length >= 1){
+      res.status(404).json({
+        message: "Product Already Exists!"
+      })
+    }else{
+      const product = new Product({
+        productId: req.body.productId,
+        productName: req.body.productName,
+        productImage: req.body.productImage,
+        availability: req.body.availability,
+        type: req.body.type,
+        details: req.body.details,
+        options: req.body.options,
+        preferences: req.body.preferences,
+        bundleItems: req.body.bundleItems,
+        tags: req.body.tags,
+      });
+      product
+        .save()
+        .then((result) => {
+          res.status(201).json({
+            message: "Product saved successfully!",
+            createdProduct: {
+              productId: req.body.productId,
+              productName: req.body.productName,
+              price: req.body.price,
+              productImage: req.body.productImage,
+              availability: req.body.availability,
+              type: req.body.type,
+              details: req.body.details,
+              options: req.body.options,
+              preferences: req.body.preferences,
+              bundleItems: req.body.bundleItems,
+              tags: req.body.tags,
+            },
+          });
+        })
+    }
+  })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).json({
+        error: err,
+      });
+    });
+});
+
+router.patch("/:productId", authenticate, (req, res, next) => {
   const id = req.params.productId;
   // const updateOps = {};
   // for(const ops of req.body){
@@ -186,7 +196,7 @@ router.patch("/:productId", (req, res, next) => {
 });
 
 //TEST: Deletes a single product using productID
-router.delete("/:productId", (req, res, next) => {
+router.delete("/:productId", authenticate, (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ productId: id })
     .exec()

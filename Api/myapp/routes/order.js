@@ -4,8 +4,9 @@ const mongoose = require('mongoose');
 
 const Order = require('../models/orderItemModel');
 const Product = require('../models/productModel');
+const authenticate = require('../middleware/authentication');
 
-router.get('/', (req, res, next) => {
+router.get('/', authenticate, (req, res, next) => {
     Order.find()
     .select('-__v -_id')
     // .populate('productObjectId')
@@ -25,7 +26,7 @@ router.get('/', (req, res, next) => {
     })
 });
 
-router.post('/', (req, res, next) => {
+router.post('/', authenticate, (req, res, next) => {
     postOrder(req.body)
         .then((order) => {
             if(result.status === 404){
@@ -52,7 +53,7 @@ router.post('/', (req, res, next) => {
         })
 });
 
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', authenticate, (req, res, next) => {
     Order.find({orderId: req.params.orderId})
     .select('-__v -_id')
     .exec()
@@ -73,7 +74,7 @@ router.get('/:orderId', (req, res, next) => {
     })
 });
 
-router.delete('/:orderId', (req, res, next) => {
+router.delete('/:orderId', authenticate, (req, res, next) => {
     Order.deleteOne({orderId:req.params.orderId})
     .exec()
     .then(result => {
@@ -88,7 +89,7 @@ router.delete('/:orderId', (req, res, next) => {
     })
 });
 
-router.delete('/', (req, res, next) => {
+router.delete('/', authenticate, (req, res, next) => {
     Order.deleteMany()
     .exec()
     .then(result => {
