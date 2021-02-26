@@ -3,13 +3,10 @@ import ProductCard from "./productcard.js";
 import { Link } from "react-router-dom";
 import { Loading } from "./pages/LandingPage.js";
 import { ProductContext } from "./context/ProductContext";
-import h1 from "./h1.jpg";
 
 const CategoryViewer = ({ tag }) => {
   const [items, setItems] = useState("");
   const { itemList } = useContext(ProductContext);
-  const [header, setHeader] = useState(h1);
-  const headEl = useRef();
 
   useEffect(() => {
     const filterList = (item) => {
@@ -47,9 +44,7 @@ const CategoryViewer = ({ tag }) => {
           }
         </p>
       </div>
-      {/*       {header && (
-        <img src={header} alt={header} ref={headEl} className="rounded-xl" />
-      )} */}
+
       <div></div>
       <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 mb-24 gap-6 font-type">
         {items.map((item) => {

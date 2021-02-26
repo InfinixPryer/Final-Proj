@@ -19,12 +19,11 @@ const Navbar = () => {
 
   return (
     <nav className="flex z-50 top-0 h-10 m-5 bg-white justify-between">
-      <img
-        src={logo}
-        alt="logo"
-        id="my-logo"
-        className="sm:pl-5 pl-2 my-auto h-2/6 sm:h-3/6"
-      />
+      <span className="my-auto">
+        <NavLink to="/">
+          <img src={logo} alt="logo" id="my-logo" className="w-52" />
+        </NavLink>
+      </span>
       <NavbarMenu />
     </nav>
   );

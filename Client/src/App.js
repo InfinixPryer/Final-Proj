@@ -22,9 +22,9 @@ const ReactRouterSetup = () => {
   return (
     <DeviceProvider>
       <CartProvider>
-        <ProductProvider>
-          <Router>
-            <Navbar />
+        <Router>
+          <Navbar />
+          <ProductProvider>
             <Switch>
               <Route exact path="/">
                 <Home />
@@ -46,8 +46,8 @@ const ReactRouterSetup = () => {
                 <Login />
               </Route>
             </Switch>
-          </Router>
-        </ProductProvider>
+          </ProductProvider>
+        </Router>
       </CartProvider>
     </DeviceProvider>
   );

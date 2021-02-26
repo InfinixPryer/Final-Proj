@@ -1,32 +1,27 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { CartContext } from "../context/CartContext.js";
+import { CartContext } from "../context/CartContext";
+import { DELETE_CART_ITEM } from "../types";
 
 const CartPage = () => {
   const { cart, dispatch } = useContext(CartContext);
-  const checkout = useRef();
   const chkPage = useHistory();
-
-  useEffect(() => {
-    console.log(cart);
-    cart.length !== 0
-      ? (checkout.current.disabled = false)
-      : (checkout.current.disabled = true);
-  }, [cart]);
 
   return (
     <>
-      <CartContainer cart={cart} dispatch={dispatch} />
-      <span
-        disabled
-        ref={checkout}
-        className="rounded-md float-right py-2 px-5 cursor-pointer text-white bg-coffee"
-        onClick={() => {
-          chkPage.push("/Checkout");
-        }}
-      >
-        Checkout
-      </span>
+      <div className="w-2/6 h-96 overflow-scroll rounded-lg relative border shadow-md m-auto p-5">
+        <CartContainer cart={cart} dispatch={dispatch} />
+        <button
+          className="my-5 absolute bottom-0 right-5 transform transition-all hover:scale-105 px-4 py-3"
+          onClick={() => {
+            if (cart.length !== 0) {
+              chkPage.push("/Checkout");
+            }
+          }}
+        >
+          Checkout
+        </button>
+      </div>
     </>
   );
 };
@@ -35,7 +30,7 @@ export const CartContainer = () => {
   const { cart, dispatch } = useContext(CartContext);
   const [total, setTotal] = useState(0);
   const handleDelete = (key) => {
-    dispatch({ type: "DELETE_CART_ITEM", payload: key });
+    dispatch({ type: DELETE_CART_ITEM, payload: key });
   };
   useEffect(() => {
     if (cart.length !== 0) {
@@ -43,7 +38,8 @@ export const CartContainer = () => {
     }
   }, [cart]);
   return (
-    <>
+    <div>
+      <span className="py-2">Your cart:</span>
       <h1 className="font-work text-xl"></h1>
       {cart.length !== 0 ? (
         <article className="p-5">
@@ -58,7 +54,7 @@ export const CartContainer = () => {
             } = item;
             return (
               <div
-                className=" text-base font-light my-2 font-type border rounded-md max-w-max hover:border-espresso shadow-sm p-3 border-gray-100"
+                className="text-base font-light my-2 font-type border rounded-md max-w-max transform transition-all hover:scale-110 hover:shadow-md shadow-sm p-3 border-gray-100"
                 key={key}
               >
                 {`${quantity} 
@@ -68,10 +64,10 @@ export const CartContainer = () => {
                 \u20b1
                 ${totalPrice}`}
                 <span
-                  className="p-2 cursor-pointer"
+                  className="p-2 cursor-pointer rounded ml-10"
                   onClick={() => handleDelete(key)}
                 >
-                  x
+                  Remove
                 </span>
               </div>
             );
@@ -81,7 +77,7 @@ export const CartContainer = () => {
       ) : (
         <span className=" w-32 m-auto text-center leading-8">No Items</span>
       )}
-    </>
+    </div>
   );
 };
 

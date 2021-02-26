@@ -4,6 +4,7 @@ import CategoryViewer from "../categoryviewer.js";
 import Footer from "../footer.js";
 import { api } from "../App.js";
 import search from "../assets/search.png";
+import vlogo from "../assets/vector-logo.jpg";
 
 const ProductPage = () => {
   const int_state = "All Products";
@@ -77,7 +78,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
       {hidden && (
         <>
           <div className="w-8/12 p-5 my-10 text-center hover:scale-150 m-auto">
-            <img src="" className="w-48 h-48 mb-10 mx-auto" />
+            <img src={vlogo} className="w-48 mb-10 mx-auto" />
             <h1>
               {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo venenatis neque eu tincidunt. Morbi eget ornare nisl, nec auctor velit. Sed fringilla at enim luctus pellentesque. Suspendisse suscipit neque maximus, laoreet velit quis, congue magna. Sed volutpat fermentum nulla, vel ultricies turpis ullamcorper sit amet."
@@ -101,7 +102,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                       handleTagSel(e);
                     }}
                   />
-                  <span className="min-w-max  text-coffee border-gray-50 block rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm py-2 px-6 mx-2">
+                  <span className="min-w-max transition-all transform hover:scale-105 text-coffee border-gray-50 block rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm py-2 px-6 mx-4">
                     {tag}
                   </span>
                 </label>
@@ -117,7 +118,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                     handleTagSel(e);
                   }}
                 />
-                <span className="min-w-max block text-coffee  border-gray-50 rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm  py-2 px-6 mx-2">
+                <span className="min-w-max transition-all transform hover:scale-105  block text-coffee  border-gray-50 rounded-full cursor-pointer shadow-clean text-center font-normal font-work text-sm  py-2 px-6 mx-2">
                   {tag}
                 </span>
               </label>

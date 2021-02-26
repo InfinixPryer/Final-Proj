@@ -6,9 +6,12 @@ const ProductCard = (props) => {
   if (options.length === 1) {
     optionsrange = `\u20b1${options[0].price}`;
   } else {
-    const high = options.reduce((obj, curr) => Math.max(obj.price, curr.price));
-    const low = options.reduce((obj, curr) => Math.min(obj.price, curr.price));
-    optionsrange = `\u20b1${low} - \u20b1${high}`;
+    const arr = options.map((op) => op.price);
+    const high = Math.max(...arr);
+    const low = Math.min(...arr);
+    if (low === high) {
+      optionsrange = `\u20b1${high}`;
+    } else optionsrange = `${low} - \u20b1${high}`;
   }
   const [img, setImg] = useState(0);
   const [slide, setSlide] = useState(null);
@@ -49,12 +52,8 @@ const ProductCard = (props) => {
       }}
       className="product-box cursor-pointer rounded group shadow-clean transform hover:-translate-y-1  hover:shadow-light w-full relative bg-white"
     >
-      <div className="overflow-hidden max-w-64 h-64 rounded-t-sm">
-        <img
-          src={productImage[img]}
-          alt={productId}
-          className="m-auto w-full"
-        />
+      <div className="overflow-hidden h-64 rounded-t-sm">
+        <img src={productImage[img]} alt={productId} className="min-h-full" />
       </div>
       <div className="pl-3 pr-3 py-1 md:py-2 max-h-32">
         <h3 className="sm:text-norm text-sm">
