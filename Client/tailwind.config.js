@@ -32,6 +32,9 @@ module.exports = {
         light: "0px 2px 4px rgb(210, 210, 210)",
         clean: "0px 1px 2px rgb(228, 228, 228)",
       },
+      backgroundImage: (theme) => ({
+        "footer-image": "url('./assets/h1.jpg')",
+      }),
     },
   },
   variants: {
@@ -39,9 +42,9 @@ module.exports = {
       backgroundColor: ["active", "disabled"],
       borderColor: ["disabled", "group-hover"],
       textColor: ["active"],
-      padding: ["group-hover"],
+      padding: ["group-hover", "hover"],
       width: ["group-hover"],
-      borderRadius: ["group-hover"],
+      borderRadius: ["group-hover", "hover"],
       fontSize: ["group-hover"],
       translate: ["group-hover", "hover"],
       outline: ["active", "focus"],

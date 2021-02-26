@@ -1,6 +1,5 @@
 import {
   GET_ITEMS,
-  DELETE_ITEMS,
   CLEAR_CART,
   DELETE_CART_ITEM,
   ADD_TO_CART,
@@ -13,8 +12,6 @@ export const productsReducer = (state, action) => {
         return state;
       }
       return action.payload;
-    case DELETE_ITEMS:
-      return state.filter((obj) => obj.productId !== action.payload);
     default:
       return state;
   }

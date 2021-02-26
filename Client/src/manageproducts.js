@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { ProductContext } from "./context/ProductContext";
 import { api } from "./App.js";
-import { Loading } from "./pages/LandingPage.js";
 
 const ManageProducts = ({ handleAdd, handleEdit }) => {
   const { itemList } = useContext(ProductContext);
@@ -21,12 +20,6 @@ const ManageProducts = ({ handleAdd, handleEdit }) => {
       });
     };
   }, []);
-
-  useEffect(() => {
-    if (itemList.length > 1) {
-      //setLoading((prev) => !prev);
-    }
-  }, [itemList]);
 
   const handleDelItems = () => {
     if (tableSelectList.length !== 0) {

@@ -2,22 +2,52 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CartContext } from "./context/CartContext";
 import { ProductContext } from "./context/ProductContext";
+import { ADD_TO_CART } from "./types";
 import { Loading } from "./pages/LandingPage.js";
+import { api } from "./App.js";
 
 export const ProductInfo = () => {
   const { product_name } = useParams();
   const { itemList } = useContext(ProductContext);
-  const [item, setItem] = useState(null);
+  const [item, setItem] = useState();
+  const adminToken = localStorage.getItem("token");
+  const [loading, setload] = useState(true);
 
   useEffect(() => {
-    const pageItem = itemList.find((item) => item.productName === product_name);
-    setItem(pageItem);
+    const fetchProduct = async () => {
+      try {
+        await api
+          .get(`/products/${product_name}`, {
+            headers: {
+              Authorization: adminToken,
+            },
+          })
+          .then((res) => {
+            setItem(res.data.product[0]);
+            console.log(res);
+          });
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setload(false);
+      }
+    };
+
+    if (itemList.length !== 0) {
+      const pageItem = itemList.find(
+        (item) => item.productName === product_name
+      );
+      setItem(pageItem);
+      setload(false);
+    } else {
+      fetchProduct();
+    }
     return () => {
       setItem({});
     };
-  }, [product_name]);
+  }, [itemList]);
 
-  return <>{item === null ? <Loading /> : <ItemPage {...item} />}</>;
+  return <>{loading ? <Loading /> : <ItemPage {...item} />}</>;
 };
 const ItemPage = ({
   productId,
@@ -40,27 +70,26 @@ const ItemPage = ({
 
   useEffect(() => {
     const update = () => {
-      let optionsrange = "";
+      let optionsrange = Number;
       if (options.length === 1) {
-        optionsrange = `${options[0].price}`;
+        optionsrange = options[0].price;
       } else {
-        const high = options.reduce((obj, curr) =>
-          Math.max(obj.price, curr.price)
-        );
-        const low = options.reduce((obj, curr) =>
-          Math.min(obj.price, curr.price)
-        );
-        optionsrange = `${low} - \u20b1${high}`;
+        const arr = options.map((op) => op.price);
+        const high = Math.max(...arr);
+        const low = Math.min(...arr);
+        if (low === high) {
+          optionsrange = high;
+        } else optionsrange = `${low} - \u20b1${high}`;
       }
       setChoice((prev) => {
-        return { ...prev, price: `${optionsrange}` };
+        return { ...prev, price: optionsrange };
       });
     };
     update();
     return () => {
       setChoice({});
     };
-  }, [options]);
+  }, []);
 
   const handleQtySelect = (e) => {
     const qty = e.target.value;
@@ -111,31 +140,31 @@ const ItemPage = ({
         {`${productName}`}
       </div>
       <div className=" w-6/12 flex flex-wrap  float-left mt-10 ml-10">
-        <div className="block h-96 w-full relative">
+        <div className="flex items-center h-96 w-full relative">
           <span
-            className="p-5 top-40 absolute left-0 cursor-pointer"
+            className="p-5 absolute left-0 text-gray-400 rounded shadow-md cursor-pointer"
             onClick={() => handleDisplayState("prev")}
           >
-            {"<"}
+            {`\u140A`}
           </span>
           <img
             src={productImage[display]}
             alt={productName}
-            className="block m-auto h-96 w-96"
+            className="block m-auto h-96"
           />
           <span
-            className="p-5 absolute bottom-44 right-0 cursor-pointer"
+            className="p-5 absolute right-0 text-gray-400 rounded shadow-md transition-colors cursor-pointer"
             onClick={() => handleDisplayState("next")}
           >
-            {">"}
+            {`\u1405`}
           </span>
         </div>
 
-        <div className=" w-96 overflow-x-scroll mx-auto">
+        <div className=" w-10/12 mb-16 overflow-x-scroll p-5 mx-auto">
           {productImage.map((img, index) => {
             return (
               <div
-                className="w-24 mt-1 mr-1 inline-block cursor-pointer border-2 border-white hover:border-darkbrown"
+                className="w-3/12 mt-1 mr-3 transition-transform transform hover:scale-110 inline-block cursor-pointer hover:border-2 hover:border-darkbrown"
                 onClick={() => setDisplay(index)}
                 key={img + productName}
               >
@@ -146,7 +175,7 @@ const ItemPage = ({
         </div>
       </div>
       <div className="float-right w-5/12 absolute pr-5 h-page right-12 flex .shadow-lg font-work flex-col bg-white p-4">
-        <h1 className=" text-2xl font-medium font-poppins pb-1">
+        <h1 className=" text-3xl font-medium font-poppins pb-1">
           {productName.toUpperCase()}
         </h1>
         <p>{type.toUpperCase()}</p>
@@ -166,7 +195,7 @@ const ItemPage = ({
             entries={preferences}
           />
         </span>
-        <span className=" flex h-12 justify-between mx-5  border-b">
+        <span className="flex h-12 justify-between mx-1 ">
           <input
             disabled
             ref={qtyInp}
@@ -175,9 +204,9 @@ const ItemPage = ({
             min="1"
             max="50"
             onChange={(e) => handleQtySelect(e)}
-            className="w-20 h-10 "
+            className="w-24 h-10 "
           />
-          <p className=" text-coffee text-2xl my-auto ">
+          <p className=" text-coffee text-4xl my-auto ">
             {"\u20b1" + choices.price}
           </p>
         </span>
@@ -210,7 +239,7 @@ const PreferenceSpan = ({ productName, handleSelect, entries }) => {
                 handleSelect(e);
               }}
             />
-            <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
+            <span className="inline-block mb-1 min-w-1/4 text-center border font-normal font-work text-sm rounded px-4 py-3 mx-1 transition-colors">
               {entry}
             </span>
           </label>
@@ -237,7 +266,7 @@ const OptionsSpan = ({ productName, handleSelect, entries }) => {
                 handleSelect(entry);
               }}
             />
-            <span className="border inline-block mb-1 min-w-1/4 text-center border-darkbrown font-normal font-work text-sm rounded px-3 py-2 mx-1 transition-colors">
+            <span className=" inline-block mb-1 min-w-1/4 text-center border font-normal font-work text-sm rounded px-4 py-3 mx-1 transition-colors">
               {key}
             </span>
           </label>
@@ -268,7 +297,7 @@ const AddtoCartBtn = ({ choices, productId, productName, preferences }) => {
       };
       if (!current.includes(selectedItem.key)) {
         setCurrent(current.concat(selectedItem.key));
-        dispatch({ type: "ADD_TO_CART", payload: selectedItem });
+        dispatch({ type: ADD_TO_CART, payload: selectedItem });
       }
     }
   };

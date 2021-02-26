@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ManageProducts from "../manageproducts.js";
 import ManageOrders from "../manageorders.js";
+import ManageCartInfo from "../managecartinfos.js";
 import PatchItem from "../addnewproduct.js";
-import { api } from "../App.js";
 
 const Admin = () => {
-  const [orders, setOrders] = useState([]);
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState({ state: false, item: "" });
 
@@ -20,9 +19,6 @@ const Admin = () => {
       };
     });
   };
-  useEffect(() => {
-    setOrders(orders);
-  }, []);
 
   if (adding) {
     return <PatchItem item={null} handleAdd={handleAdd} />;
@@ -32,7 +28,8 @@ const Admin = () => {
   return (
     <>
       <ManageProducts handleEdit={handleEdit} handleAdd={handleAdd} />
-      <ManageOrders orders={orders} />
+      <ManageOrders />
+      <ManageCartInfo />
     </>
   );
 };

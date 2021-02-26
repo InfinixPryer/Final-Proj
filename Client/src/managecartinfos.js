@@ -1,34 +1,34 @@
 import React, { useEffect, useState, useRef } from "react";
 import { api } from "./App.js";
 
-const ManageOrders = () => {
-  const [ordArr, setArr] = useState([]);
+const ManageCartInfo = () => {
+  const [carts, setCart] = useState([]);
   const [tableSelectList, setList] = useState([]);
   const adminToken = localStorage.getItem("token");
   const delSelBtn = useRef();
 
-  const getOrders = async () => {
+  const getCarts = async () => {
     try {
-      const res = await api.get("/orders");
-      setArr(res.data.orders);
+      const res = await api.get("/carts");
+      setCart(res.data.carts);
     } catch (err) {
       console.error(err);
     }
   };
 
   useEffect(() => {
-    getOrders();
+    getCarts();
   }, []);
 
   const handleDelItems = () => {
     if (tableSelectList.length !== 0) {
       tableSelectList.forEach((id) => {
-        api.delete(`/orders/${id}`, {
+        api.delete(`/carts/${id}`, {
           headers: {
             Authorization: adminToken,
           },
         });
-        getOrders();
+        getCarts();
       });
     }
     setList([]);
@@ -50,7 +50,7 @@ const ManageOrders = () => {
   return (
     <>
       <div className="p-5 rounded bg-white m-2 shadow">
-        <h1 className="">ORDER ITEMS</h1>{" "}
+        <h1 className="">ORDERS</h1>{" "}
         <button
           onClick={() => handleDelItems()}
           ref={delSelBtn}
@@ -65,41 +65,49 @@ const ManageOrders = () => {
           <thead>
             <tr className="text-xs bottom top-0 h-8 bg-black z-10 text-white shadow-lg">
               <th>{`\u2713`}</th>
-              <th>ID</th>
-              <th>PRODUCT ID</th>
-              <th>QUANTITY</th>
-              <th>OPTION</th>
+              <th>ORDER IDS</th>
+              <th>DATE</th>
+              <th>NAME</th>
+              <th>ADDRESS</th>
+              <th>CONTACT</th>
               <th>TOTAL</th>
             </tr>
           </thead>
           <tbody>
-            {ordArr.map(
+            {carts.map(
               ({
-                orderId,
-                productId,
-                quantity,
-                selectedOption,
-                selectedPreference,
+                orderIds,
+                cartId,
+                cusName,
+                cusAddress,
+                cusPhone,
+                cusEmail,
+                orderDate,
                 totalPrice,
               }) => {
                 return (
-                  <tr key={orderId} className="font-source text-sm">
+                  <tr key={cartId} className="font-source text-sm">
                     <td className="">
                       <label className="w-8 mx-auto h-10 flex">
                         <input
                           type="checkbox"
                           className="m-auto"
-                          value={orderId}
+                          value={cartId}
                           onChange={(e) => handleSelect(e)}
                         />
                       </label>
                     </td>
-                    <td>{orderId}</td>
-                    <td>{productId}</td>
-                    <td>{quantity}</td>
                     <td>
-                      <span>{selectedOption}</span>
-                      <span>{selectedPreference}</span>
+                      {orderIds.map((id) => (
+                        <span key={id}>{id}</span>
+                      ))}
+                    </td>
+                    <td>{orderDate}</td>
+                    <td>{cusName}</td>
+                    <td>{cusAddress}</td>
+                    <td>
+                      <span className="block">{cusPhone}</span>
+                      <span>{cusEmail}</span>
                     </td>
                     <td>{totalPrice}</td>
                   </tr>
@@ -113,4 +121,4 @@ const ManageOrders = () => {
     </>
   );
 };
-export default ManageOrders;
+export default ManageCartInfo;
