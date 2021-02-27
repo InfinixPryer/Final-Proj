@@ -53,7 +53,11 @@ const ProductCard = (props) => {
       className="product-box cursor-pointer rounded group shadow-clean transform hover:-translate-y-1  hover:shadow-light w-full relative bg-white"
     >
       <div className="overflow-hidden h-64 rounded-t-sm">
-        <img src={productImage[img]} alt={productId} className="min-h-full" />
+        <img
+          src={`../${productImage[img]}`}
+          alt={productId}
+          className="min-h-full"
+        />
       </div>
       <div className="pl-3 pr-3 py-1 md:py-2 max-h-32">
         <h3 className="sm:text-norm text-sm">

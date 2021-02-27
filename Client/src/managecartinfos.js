@@ -9,13 +9,12 @@ const ManageCartInfo = () => {
 
   const getCarts = async () => {
     try {
-      await fetch("/carts", {
+      const res = await api.get("/carts", {
         headers: {
           Authorization: adminToken,
         },
-      })
-        .then((res) => res.json())
-        .then((data) => setCart(data.carts));
+      });
+      setCart(res.data.carts);
     } catch (err) {
       console.error(err);
     }
