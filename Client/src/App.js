@@ -15,7 +15,7 @@ import Admin from "./pages/AdminPage";
 import Login from "./pages/LoginPage";
 
 export const api = axios.create({
-  baseURL: "https://testcofmon.herokuapp.com/",
+  baseURL: "http://localhost:9000/",
 });
 
 const ReactRouterSetup = () => {
