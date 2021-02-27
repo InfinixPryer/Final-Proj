@@ -27,11 +27,11 @@ mongoose.connect(
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
 
-mongoose.connection.on('connected', function(){
-  console.log("MONGOOOSE CONNNEEECTEEEEDDD");
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.JWT_KEY);
-})
+// mongoose.connection.on('connected', function(){
+//   console.log("MONGOOOSE CONNNEEECTEEEEDDD");
+//   console.log(process.env.NODE_ENV);
+//   console.log(process.env.JWT_KEY);
+// })
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -57,7 +57,6 @@ if(process.env.NODE_ENV === "production"){
     res.send("Api is running")
   })
 }
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
