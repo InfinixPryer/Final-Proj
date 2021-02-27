@@ -34,6 +34,7 @@ mongoose.connect(
 //   console.log(process.env.JWT_KEY);
 // })
 
+app.use(express.static('photos'))
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "500mb" }));
@@ -42,10 +43,10 @@ app.use(express.json({ limit: "500mb" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/admin", userRoutes);
-app.use("/products", productRoutes);
-app.use("/orders", orderRoutes.router);
-app.use("/carts", cartRoutes);
+app.use("/api/admin", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/orders", orderRoutes.router);
+app.use("/api/carts", cartRoutes);
 
 if(process.env.NODE_ENV === "production"){
   app.use(express.static(path.join(__dirname, '/Client/build')));
