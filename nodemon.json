@@ -1,0 +1,8 @@
+{
+    "env": {
+        "PORT": 9000,
+        "JWT_KEY": "secreeet",
+        "MONGO_URI": "mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
+        "NODE_ENV": "production"
+    }
+}

@@ -10,6 +10,7 @@ var bodyParser = require("body-parser");
 var app = express();
 app.use(cors());
 
+
 var userRoutes = require("./routes/user");
 var productRoutes = require("./routes/product");
 var orderRoutes = require("./routes/order");
@@ -22,9 +23,15 @@ mongoose.set("useNewUrlParser", true);
 //mongoose.connect("mongodb://localhost:27017/database");
 
 mongoose.connect(
-  "mongodb+srv://angelokail:CoffeeMonkey@coffeemonkey.4ayjd.mongodb.net/database?retryWrites=true&w=majority",
+  process.env.MONGO_URI,
   { useNewUrlParser: true, useUnifiedTopology: true }
 );
+
+// mongoose.connection.on('connected', function(){
+//   console.log("MONGOOOSE CONNNEEECTEEEEDDD");
+//   console.log(process.env.NODE_ENV);
+//   console.log(process.env.JWT_KEY);
+// })
 
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,6 +45,7 @@ app.use("/admin", userRoutes);
 app.use("/products", productRoutes);
 app.use("/orders", orderRoutes.router);
 app.use("/carts", cartRoutes);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -55,5 +63,19 @@ app.use(function (err, req, res, next) {
     },
   });
 });
+
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname, '/Client/build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client', 'build', 'index.js'))
+  })
+}else{
+  app.get('/', (req, res) => {
+    res.send("Api is running")
+  })
+}
+
+
 
 module.exports = app;
