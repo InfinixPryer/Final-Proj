@@ -129,7 +129,7 @@ router.post("/"/*, authenticate*/ /*upload.array("productImage", 10)*/,(req, res
       const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
-        productImage: req.files.path,
+        productImage: req.files.productImage,
         availability: req.body.availability,
         type: req.body.type,
         details: req.body.details,
