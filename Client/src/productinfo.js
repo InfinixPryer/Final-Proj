@@ -45,7 +45,7 @@ export const ProductInfo = () => {
     return () => {
       setItem({});
     };
-  }, [itemList]);
+  }, [itemList, product_name, adminToken]);
 
   return <>{loading ? <Loading /> : <ItemPage {...item} />}</>;
 };
@@ -89,7 +89,7 @@ const ItemPage = ({
     return () => {
       setChoice({});
     };
-  }, []);
+  }, [options]);
 
   const handleQtySelect = (e) => {
     const qty = e.target.value;
