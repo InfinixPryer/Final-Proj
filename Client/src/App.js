@@ -15,7 +15,7 @@ import Admin from "./pages/AdminPage";
 import Login from "./pages/LoginPage";
 
 export const api = axios.create({
-  baseURL: '/api/',
+  baseURL: "http://localhost:9000/api/",
 });
 
 const ReactRouterSetup = () => {
