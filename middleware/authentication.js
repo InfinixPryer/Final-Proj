@@ -7,6 +7,7 @@ module.exports = (req, res, next) => {
         req.userDate = decoded;
         next();
     } catch (error) {
+        console.log(error);
         return res.status(401).json({
             message: 'Login failed'
         })
