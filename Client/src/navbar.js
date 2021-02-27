@@ -31,7 +31,6 @@ const Navbar = () => {
 const NavbarMenu = () => {
   const { cart } = useContext(CartContext);
   useEffect(() => {
-    console.table(cart);
   }, [cart]);
   return (
     <div className=" w-3/12 justify-end text-base flex-row flex">
