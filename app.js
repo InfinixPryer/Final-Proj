@@ -47,7 +47,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes.router);
 app.use("/api/carts", cartRoutes);
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "/Client/build")));
 
   app.get("*", (req, res) => {
