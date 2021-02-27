@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
+const fs = require('fs');
 
 const Product = require("../models/productModel");
 const authenticate = require("../middleware/authentication")
@@ -190,6 +191,15 @@ router.patch("/:productId"/*, authenticate*/, (req, res, next) => {
 
 router.delete("/:productId"/*, authenticate*/, (req, res, next) => {
   const id = req.params.productId;
+  Product.find({productId: id})
+  .select('productImage')
+  .exec()
+  .then(result => {
+    result[0].productImage.map(img => {
+      console.log(img);
+      fs.unlinkSync(img);
+    })
+  })
   Product.deleteOne({ productId: id })
     .exec()
     .then((result) => {
