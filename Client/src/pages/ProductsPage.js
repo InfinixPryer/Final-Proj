@@ -37,26 +37,20 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
   const [hidden, setHide] = useState(true);
   const int_btn = useRef();
 
-  const config = {
-    method: "GET",
-  };
-
   useEffect(() => {
     const getTags = async () => {
       try {
-        await fetch("products/tags", config)
-          .then((res) => res.json())
-          .then((data) =>
-            setTags((prev) => {
-              let arr = [];
-              data.forEach((tag) => {
-                if (!prev.includes(tag)) {
-                  arr.push(tag);
-                } else return;
-              });
-              return prev.concat(arr);
-            })
-          );
+        const res = await api.get("products/tags");
+        setTags((prev) => {
+          let arr = [];
+          console.log(res.data);
+          res.data.forEach((tag) => {
+            if (!prev.includes(tag)) {
+              arr.push(tag);
+            } else return;
+          });
+          return prev.concat(arr);
+        });
       } catch (error) {
         console.error(error);
       }
@@ -69,7 +63,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
       setTags([int_state]);
       setHide(true);
     };
-  }, []);
+  }, [int_state]);
 
   const handleChange = (e) => {
     setQuery(e.target.value);
