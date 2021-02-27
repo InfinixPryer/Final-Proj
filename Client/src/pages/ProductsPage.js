@@ -37,25 +37,38 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
   const [hidden, setHide] = useState(true);
   const int_btn = useRef();
 
+  const config = {
+    method: "GET",
+  };
+
   useEffect(() => {
     const getTags = async () => {
       try {
-        const res = await api.get("products/tags");
-        setTags((prev) => {
-          let arr = [];
-          res.data.some((tag) => {
-            if (!prev.includes(tag)) {
-              arr.push(tag);
-            }
-          });
-          return prev.concat(arr);
-        });
+        await fetch("products/tags", config)
+          .then((res) => res.json())
+          .then((data) =>
+            setTags((prev) => {
+              let arr = [];
+              data.forEach((tag) => {
+                if (!prev.includes(tag)) {
+                  arr.push(tag);
+                } else return;
+              });
+              return prev.concat(arr);
+            })
+          );
       } catch (error) {
         console.error(error);
       }
     };
     getTags();
     int_btn.current.checked = true;
+
+    return () => {
+      setQuery("");
+      setTags([int_state]);
+      setHide(true);
+    };
   }, []);
 
   const handleChange = (e) => {
@@ -78,7 +91,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
       {hidden && (
         <>
           <div className="w-8/12 p-5 my-10 text-center hover:scale-150 m-auto">
-            <img src={vlogo} className="w-48 mb-10 mx-auto" />
+            <img src={vlogo} alt="logo" className="w-48 mb-10 mx-auto" />
             <h1>
               {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo venenatis neque eu tincidunt. Morbi eget ornare nisl, nec auctor velit. Sed fringilla at enim luctus pellentesque. Suspendisse suscipit neque maximus, laoreet velit quis, congue magna. Sed volutpat fermentum nulla, vel ultricies turpis ullamcorper sit amet."

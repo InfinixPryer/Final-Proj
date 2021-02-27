@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import { DELETE_CART_ITEM } from "../types";
@@ -40,7 +40,6 @@ export const CartContainer = () => {
   return (
     <div>
       <span className="py-2">Your cart:</span>
-      <h1 className="font-work text-xl"></h1>
       {cart.length !== 0 ? (
         <article className="p-5">
           {cart.map((item) => {

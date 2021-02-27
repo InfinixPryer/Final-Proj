@@ -16,7 +16,10 @@ const PatchItem = ({ item }) => {
   const [urlId, setUrl] = useState("");
   const [tag, setTag] = useState("");
   const [pref, setPref] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState({
+    src: "",
+    file: "",
+  });
   const [newOption, setOption] = useState({
     name: "",
     price: "",
@@ -29,7 +32,7 @@ const PatchItem = ({ item }) => {
       setNewItem(item);
       setUrl(item.productId);
     }
-  }, []);
+  }, [item]);
 
   useEffect(() => {
     console.log(patchedProps);
@@ -47,11 +50,9 @@ const PatchItem = ({ item }) => {
   } = newItem;
 
   const adminToken = localStorage.getItem("token");
-  const config = {
-    headers: {
-      Authorization: adminToken,
-    },
-  };
+  useEffect(() => {
+    console.log(newItem);
+  }, [productImage]);
 
   const handleChange = (e) => {
     const data = e.target.value;
@@ -69,15 +70,16 @@ const PatchItem = ({ item }) => {
         setNewItem({ ...newItem, type: data });
         break;
       case "imgs":
+        const fd = new FormData();
         const reader = new FileReader();
         const imgToUp = e.target.files[0];
+        fd.append("file", imgToUp);
 
-        if (imgToUp) {
-          reader.addEventListener("loadend", () => {
-            setImage(reader.result);
-          });
-          reader.readAsDataURL(imgToUp);
-        }
+        reader.addEventListener("loadend", () => {
+          setImage({ file: fd, src: reader.result });
+        });
+        reader.readAsDataURL(imgToUp);
+        //console.log(imgToUp);
         break;
       case "option":
         setOption({ ...newOption, name: data });
@@ -90,6 +92,7 @@ const PatchItem = ({ item }) => {
         break;
       case "prefs":
         setPref(data);
+        break;
       default:
         break;
     }
@@ -128,16 +131,31 @@ const PatchItem = ({ item }) => {
     setNewItem({ ...newItem, [name]: nVal });
   };
 
+  const handleDelImg = (im) => {
+    const nVal = productImage.filter((i) => i.src !== im);
+    setNewItem({ ...newItem, productImage: nVal });
+  };
+
   const handleDelOpt = (opt) => {
     const nOpts = options.filter((o) => o.name !== opt);
     setNewItem({ ...newItem, options: nOpts });
   };
 
   const handleSubmit = (event) => {
+    const images = productImage.map((i) => i.file);
+    setNewItem({ ...newItem, productImage: images });
+
     event.preventDefault();
+    const config = {
+      method: "POST",
+      body: JSON.stringify(newItem),
+      headers: {
+        Authorization: adminToken,
+      },
+    };
     if (newItem.options.length > 0) {
       try {
-        api.post("products", newItem, config).then(() => {
+        fetch("products", config).then(() => {
           setMes("Added!");
           messpan.current.hidden = false;
           window.location.reload();
@@ -151,8 +169,18 @@ const PatchItem = ({ item }) => {
     }
   };
 
-  const handleSave = (event) => {
+  const handleSave = async (event) => {
     event.preventDefault();
+    const images = productImage.map((i) => i.file);
+    setNewItem({ ...newItem, productImage: images });
+
+    const config = {
+      method: "PATCH",
+      body: JSON.stringify(newItem),
+      headers: {
+        Authorization: adminToken,
+      },
+    };
     if (item && newItem !== item) {
       for (const key in newItem) {
         if (newItem.hasOwnProperty(key) && item[key] !== newItem[key]) {
@@ -165,9 +193,9 @@ const PatchItem = ({ item }) => {
       }
 
       try {
-        api
-          .patch(`products/${urlId}`, patchedProps, config)
-          .then(() => window.location.reload());
+        await fetch(`products/${urlId}`, config).then(() =>
+          window.location.reload()
+        );
       } catch (error) {
         console.error(error);
       }
@@ -179,11 +207,15 @@ const PatchItem = ({ item }) => {
       <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
         <div className="grid grid-cols-2 overflow-y-scroll px-4 float-right w-3/6">
           {productImage.map((im) => {
+            let img;
+            if (typeof im === "string") {
+              img = im;
+            } else img = im.src;
             return (
-              <span key={im} className=" max-h-64 overflow-auto relative">
-                <img src={im} alt="preview" />
+              <span key={img} className=" max-h-64 overflow-auto relative">
+                <img src={img} alt="preview" />
                 <span
-                  onClick={() => handleDel(im, `productImage`, productImage)}
+                  onClick={() => handleDelImg(img)}
                   className="rounded-full absolute bottom-3 cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
                 >
                   {`\u2715`}
