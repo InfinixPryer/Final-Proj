@@ -117,7 +117,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.post("/", authenticate /*upload.array("productImage", 10)*/,(req, res, next) => {
+router.post("/"/*, authenticate*/ /*upload.array("productImage", 10)*/,(req, res, next) => {
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
@@ -168,7 +168,7 @@ router.post("/", authenticate /*upload.array("productImage", 10)*/,(req, res, ne
   });
 });
 
-router.patch("/:productId", authenticate, (req, res, next) => {
+router.patch("/:productId"/*, authenticate*/, (req, res, next) => {
   const id = req.params.productId;
   const updateBody = req.body;
   Product.updateOne({ productId: id }, { $set: updateBody })
@@ -183,7 +183,7 @@ router.patch("/:productId", authenticate, (req, res, next) => {
     });
 });
 
-router.delete("/:productId", authenticate, (req, res, next) => {
+router.delete("/:productId"/*, authenticate*/, (req, res, next) => {
   const id = req.params.productId;
   Product.deleteOne({ productId: id })
     .exec()

@@ -6,7 +6,7 @@ const Order = require('../models/orderItemModel');
 const Product = require('../models/productModel');
 const authenticate = require('../middleware/authentication');
 
-router.get('/', authenticate, (req, res, next) => {
+router.get('/'/*, authenticate*/, (req, res, next) => {
     Order.find()
     .select('-__v -_id')
     .exec()
@@ -25,7 +25,7 @@ router.get('/', authenticate, (req, res, next) => {
     })
 });
 
-router.post('/', authenticate, (req, res, next) => {
+router.post('/'/*, authenticate*/, (req, res, next) => {
     postOrder(req.body)
         .then((order) => {
             if(result.status === 404){
@@ -52,7 +52,7 @@ router.post('/', authenticate, (req, res, next) => {
         })
 });
 
-router.get('/:orderId', authenticate, (req, res, next) => {
+router.get('/:orderId'/*, authenticate*/, (req, res, next) => {
     Order.find({orderId: req.params.orderId})
     .select('-__v -_id')
     .exec()

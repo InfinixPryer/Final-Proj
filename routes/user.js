@@ -8,7 +8,7 @@ const User = require("../models/userModel");
 const authenticate = require('../middleware/authentication');
 
 /* GET users listing. */
-router.get("/", authenticate, function (req, res, next) {
+router.get("/"/*, authenticate*/, function (req, res, next) {
   User.find()
   .select('-__v -_id')
   .exec()
@@ -112,7 +112,7 @@ router.post("/login", (req, res, next) => {
     });
 });
 
-router.delete("/:username", authenticate,(req, res, next) => {
+router.delete("/:username", /*, authenticate*/(req, res, next) => {
   User.deleteOne({ username: req.params.username })
     .exec()
     .then((result) => {
