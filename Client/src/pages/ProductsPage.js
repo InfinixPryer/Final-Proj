@@ -43,7 +43,6 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
         const res = await api.get("products/tags");
         setTags((prev) => {
           let arr = [];
-          console.log(res.data);
           res.data.forEach((tag) => {
             if (!prev.includes(tag)) {
               arr.push(tag);
