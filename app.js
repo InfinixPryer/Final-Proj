@@ -34,7 +34,7 @@ mongoose.connect(
 //   console.log(process.env.JWT_KEY);
 // })
 
-app.use(express.static('photos'))
+app.use('/photos',express.static('photos'));
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "500mb" }));
