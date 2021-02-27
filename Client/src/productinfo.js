@@ -148,7 +148,7 @@ const ItemPage = ({
             {`\u140A`}
           </span>
           <img
-            src={productImage[display]}
+            src={`../${productImage[display]}`}//productImage[display]
             alt={productName}
             className="block m-auto h-96"
           />
@@ -168,7 +168,7 @@ const ItemPage = ({
                 onClick={() => setDisplay(index)}
                 key={img + productName}
               >
-                <img src={img} alt={productName} key={productName + img} />
+                <img src={`../${img}`} alt={productName} key={productName + img} />
               </div>
             );
           })}
