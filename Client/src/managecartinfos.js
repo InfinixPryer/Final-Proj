@@ -9,29 +9,33 @@ const ManageCartInfo = () => {
 
   const getCarts = async () => {
     try {
-      const res = await api.get("/carts");
-      setCart(res.data.carts);
+      await fetch("/carts", {
+        headers: {
+          Authorization: adminToken,
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => setCart(data.carts));
     } catch (err) {
       console.error(err);
     }
   };
 
-  useEffect(() => {
-    getCarts();
-  }, []);
+  useEffect(getCarts, [adminToken]);
 
   const handleDelItems = () => {
     if (tableSelectList.length !== 0) {
       tableSelectList.forEach((id) => {
-        api.delete(`/carts/${id}`, {
+        fetch(`/carts/${id}`, {
+          method: "DELETE",
           headers: {
             Authorization: adminToken,
           },
         });
-        getCarts();
       });
     }
     setList([]);
+    getCarts();
   };
 
   const handleSelect = (e) => {
@@ -65,7 +69,7 @@ const ManageCartInfo = () => {
           <thead>
             <tr className="text-xs bottom top-0 h-8 bg-black z-10 text-white shadow-lg">
               <th>{`\u2713`}</th>
-              <th>ORDER IDS</th>
+              <th>ORDERS</th>
               <th>DATE</th>
               <th>NAME</th>
               <th>ADDRESS</th>
@@ -74,50 +78,94 @@ const ManageCartInfo = () => {
             </tr>
           </thead>
           <tbody>
-            {carts.map(
-              ({
-                orderIds,
-                cartId,
-                cusName,
-                cusAddress,
-                cusPhone,
-                cusEmail,
-                orderDate,
-                totalPrice,
-              }) => {
-                return (
-                  <tr key={cartId} className="font-source text-sm">
-                    <td className="">
-                      <label className="w-8 mx-auto h-10 flex">
-                        <input
-                          type="checkbox"
-                          className="m-auto"
-                          value={cartId}
-                          onChange={(e) => handleSelect(e)}
-                        />
-                      </label>
-                    </td>
-                    <td>
-                      {orderIds.map((id) => (
-                        <span key={id}>{id}</span>
-                      ))}
-                    </td>
-                    <td>{orderDate}</td>
-                    <td>{cusName}</td>
-                    <td>{cusAddress}</td>
-                    <td>
-                      <span className="block">{cusPhone}</span>
-                      <span>{cusEmail}</span>
-                    </td>
-                    <td>{totalPrice}</td>
-                  </tr>
-                );
-              }
-            )}
+            <Carts
+              carts={carts}
+              adminToken={adminToken}
+              handleSelect={handleSelect}
+            />
           </tbody>
           <tfoot></tfoot>
         </table>
       </div>
+    </>
+  );
+};
+const Carts = ({ carts, adminToken, handleSelect }) => {
+  return carts.map(
+    ({
+      orderIds,
+      cartId,
+      cusName,
+      cusAddress,
+      cusPhone,
+      cusEmail,
+      orderDate,
+      totalPrice,
+    }) => {
+      return (
+        <tr key={cartId} className="font-source text-sm">
+          <td className="">
+            <label className="w-8 mx-auto h-10 flex">
+              <input
+                type="checkbox"
+                className="m-auto"
+                value={cartId}
+                onChange={(e) => handleSelect(e)}
+              />
+            </label>
+          </td>
+          <td>
+            <Orders orderIds={orderIds} adminToken={adminToken} carts={carts} />
+          </td>
+          <td>{orderDate}</td>
+          <td>{cusName}</td>
+          <td>{cusAddress}</td>
+          <td>
+            <span className="block">{cusPhone}</span>
+            <span>{cusEmail}</span>
+          </td>
+          <td>{totalPrice}</td>
+        </tr>
+      );
+    }
+  );
+};
+
+const Orders = ({ orderIds, adminToken, carts }) => {
+  const [ordArr, setOrds] = useState([]);
+
+  useEffect(() => {
+    const getOrder = async (id) => {
+      try {
+        const res = await api.get(`/orders/${id}`, {
+          headers: {
+            Authorization: adminToken,
+          },
+        });
+        const data = res.data.order;
+        setOrds((prev) => prev.concat(data));
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    orderIds.forEach((id) => getOrder(id));
+    return () => {
+      setOrds([]);
+    };
+  }, [orderIds, adminToken, carts]);
+
+  return (
+    <>
+      {ordArr.map((ord) => {
+        return (
+          <span key={ord.orderId}>
+            <span className="">{ord.quantity}</span>
+            <span className="block">{ord.productId}</span>
+            <span className="block">{`${ord.selectedOption} ${ord.selectedPreference}`}</span>
+          </span>
+        );
+      })}
     </>
   );
 };

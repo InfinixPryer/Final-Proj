@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import ProductCard from "./productcard.js";
 import { Link } from "react-router-dom";
 import { Loading } from "./pages/LandingPage.js";

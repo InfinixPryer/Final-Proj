@@ -31,14 +31,17 @@ const Checkout = () => {
   });
 
   useEffect(() => {
-    setOrder({ ...orderInfo, cusName: `${fullname.fname} ${fullname.lname}` });
+    setOrder((ord) => ({
+      ...ord,
+      cusName: `${fullname.fname} ${fullname.lname}`,
+    }));
   }, [fullname]);
 
   useEffect(() => {
     if (cart.length !== 0) {
       const total = cart.map((i) => i.totalPrice).reduce((p, t) => p + t);
-      setOrder({ ...orderInfo, totalPrice: total });
-    } else setOrder({ ...orderInfo, totalPrice: 0 });
+      setOrder((ord) => ({ ...ord, totalPrice: total }));
+    } else setOrder((ord) => ({ ...ord, totalPrice: 0 }));
   }, [cart]);
 
   useEffect(() => {
@@ -66,6 +69,7 @@ const Checkout = () => {
         break;
       case "email":
         setOrder({ ...orderInfo, cusEmail: data });
+        break;
       default:
         break;
     }
