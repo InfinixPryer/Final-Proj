@@ -7,7 +7,7 @@ const authenticate = require("../middleware/authentication")
 
 router.get("/", (req, res, next) => {
   Product.find()
-    .select("-__v -_id -options._id")
+    .select("-__v -_id -options._id -productImage")
     .exec()
     .then((docs) => {
       const response = {
