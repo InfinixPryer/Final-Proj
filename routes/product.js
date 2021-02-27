@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
 const fs = require('fs');
+const { getFile, postFile, deleteFile } = require("../service/boxService");
 
 const Product = require("../models/productModel");
 const authenticate = require("../middleware/authentication")
@@ -126,11 +127,11 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
       res.status(409).json({
         message: "Product Already Exists!"
       })
-    }else{
+    } else {
       const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
-        productImage: [...req.files.map(f => f.path)],
+        productImage: [...req.files.map(f => f.filename)],
         availability: req.body.availability,
         type: req.body.type,
         details: req.body.details,
@@ -139,8 +140,12 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
         bundleItems: req.body.bundleItems,
         tags: req.body.tags,
       });
-      product
-        .save()
+
+      Promise.all(req.files.map(f => postFile(f.filename, fs.createReadStream(f.path))))
+        .then(() => {
+          req.files.map(f => fs.unlink(f.path, () => {}));
+          return product.save();
+        })
         .then((result) => {
           res.status(201).json({
             message: "Product saved successfully!",
