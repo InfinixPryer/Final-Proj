@@ -1,30 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-// const multer = require('multer');
+const multer = require('multer');
 
 const Product = require("../models/productModel");
 const authenticate = require("../middleware/authentication")
 
-// const storage = multer.diskStorage({
-//   destination: './photos/',
-//   filename: function(req, file, cb){
-//     cb(null, Date.now() + file.originalname);
-//   }
-// })
+const storage = multer.diskStorage({
+  destination: './photos/',
+  filename: function(req, file, cb){
+    cb(null, Date.now() + file.originalname);
+  }
+})
 
-// const fileFilter = (req, file, cb) => {
-//   if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
-//     cb(null, true);
-//   }else{
-//     cb(null, false);
-//   }
-// }
+const fileFilter = (req, file, cb) => {
+  if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+    cb(null, true);
+  }else{
+    cb(null, false);
+  }
+}
 
-// const upload = multer({
-//   storage: storage,
-//   fileFilter: fileFilter
-// });
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter
+});
 
 router.get("/", (req, res, next) => {
   Product.find()
@@ -117,7 +117,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.post("/"/*, authenticate*/ /*upload.array("productImage", 10)*/,(req, res, next) => {
+router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, next) => {
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
@@ -129,12 +129,12 @@ router.post("/"/*, authenticate*/ /*upload.array("productImage", 10)*/,(req, res
       const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
-        productImage: req.body.productImage,
+        productImage: [...req.files.map(f => f.path)],
         availability: req.body.availability,
         type: req.body.type,
         details: req.body.details,
-        options: req.body.options,
-        preferences: req.body.preferences,
+        options: JSON.parse(req.body.options),
+        preferences: JSON.parse(req.body.preferences),
         bundleItems: req.body.bundleItems,
         tags: req.body.tags,
       });
@@ -144,18 +144,23 @@ router.post("/"/*, authenticate*/ /*upload.array("productImage", 10)*/,(req, res
           res.status(201).json({
             message: "Product saved successfully!",
             createdProduct: {
-              productId: req.body.productId,
-              productName: req.body.productName,
-              price: req.body.price,
-              productImage: req.body.productImage,
-              availability: req.body.availability,
-              type: req.body.type,
-              details: req.body.details,
-              options: req.body.options,
-              preferences: req.body.preferences,
-              bundleItems: req.body.bundleItems,
-              tags: req.body.tags,
+              productId: result.productId,
+              productName: result.productName,
+              price: result.price,
+              productImage: result.productImage,
+              availability: result.availability,
+              type: result.type,
+              details: result.details,
+              options: result.options,
+              preferences: result.preferences,
+              bundleItems: result.bundleItems,
+              tags: result.tags,
             },
+          });
+        })
+        .catch((err) => {
+          res.status(500).json({
+            error: err.message,
           });
         })
     }
