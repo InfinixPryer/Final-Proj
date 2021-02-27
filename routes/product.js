@@ -3,8 +3,8 @@ const router = express.Router();
 const mongoose = require("mongoose");
 // const multer = require('multer');
 
-// const Product = require("../models/productModel");
-// const authenticate = require("../middleware/authentication")
+const Product = require("../models/productModel");
+const authenticate = require("../middleware/authentication")
 
 // const storage = multer.diskStorage({
 //   destination: './photos/',
