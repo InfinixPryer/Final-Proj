@@ -117,7 +117,7 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.post("/", authenticate, /*upload.array("productImage", 10)*/,(req, res, next) => {
+router.post("/", authenticate /*upload.array("productImage", 10)*/,(req, res, next) => {
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
