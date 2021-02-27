@@ -20,21 +20,39 @@ const ManageCartInfo = () => {
     }
   };
 
-  useEffect(getCarts, [adminToken]);
+  useEffect(() => {
+    getCarts();
+    return () => {
+      setCart([]);
+      setList([]);
+    };
+  }, []);
 
   const handleDelItems = () => {
-    if (tableSelectList.length !== 0) {
-      tableSelectList.forEach((id) => {
-        fetch(`/carts/${id}`, {
-          method: "DELETE",
-          headers: {
-            Authorization: adminToken,
-          },
-        });
-      });
+    async function call() {
+      if (tableSelectList.length !== 0) {
+        for await (const id of tableSelectList) {
+          api
+            .delete(`/carts/${id}`, {
+              headers: {
+                Authorization: adminToken,
+              },
+            })
+            .then((res) => {
+              console.log(res.data);
+              getCarts();
+            });
+        }
+      }
     }
-    setList([]);
-    getCarts();
+
+    try {
+      call();
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setList([]);
+    }
   };
 
   const handleSelect = (e) => {

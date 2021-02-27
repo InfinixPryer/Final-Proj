@@ -6,7 +6,7 @@ import PatchItem from "../addnewproduct.js";
 const Admin = () => {
   const [adding, setAdding] = useState(false);
   const [editing, setEditing] = useState({ state: false, item: "" });
-  const [carts, setCart] = useState([]);
+  //const [carts, setCart] = useState([]);
   const adminToken = localStorage.getItem("token");
 
   useEffect(() => {

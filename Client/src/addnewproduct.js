@@ -16,10 +16,7 @@ const PatchItem = ({ item }) => {
   const [urlId, setUrl] = useState("");
   const [tag, setTag] = useState("");
   const [pref, setPref] = useState("");
-  const [image, setImage] = useState({
-    src: "",
-    file: "",
-  });
+  const [image, setImage] = useState();
   const [newOption, setOption] = useState({
     name: "",
     price: "",
@@ -52,7 +49,9 @@ const PatchItem = ({ item }) => {
   const adminToken = localStorage.getItem("token");
   useEffect(() => {
     console.log(newItem);
-  }, [productImage]);
+  }, [productImage, newItem]);
+
+  const imgFileHolder = new FormData();
 
   const handleChange = (e) => {
     const data = e.target.value;
@@ -70,16 +69,14 @@ const PatchItem = ({ item }) => {
         setNewItem({ ...newItem, type: data });
         break;
       case "imgs":
-        const fd = new FormData();
         const reader = new FileReader();
         const imgToUp = e.target.files[0];
-        fd.append("file", imgToUp);
-
+        imgFileHolder.append("photo", imgToUp);
         reader.addEventListener("loadend", () => {
-          setImage({ file: fd, src: reader.result });
+          setImage(reader.result);
+          console.log(imgFileHolder);
         });
         reader.readAsDataURL(imgToUp);
-        //console.log(imgToUp);
         break;
       case "option":
         setOption({ ...newOption, name: data });
@@ -121,7 +118,7 @@ const PatchItem = ({ item }) => {
 
   const handleAddImg = () => {
     if (image) {
-      setNewItem({ ...newItem, productImage: productImage.concat(image) });
+      setNewItem({ ...newItem, productImage: [...productImage, image] });
       setImage("");
     }
   };
@@ -131,34 +128,27 @@ const PatchItem = ({ item }) => {
     setNewItem({ ...newItem, [name]: nVal });
   };
 
-  const handleDelImg = (im) => {
-    const nVal = productImage.filter((i) => i.src !== im);
-    setNewItem({ ...newItem, productImage: nVal });
-  };
-
   const handleDelOpt = (opt) => {
     const nOpts = options.filter((o) => o.name !== opt);
     setNewItem({ ...newItem, options: nOpts });
   };
 
-  const handleSubmit = (event) => {
-    const images = productImage.map((i) => i.file);
-    setNewItem({ ...newItem, productImage: images });
-
+  const handleSubmit = async (event) => {
+    const itemToSend = { ...newItem, productImage: imgFileHolder };
     event.preventDefault();
     const config = {
-      method: "POST",
-      body: JSON.stringify(newItem),
       headers: {
         Authorization: adminToken,
       },
     };
     if (newItem.options.length > 0) {
+      console.log(itemToSend);
       try {
-        fetch("products", config).then(() => {
+        await api.post("products", itemToSend, config).then((res) => {
           setMes("Added!");
-          messpan.current.hidden = false;
+          console.log(res);
           window.location.reload();
+          messpan.current.hidden = false;
         });
       } catch (error) {
         console.error(error);
@@ -175,8 +165,6 @@ const PatchItem = ({ item }) => {
     setNewItem({ ...newItem, productImage: images });
 
     const config = {
-      method: "PATCH",
-      body: JSON.stringify(newItem),
       headers: {
         Authorization: adminToken,
       },
@@ -193,9 +181,9 @@ const PatchItem = ({ item }) => {
       }
 
       try {
-        await fetch(`products/${urlId}`, config).then(() =>
-          window.location.reload()
-        );
+        await api
+          .patch(`products/${urlId}`, newItem, config)
+          .then(() => window.location.reload());
       } catch (error) {
         console.error(error);
       }
@@ -206,16 +194,12 @@ const PatchItem = ({ item }) => {
     <section className="w-full h-page absolute bg-gray-100">
       <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
         <div className="grid grid-cols-2 overflow-y-scroll px-4 float-right w-3/6">
-          {productImage.map((im) => {
-            let img;
-            if (typeof im === "string") {
-              img = im;
-            } else img = im.src;
+          {productImage.map((img) => {
             return (
               <span key={img} className=" max-h-64 overflow-auto relative">
                 <img src={img} alt="preview" />
                 <span
-                  onClick={() => handleDelImg(img)}
+                  onClick={() => handleDel(img, `productImage`, productImage)}
                   className="rounded-full absolute bottom-3 cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
                 >
                   {`\u2715`}
