@@ -46,6 +46,18 @@ app.use("/products", productRoutes);
 app.use("/orders", orderRoutes.router);
 app.use("/carts", cartRoutes);
 
+if(process.env.NODE_ENV === "production"){
+  app.use(express.static(path.join(__dirname, '/Client/build')));
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'Client', 'build', 'index.js'))
+  })
+}else{
+  app.get('/', (req, res) => {
+    res.send("Api is running")
+  })
+}
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -64,17 +76,7 @@ app.use(function (err, req, res, next) {
   });
 });
 
-if(process.env.NODE_ENV === "production"){
-  app.use(express.static(path.join(__dirname, '/Client/build')));
 
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Client', 'build', 'index.js'))
-  })
-}else{
-  app.get('/', (req, res) => {
-    res.send("Api is running")
-  })
-}
 
 
 
