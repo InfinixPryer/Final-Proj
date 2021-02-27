@@ -1,9 +1,30 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
+// const multer = require('multer');
 
-const Product = require("../models/productModel");
-const authenticate = require("../middleware/authentication")
+// const Product = require("../models/productModel");
+// const authenticate = require("../middleware/authentication")
+
+// const storage = multer.diskStorage({
+//   destination: './photos/',
+//   filename: function(req, file, cb){
+//     cb(null, Date.now() + file.originalname);
+//   }
+// })
+
+// const fileFilter = (req, file, cb) => {
+//   if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
+//     cb(null, true);
+//   }else{
+//     cb(null, false);
+//   }
+// }
+
+// const upload = multer({
+//   storage: storage,
+//   fileFilter: fileFilter
+// });
 
 router.get("/", (req, res, next) => {
   Product.find()
@@ -96,19 +117,19 @@ router.get("/:productId", (req, res, next) => {
     });
 });
 
-router.post("/", authenticate, (req, res, next) => {
+router.post("/", authenticate, /*upload.array("productImage", 10)*/,(req, res, next) => {
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
     if(product.length >= 1){
-      res.status(404).json({
+      res.status(409).json({
         message: "Product Already Exists!"
       })
     }else{
       const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
-        productImage: req.body.productImage,
+        productImage: req.files.path,
         availability: req.body.availability,
         type: req.body.type,
         details: req.body.details,
@@ -139,12 +160,12 @@ router.post("/", authenticate, (req, res, next) => {
         })
     }
   })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err,
-      });
+  .catch((err) => {
+    console.log(err);
+    res.status(500).json({
+      error: err,
     });
+  });
 });
 
 router.patch("/:productId", authenticate, (req, res, next) => {
