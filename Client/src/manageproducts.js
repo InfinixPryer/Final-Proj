@@ -167,7 +167,7 @@ const TableRow = ({ item, handleSelect, handleEdit }) => {
           {item.productImage.map((img) => {
             return (
               <img
-                src={img}
+                src={`https://testcofmon.herokuapp.com/api/products/image/${img}`}
                 key={img}
                 className="p-1 w-20"
                 alt={item.productName}

@@ -54,7 +54,7 @@ const ProductCard = (props) => {
     >
       <div className="overflow-hidden h-64 rounded-t-sm">
         <img
-          src={`../${productImage[img]}`}
+          src={`https://testcofmon.herokuapp.com/api/products/image/${productImage[img]}`}
           alt={productId}
           className="min-h-full"
         />

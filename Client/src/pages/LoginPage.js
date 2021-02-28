@@ -22,7 +22,7 @@ const Login = () => {
     if (localStorage.getItem("token")) {
       toAdmin.push("/Admin");
     }
-  }, []);
+  }, [toAdmin]);
 
   const Login = (e) => {
     e.preventDefault();

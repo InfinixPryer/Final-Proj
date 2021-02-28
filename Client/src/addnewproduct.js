@@ -6,6 +6,7 @@ const PatchItem = ({ item }) => {
     productId: "",
     productName: "",
     availability: false,
+    productImage: [],
     type: "",
     details: "",
     options: [],
@@ -78,13 +79,14 @@ const PatchItem = ({ item }) => {
   };
 
   const handleAddOption = () => {
-    if (newOption.name !== "" && newOption.price > 10) {
+    if (newOption.name && !options.some((o) => newOption.name === o.name)) {
       setNewItem({ ...newItem, options: options.concat(newOption) });
       setOption({
         name: "",
         price: "",
       });
     }
+    console.log(false);
   };
   const handleAddTag = () => {
     if (tag !== "" && !tags.includes(tag)) {
@@ -93,7 +95,7 @@ const PatchItem = ({ item }) => {
     }
   };
   const handleAddPref = () => {
-    if (pref !== "") {
+    if (pref !== "" && !preferences.includes(pref)) {
       setNewItem({ ...newItem, preferences: preferences.concat(pref) });
       setPref("");
     }
@@ -138,9 +140,15 @@ const PatchItem = ({ item }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const UpdateProductData = new FormData();
-    UpdateProductData.append(`options`, `[${[...options.map(o => JSON.stringify(o))]}]`);
-    UpdateProductData.append(`tags`, `[${[...tags.map(t => `"${t}"`)]}]`);
-    UpdateProductData.append(`preferences`, `[${[...preferences.map(p => `"${p}"`)]}]`);
+    UpdateProductData.append(
+      `options`,
+      `[${[...options.map((o) => JSON.stringify(o))]}]`
+    );
+    UpdateProductData.append(`tags`, `[${[...tags.map((t) => `"${t}"`)]}]`);
+    UpdateProductData.append(
+      `preferences`,
+      `[${[...preferences.map((p) => `"${p}"`)]}]`
+    );
     UpdateProductData.append(`productName`, productName);
     UpdateProductData.append(`productId`, productId);
     UpdateProductData.append(`type`, type);
@@ -189,13 +197,23 @@ const PatchItem = ({ item }) => {
               patchedFile.append(key, imgHolder);
               break;
             case `preference`:
-              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              patchedFile.append(
+                key,
+                `[${[...preferences.map((p) => `"${p}"`)]}]`
+              );
               break;
             case `options`:
-              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              patchedFile.append(
+                key,
+                `[${[...options.map((o) => JSON.stringify(o))]}]`
+              );
               break;
             case `tags`:
-              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              patchedFile.append(
+                key,
+                `tags`,
+                `[${[...tags.map((t) => `"${t}"`)]}]`
+              );
               break;
             default:
               patchedFile.append(key, patchedProps[key]);
