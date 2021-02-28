@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { api } from "../App";
 import { useHistory } from "react-router-dom";
 
@@ -18,6 +18,12 @@ const Login = () => {
     setUserLogin({ ...userLogin, password: e.target.value });
   };
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      toAdmin.push("/Admin");
+    }
+  }, []);
+
   const Login = (e) => {
     e.preventDefault();
     if (userLogin.username && userLogin.password) {
@@ -25,8 +31,9 @@ const Login = () => {
         api
           .post("/admin/login", userLogin)
           .then((res) => {
-            if (res.data.message === "Login successful") {
-              setUserLogin({ username: "", password: "" });
+            const mes = res.data.message;
+            if (mes === "Login successful") {
+              setAuth({ ...auth, mess: mes });
               localStorage.setItem("token", res.data.token);
               toAdmin.push("/Admin");
             }
@@ -34,14 +41,17 @@ const Login = () => {
           .then((errspan.current.hidden = false));
       } catch (err) {
         console.error(err);
+      } finally {
+        setUserLogin({ username: "", password: "" });
+        setAuth({ status: false, mess: "Incorrect username or password" });
+        errspan.current.hidden = false;
       }
     }
-    setAuth({ status: false, mess: "Incorrect username or password" });
   };
 
   return (
     <form onSubmit={(e) => Login(e)}>
-      <div className=" m-auto flex shadow-lg border rounded-lg p-5 flex-col w-2/12 h-72">
+      <div className=" m-auto flex shadow-lg relative border rounded-lg p-5 flex-col w-2/12 h-72">
         <span>Welcome User!</span>
 
         <label className="w-24 mt-4 text-xs">
@@ -63,15 +73,16 @@ const Login = () => {
             onChange={(e) => handlePassChange(e)}
           />
         </label>
+
         <button type="submit">Login</button>
+        <span
+          ref={errspan}
+          hidden
+          className="p-2 -left-8 -bottom-20 min-w-max absolute bg-gray-700 text-white rounded"
+        >
+          {auth.mess}
+        </span>
       </div>
-      <span
-        ref={errspan}
-        hidden
-        className="p-2  bg-gray-500 text-white rounded mx-3"
-      >
-        {auth.mess}
-      </span>
     </form>
   );
 };

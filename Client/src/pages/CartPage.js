@@ -9,7 +9,7 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="w-2/6 h-96 overflow-scroll rounded-lg relative border shadow-md m-auto p-5">
+      <div className="w-3/6 h-96 overflow-scroll rounded-lg relative border shadow-md m-auto p-5">
         <CartContainer cart={cart} dispatch={dispatch} />
         <button
           className="my-5 absolute bottom-0 right-5 transform transition-all hover:scale-105 px-4 py-3"
@@ -38,7 +38,7 @@ export const CartContainer = () => {
     }
   }, [cart]);
   return (
-    <div>
+    <div className="h-60 overflow-scroll">
       <span className="py-2">Your cart:</span>
       {cart.length !== 0 ? (
         <article className="p-5">

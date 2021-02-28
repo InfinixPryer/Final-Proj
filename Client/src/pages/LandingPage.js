@@ -66,20 +66,10 @@ const HomePage = () => {
         />
       </div>
       <div className="w-4/6 shadow-lg rounded-lg p-5 bg-white transform -translate-y-44 text-center my-40 m-auto">
-        <p>
-          "At vero eos et accusamus et iusto odio dignissimos ducimus qui
-          blanditiis praesentium voluptatum deleniti atque corrupti quos dolores
-          et quas molestias excepturi sint occaecati cupiditate non provident,
-          similique sunt in culpa qui officia deserunt mollitia animi, id est
-          laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita
-          distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
-          cumque nihil impedit quo minus id quod maxime placeat facere possimus,
-          omnis voluptas assumenda est, omnis dolor repellendus. Temporibus
-          autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe
-          eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
-          Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-          voluptatibus maiores alias consequatur aut perferendis doloribus
-          asperiores repellat."
+        <p className="italic">
+          ”Welcome to Coffee Monkey PH! We provide a variety of coffee products
+          coming from all corners of the Philippines supporting local farmers
+          and suppliers that we guarantee you will like"
         </p>
       </div>
       <span className="w-full h-80">

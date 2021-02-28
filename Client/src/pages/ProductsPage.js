@@ -86,9 +86,17 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
           <div className="w-8/12 p-5 my-10 text-center hover:scale-150 m-auto">
             <img src={vlogo} alt="logo" className="w-48 mb-10 mx-auto" />
             <h1>
-              {
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo venenatis neque eu tincidunt. Morbi eget ornare nisl, nec auctor velit. Sed fringilla at enim luctus pellentesque. Suspendisse suscipit neque maximus, laoreet velit quis, congue magna. Sed volutpat fermentum nulla, vel ultricies turpis ullamcorper sit amet."
-              }
+              Our Website currently only supports cash on delivery payment
+              methods. If you have any questions please feel free to message us
+              at
+              <a
+                target="_blank"
+                href="https://www.facebook.com/phcoffeemonkey"
+                className="font-bold hover:text-coffee"
+              >
+                {` Coffee Monkey Ph`}
+              </a>{" "}
+              facebook page
             </h1>
           </div>
         </>
