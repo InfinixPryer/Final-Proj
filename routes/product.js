@@ -120,6 +120,8 @@ router.get("/:productId", (req, res, next) => {
 });
 
 router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, next) => {
+  console.log(req.body);
+  console.log(req.files)
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
@@ -128,6 +130,7 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
         message: "Product Already Exists!"
       })
     } else {
+      
       const product = new Product({
         productId: req.body.productId,
         productName: req.body.productName,
@@ -138,7 +141,7 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
         options: JSON.parse(req.body.options),
         preferences: JSON.parse(req.body.preferences),
         bundleItems: req.body.bundleItems,
-        tags: req.body.tags,
+        tags: JSON.parse(req.body.tags),
       });
 
       Promise.all(req.files.map(f => postFile(f.filename, fs.createReadStream(f.path))))
@@ -165,6 +168,7 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
           });
         })
         .catch((err) => {
+          console.log(err);
           res.status(500).json({
             error: err.message,
           });
