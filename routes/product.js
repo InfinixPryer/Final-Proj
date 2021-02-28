@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const multer = require('multer');
 const fs = require('fs');
-const { getFile, postFile, deleteFile } = require("../service/boxService");
+const {getFile, postFile, deleteFile } = require("../service/boxService");
 
 const Product = require("../models/productModel");
 const authenticate = require("../middleware/authentication")
@@ -33,12 +33,12 @@ router.get("/", (req, res, next) => {
     .select("-__v -_id -options._id")
     .exec()
     .then((docs) => {
+      docs.map(doc => {
+        getFileInfo(doc.productImage.filename)
+      })
       const response = {
         count: docs.length,
-        products: docs,
-        request: {
-          type: "GET",
-        },
+        products: docs
       };
       res.status(200).json(response);
     })
