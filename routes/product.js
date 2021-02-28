@@ -33,9 +33,6 @@ router.get("/", (req, res, next) => {
     .select("-__v -_id -options._id")
     .exec()
     .then((docs) => {
-      docs.map(doc => {
-        getFileInfo(doc.productImage.filename)
-      })
       const response = {
         count: docs.length,
         products: docs
