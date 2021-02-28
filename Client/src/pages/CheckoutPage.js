@@ -3,10 +3,12 @@ import { CartContext } from "../context/CartContext";
 import { CartContainer } from "./CartPage";
 import { CLEAR_CART } from "../types";
 import { api } from "../App.js";
+import { useHistory } from "react-router-dom";
 
 const Checkout = () => {
   const { cart, dispatch } = useContext(CartContext);
   const [isSuccess, setSuccess] = useState(false);
+  const [correctIn, setcorr] = useState(false);
   const [fullname, setName] = useState({
     fname: "",
     lname: "",
@@ -29,6 +31,7 @@ const Checkout = () => {
     cusPhone: "",
     cusEmail: "",
   });
+  const toProds = useHistory();
 
   useEffect(() => {
     setOrder((ord) => ({
@@ -46,7 +49,9 @@ const Checkout = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      window.location.reload();
+      setTimeout(() => {
+        toProds.push("/");
+      }, 500);
     }
   }, [isSuccess]);
 
@@ -89,6 +94,7 @@ const Checkout = () => {
         console.error(err);
       } finally {
         setSuccess(true);
+        setcorr(false);
         dispatch({ type: CLEAR_CART });
         setOrder({
           orderItems: orderArr,
@@ -103,17 +109,22 @@ const Checkout = () => {
           lname: "",
         });
       }
-    }
+    } else setcorr(true);
   };
   return (
     <>
-      <div className="w-full h-screen">
-        <div className="w-7/12 h-96 overflow-scroll rounded-lg relative bg-white border shadow-lg m-auto p-5">
+      <div className="w-full">
+        <div className="w-7/12 h-96 rounded relative bg-white border shadow-lg m-auto p-5">
           <form onSubmit={(e) => handlePlaceOrder(e)}>
             <CartContainer />
             {isSuccess && (
-              <span className="shadow-xl z-50 rounded-lg bg-white p-2 w-28  border m-auto ">
+              <span className="rounded absolute -top-2 w-full h-8 left-0 bg-coffee text-white p-1 text-center ">
                 {`Success! your order has been placed.`}
+              </span>
+            )}
+            {correctIn && (
+              <span className="rounded absolute -top-2 w-full h-8 left-0 text-white bg-red-500 p-1 text-center ">
+                {`An input may be incorrectly filled.`}
               </span>
             )}
             <div className="flex checkout justify-center p-5 absolute text-sm h-full top-0 right-0 flex-col w-4/12 ">

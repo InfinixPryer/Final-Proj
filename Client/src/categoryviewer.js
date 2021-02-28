@@ -38,10 +38,10 @@ const CategoryViewer = ({ tag }) => {
     <>
       <div className="w-full my-8 mb-48 flex flex-col cursor-default justify-center">
         <h1 className="text-7xl p-4 font-bold font-poppins">{tag}</h1>
-        <p className="p-5">
-          {
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo venenatis neque eu tincidupiscing elit. Maecenas commodo venenatis neque eu tincidupiscing elit. Maecenas commodo venenatis neque eu tincidupiscing elit. Maecenas commodo venenatis neque eu tincidunt. Morbi eget ornare nisl, ne"
-          }
+        <p className="p-5 w-4/6 font-bold text-lg">
+          Our products range from not just coffee beans, we also have bundles
+          and coffee press. There's a lot you can choose from and we recommend
+          you try them out!
         </p>
       </div>
 
