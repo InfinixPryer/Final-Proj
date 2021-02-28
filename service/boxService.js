@@ -14,6 +14,8 @@ const config = {
 
 const sdk = BoxSDK.getPreconfiguredInstance(config);
 const client = sdk.getAppAuthClient("enterprise");
+client.asUser();
+// const client = sdk.getBasicClient("CvPg2dz1iYAdTxBfBUivZMx7Q5yhvFqV");
 
 const getFile = (path, params) => {
     return new Promise((resolve, reject) => {

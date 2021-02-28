@@ -133,8 +133,6 @@ router.get("/:productId", (req, res, next) => {
 });
 
 router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, next) => {
-  console.log(req.body);
-  console.log(req.files)
   Product.find({productId: req.body.productId})
   .exec()
   .then(product => {
@@ -180,7 +178,7 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
           });
         })
         .catch((err) => {
-          console.log(err.message);
+          console.log(err);
           res.status(500).json({
             error: err.message,
           });
