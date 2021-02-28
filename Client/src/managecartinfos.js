@@ -134,7 +134,7 @@ const Carts = ({ carts, adminToken, handleSelect }) => {
           <td>
             <Orders orderIds={orderIds} adminToken={adminToken} carts={carts} />
           </td>
-          <td>{orderDate}</td>
+          <td>{orderDate.slice(0, 9)}</td>
           <td>{cusName}</td>
           <td>{cusAddress}</td>
           <td>
@@ -177,8 +177,7 @@ const Orders = ({ orderIds, adminToken, carts }) => {
       {ordArr.map((ord) => {
         return (
           <span key={ord.orderId}>
-            <span className="">{ord.quantity}</span>
-            <span className="block">{ord.productId}</span>
+            <span className="block">{`${ord.quantity} x ${ord.productId}`}</span>
             <span className="block">{`${ord.selectedOption} ${ord.selectedPreference}`}</span>
           </span>
         );

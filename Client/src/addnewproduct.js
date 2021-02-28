@@ -6,7 +6,6 @@ const PatchItem = ({ item }) => {
     productId: "",
     productName: "",
     availability: false,
-    productImage: [],
     type: "",
     details: "",
     options: [],
@@ -16,42 +15,35 @@ const PatchItem = ({ item }) => {
   const [urlId, setUrl] = useState("");
   const [tag, setTag] = useState("");
   const [pref, setPref] = useState("");
-  const [image, setImage] = useState();
+  const [imgHolder, setImg] = useState([]);
   const [newOption, setOption] = useState({
     name: "",
     price: "",
   });
   const [message, setMes] = useState("");
   const messpan = useRef();
+  const imgFile = useRef();
+  const adminToken = localStorage.getItem("token");
 
   useEffect(() => {
     if (item) {
       setNewItem(item);
       setUrl(item.productId);
+      item.productImage.forEach((i) => {
+        setImg((prev) => prev.concat({ src: i }));
+      });
     }
   }, [item]);
-
-  useEffect(() => {
-    console.log(patchedProps);
-  }, [patchedProps]);
 
   const {
     productName,
     productId,
-    productImage,
     type,
     details,
     options,
     preferences,
     tags,
   } = newItem;
-
-  const adminToken = localStorage.getItem("token");
-  useEffect(() => {
-    console.log(newItem);
-  }, [productImage, newItem]);
-
-  const imgFileHolder = new FormData();
 
   const handleChange = (e) => {
     const data = e.target.value;
@@ -68,16 +60,15 @@ const PatchItem = ({ item }) => {
       case "type":
         setNewItem({ ...newItem, type: data });
         break;
-      case "imgs":
+      /*   case "imgs":
         const reader = new FileReader();
         const imgToUp = e.target.files[0];
-        imgFileHolder.append("photo", imgToUp);
         reader.addEventListener("loadend", () => {
           setImage(reader.result);
-          console.log(imgFileHolder);
+          UpdateProductData.append("productImage", imgToUp);
         });
         reader.readAsDataURL(imgToUp);
-        break;
+        break; */
       case "option":
         setOption({ ...newOption, name: data });
         break;
@@ -94,6 +85,7 @@ const PatchItem = ({ item }) => {
         break;
     }
   };
+
   const handleAddOption = () => {
     if (newOption.name !== "" && newOption.price > 10) {
       setNewItem({ ...newItem, options: options.concat(newOption) });
@@ -117,15 +109,29 @@ const PatchItem = ({ item }) => {
   };
 
   const handleAddImg = () => {
-    if (image) {
-      setNewItem({ ...newItem, productImage: [...productImage, image] });
-      setImage("");
-    }
+    const reader = new FileReader();
+    const imgToUp = imgFile.current.files[0];
+
+    reader.addEventListener("loadend", () => {
+      setImg((prev) =>
+        prev.concat({
+          file: imgToUp,
+          src: reader.result,
+        })
+      );
+      //setNewItem({...newItem,productImage: [...productImage, reader.result],});
+      //UpdateProductData.append("productImage", imgToUp);
+    });
+    reader.readAsDataURL(imgToUp);
   };
 
   const handleDel = (val, name, prop) => {
     const nVal = prop.filter((i) => i !== val);
     setNewItem({ ...newItem, [name]: nVal });
+  };
+  const handleDelImg = (val) => {
+    const nArr = imgHolder.filter((i) => i.src !== val);
+    setImg(nArr);
   };
 
   const handleDelOpt = (opt) => {
@@ -133,20 +139,31 @@ const PatchItem = ({ item }) => {
     setNewItem({ ...newItem, options: nOpts });
   };
 
+  const config = {
+    headers: {
+      Authorization: adminToken,
+    },
+  };
+
   const handleSubmit = async (event) => {
-    const itemToSend = { ...newItem, productImage: imgFileHolder };
     event.preventDefault();
-    const config = {
-      headers: {
-        Authorization: adminToken,
-      },
-    };
+    const UpdateProductData = new FormData();
+    UpdateProductData.append(`options`, JSON.stringify(options));
+    UpdateProductData.append(`tags`, JSON.stringify(tags));
+    UpdateProductData.append(`preferences`, JSON.stringify(preferences));
+    UpdateProductData.append(`productName`, productName);
+    UpdateProductData.append(`productId`, productId);
+    UpdateProductData.append(`type`, type);
+    UpdateProductData.append(`details`, details);
+
+    imgHolder.forEach((i) => {
+      UpdateProductData.append(`productImage`, i.file);
+    });
     if (newItem.options.length > 0) {
-      console.log(itemToSend);
       try {
-        await api.post("products", itemToSend, config).then((res) => {
+        await api.post("products", UpdateProductData, config).then((res) => {
           setMes("Added!");
-          console.log(res);
+          console.log(newItem);
           window.location.reload();
           messpan.current.hidden = false;
         });
@@ -160,33 +177,51 @@ const PatchItem = ({ item }) => {
   };
 
   const handleSave = async (event) => {
-    event.preventDefault();
-    const images = productImage.map((i) => i.file);
-    setNewItem({ ...newItem, productImage: images });
+    const patchedFile = new FormData();
 
-    const config = {
-      headers: {
-        Authorization: adminToken,
-      },
-    };
+    event.preventDefault();
     if (item && newItem !== item) {
       for (const key in newItem) {
-        if (newItem.hasOwnProperty(key) && item[key] !== newItem[key]) {
+        if (
+          newItem.hasOwnProperty(key) &&
+          item[key] !== newItem[key] &&
+          key !== `productImage`
+        ) {
           const patch = Object.assign(patchedProps, {
             [key]: newItem[key],
           });
-          console.log(patch);
           setPatch(patch);
         }
       }
-
-      try {
-        await api
-          .patch(`products/${urlId}`, newItem, config)
-          .then(() => window.location.reload());
-      } catch (error) {
-        console.error(error);
+      for (const key in patchedProps) {
+        if (Object.hasOwnProperty.call(patchedProps, key)) {
+          switch (key) {
+            case `productImage`:
+              patchedFile.append(key, imgHolder);
+              break;
+            case `preference`:
+              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              break;
+            case `options`:
+              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              break;
+            case `tags`:
+              patchedFile.append(key, JSON.stringify(patchedProps[key]));
+              break;
+            default:
+              patchedFile.append(key, patchedProps[key]);
+              break;
+          }
+        }
       }
+    }
+
+    try {
+      await api
+        .patch(`products/${urlId}`, patchedFile, config)
+        .then(() => window.location.reload());
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -194,16 +229,17 @@ const PatchItem = ({ item }) => {
     <section className="w-full h-page absolute bg-gray-100">
       <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
         <div className="grid grid-cols-2 overflow-y-scroll px-4 float-right w-3/6">
-          {productImage.map((img) => {
+          {imgHolder.map((img) => {
+            const im = img.src;
             return (
-              <span key={img} className=" max-h-64 overflow-auto relative">
-                <img src={img} alt="preview" />
+              <span key={im} className=" max-h-64 overflow-auto relative">
+                <img src={im} alt="preview" />
                 <span
-                  onClick={() => handleDel(img, `productImage`, productImage)}
-                  className="rounded-full absolute bottom-3 cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
+                  onClick={() => handleDelImg(im)}
+                  className="rounded-full cursor-pointer bg-gray-200 ml-1 hover:bg-gray-400 hover:text-white w-4 text-center text-xs inline-block"
                 >
                   {`\u2715`}
-                </span>{" "}
+                </span>
               </span>
             );
           })}
@@ -365,7 +401,7 @@ const PatchItem = ({ item }) => {
             />
             <label className="flex">
               Images:
-              <input type="file" id="imgs" onChange={(e) => handleChange(e)} />
+              <input type="file" ref={imgFile} />
               <button type="button" onClick={() => handleAddImg()}>
                 ADD
               </button>
