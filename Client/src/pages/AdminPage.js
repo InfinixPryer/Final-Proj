@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import ManageProducts from "../manageproducts.js";
 import ManageCartInfo from "../managecartinfos.js";
 import PatchItem from "../addnewproduct.js";

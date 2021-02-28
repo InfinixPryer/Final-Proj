@@ -30,14 +30,3 @@ export const cartItemsReducer = (state, action) => {
       return state;
   }
 };
-
-export const screenReducer = (state = "", action) => {
-  switch (action.type) {
-    case "MOBILE":
-      return (state = "md");
-    case "DESKTOP":
-      return (state = "sm");
-    default:
-      return state;
-  }
-};

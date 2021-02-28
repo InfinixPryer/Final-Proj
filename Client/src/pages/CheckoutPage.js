@@ -53,7 +53,7 @@ const Checkout = () => {
         toProds.push("/");
       }, 500);
     }
-  }, [isSuccess]);
+  }, [isSuccess, toProds]);
 
   const { cusAddress, cusPhone, cusEmail } = orderInfo;
 

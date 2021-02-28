@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { api } from "./App.js";
 
 const ManageCartInfo = () => {
@@ -7,7 +7,7 @@ const ManageCartInfo = () => {
   const adminToken = localStorage.getItem("token");
   const delSelBtn = useRef();
 
-  const getCarts = async () => {
+  const getCarts = useCallback(async () => {
     try {
       const res = await api.get("/carts", {
         headers: {
@@ -18,7 +18,7 @@ const ManageCartInfo = () => {
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [adminToken]);
 
   useEffect(() => {
     getCarts();
@@ -26,7 +26,7 @@ const ManageCartInfo = () => {
       setCart([]);
       setList([]);
     };
-  }, []);
+  }, [getCarts]);
 
   const handleDelItems = () => {
     async function call() {
@@ -38,8 +38,7 @@ const ManageCartInfo = () => {
                 Authorization: adminToken,
               },
             })
-            .then((res) => {
-              console.log(res.data);
+            .then(() => {
               getCarts();
             });
         }
@@ -49,7 +48,7 @@ const ManageCartInfo = () => {
     try {
       call();
     } catch (err) {
-      console.log(err);
+      console.err(err);
     } finally {
       setList([]);
     }

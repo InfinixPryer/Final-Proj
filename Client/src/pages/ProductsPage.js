@@ -91,6 +91,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
               at
               <a
                 target="_blank"
+                rel="noreferrer"
                 href="https://www.facebook.com/phcoffeemonkey"
                 className="font-bold hover:text-coffee"
               >

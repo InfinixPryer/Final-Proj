@@ -3,20 +3,8 @@ import { NavLink } from "react-router-dom";
 import bag from "./assets/bag.png";
 import logo from "./assets/logo.jpg";
 import { CartContext } from "./context/CartContext";
-import { DeviceContext } from "./context/DeviceContext";
 
 const Navbar = () => {
-  const { device, dispatch } = useContext(DeviceContext);
-
-  useEffect(() => {
-    const screensize = window.innerWidth;
-    if (screensize < 450) {
-      dispatch({ type: "MOBILE" });
-    } else {
-      dispatch({ type: "DESKTOP" });
-    }
-  }, [device, dispatch]);
-
   return (
     <nav className="flex z-50 top-0 h-10 mx-16 my-5 bg-white justify-between">
       <span className="my-auto">
@@ -30,8 +18,7 @@ const Navbar = () => {
 };
 const NavbarMenu = () => {
   const { cart } = useContext(CartContext);
-  useEffect(() => {
-  }, [cart]);
+  useEffect(() => {}, [cart]);
   return (
     <div className=" w-3/12 justify-end text-base flex-row flex">
       <NavLink to="/" exact className="m-auto active:text-coffee">

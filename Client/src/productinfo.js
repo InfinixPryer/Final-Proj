@@ -24,7 +24,6 @@ export const ProductInfo = () => {
           })
           .then((res) => {
             setItem(res.data.product[0]);
-            console.log(res);
           });
       } catch (err) {
         console.error(err);
@@ -148,7 +147,7 @@ const ItemPage = ({
             {`\u140A`}
           </span>
           <img
-            src={`../${productImage[display]}`}//productImage[display]
+            src={`https://testcofmon.herokuapp.com/api/products/image/${productImage[display]}`} //productImage[display]
             alt={productName}
             className="block m-auto h-96"
           />
@@ -168,7 +167,11 @@ const ItemPage = ({
                 onClick={() => setDisplay(index)}
                 key={img + productName}
               >
-                <img src={`../${img}`} alt={productName} key={productName + img} />
+                <img
+                  src={`https://testcofmon.herokuapp.com/api/products/image/${img}`}
+                  alt={productName}
+                  key={productName + img}
+                />
               </div>
             );
           })}

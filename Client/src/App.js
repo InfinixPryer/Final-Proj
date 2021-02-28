@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import axios from "axios";
 import CartProvider from "./context/CartContext";
 import ProductProvider from "./context/ProductContext";
-import DeviceProvider from "./context/DeviceContext";
 import PrivateRoute from "./pages/PrivateRoute";
 
 import Products from "./pages/ProductsPage";
@@ -20,36 +19,34 @@ export const api = axios.create({
 
 const ReactRouterSetup = () => {
   return (
-    <DeviceProvider>
-      <CartProvider>
-        <Router>
-          <Navbar />
-          <ProductProvider>
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/Products" children={<Products />}></Route>
-              <Route
-                exact
-                path="/Products/:product_name"
-                children={<ProductInfo />}
-              ></Route>
-              <Route path="/My-Cart">
-                <Cart />
-              </Route>
-              <Route path="/Checkout">
-                <Checkout />
-              </Route>
-              <PrivateRoute exact path="/Admin" component={Admin} />
-              <Route path="/Admin/Login">
-                <Login />
-              </Route>
-            </Switch>
-          </ProductProvider>
-        </Router>
-      </CartProvider>
-    </DeviceProvider>
+    <CartProvider>
+      <Router>
+        <Navbar />
+        <ProductProvider>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/Products" children={<Products />}></Route>
+            <Route
+              exact
+              path="/Products/:product_name"
+              children={<ProductInfo />}
+            ></Route>
+            <Route path="/My-Cart">
+              <Cart />
+            </Route>
+            <Route path="/Checkout">
+              <Checkout />
+            </Route>
+            <PrivateRoute exact path="/Admin" component={Admin} />
+            <Route path="/Admin/Login">
+              <Login />
+            </Route>
+          </Switch>
+        </ProductProvider>
+      </Router>
+    </CartProvider>
   );
 };
 
