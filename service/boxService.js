@@ -8,15 +8,21 @@ const sdk = new BoxSDK({
 const client = sdk.getBasicClient(process.env.BOX_DEVELOPER_TOKEN);
 
 const getFile = (path, params) => {
+    // return new Promise((resolve, reject) => {
+    //     client.get(path, params, (err, response) => {
+    //         if (err) {
+    //             reject(err);
+    //         }
+    //         resolve(response);
+    //     });
+    // });
+
     return new Promise((resolve, reject) => {
-        client.get(path, params, (err, response) => {
-            if (err) {
-                reject(err);
-            }
-            resolve(response);
-        });
-    });
+        
+    })
 }
+
+
 
 const postFile = (filename, stream) => {
     return client.files.uploadFile(process.env.BOX_FOLDER_ID, filename, stream);
