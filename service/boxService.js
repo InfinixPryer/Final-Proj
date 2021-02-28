@@ -1,12 +1,11 @@
 const BoxSDK = require('box-node-sdk');
-
 const config = {
     boxAppSettings: {
         clientID: process.env.BOX_CLIENT_ID,
         clientSecret: process.env.BOX_CLIENT_SECRET,
         appAuth: {
           publicKeyID: process.env.BOX_PUBLIC_KEY_ID,
-          privateKey: String(process.env.BOX_PRIVATE_KEY),
+          privateKey: process.env.BOX_PRIVATE_KEY.replace(/\\n/g, '\n'), 
           passphrase: process.env.BOX_PASSPHRASE,
         }
       },
@@ -18,7 +17,6 @@ const client = sdk.getAppAuthClient("enterprise");
 
 const getFile = (path, params) => {
     return new Promise((resolve, reject) => {
-        console.log({...client.folders});
         client.files.getRepresentationContent(path, "[jpg?dimensions=1024x1024]", params, (err, stream) => {
             if (err) {
                 reject(err);
