@@ -72,6 +72,22 @@ router.get("/tags", (req, res, next) => {
     })
 });
 
+router.get("/image/:imageId", (req, res, next) => {
+  getFile(req.params.imageId)
+    .then(image => {
+      res.setHeader('Content-Type', 'image/jpeg');
+      image.on('data', (data) => {
+        res.write(Buffer.concat([data]));
+      });
+      image.on('error', () => res.end());
+      image.on('end', () => res.end());
+    })
+    .catch(err => {
+      console.log(err.message);
+      res.status(500).json({ err });
+    });
+});
+
 router.get("/:productName", async(req, res, next) => {
   const name = req.params.productName;
   Product.find({ productName: name })
@@ -127,23 +143,22 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
         message: "Product Already Exists!"
       })
     } else {
-      
-      const product = new Product({
-        productId: req.body.productId,
-        productName: req.body.productName,
-        productImage: [...req.files.map(f => f.filename)],
-        availability: req.body.availability,
-        type: req.body.type,
-        details: req.body.details,
-        options: JSON.parse(req.body.options),
-        preferences: JSON.parse(req.body.preferences),
-        bundleItems: req.body.bundleItems,
-        tags: JSON.parse(req.body.tags),
-      });
-
       Promise.all(req.files.map(f => postFile(f.filename, fs.createReadStream(f.path))))
-        .then(() => {
+        .then((uploadedIds) => {
           req.files.map(f => fs.unlink(f.path, () => {}));
+          const product = new Product({
+            productId: req.body.productId,
+            productName: req.body.productName,
+            // productImage: [...req.files.map(f => f.filename)],
+            productImage: [...uploadedIds],
+            availability: req.body.availability,
+            type: req.body.type,
+            details: req.body.details,
+            options: JSON.parse(req.body.options),
+            preferences: JSON.parse(req.body.preferences),
+            bundleItems: req.body.bundleItems,
+            tags: JSON.parse(req.body.tags),
+          });
           return product.save();
         })
         .then((result) => {
@@ -165,7 +180,7 @@ router.post("/"/*, authenticate*/ ,upload.array("productImage", 10),(req, res, n
           });
         })
         .catch((err) => {
-          console.log(err);
+          console.log(err.message);
           res.status(500).json({
             error: err.message,
           });
