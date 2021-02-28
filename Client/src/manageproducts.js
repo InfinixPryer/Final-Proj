@@ -56,6 +56,15 @@ const ManageProducts = ({ handleAdd, handleEdit }) => {
   return (
     <div className="p-5 rounded flex flex-col bg-white m-2 shadow">
       <h1 className="">MANAGE PRODUCTS</h1>{" "}
+      <button
+        className="w-20 m-0"
+        onClick={() => {
+          localStorage.removeItem("token");
+          window.location.reload();
+        }}
+      >
+        Logout
+      </button>
       {deleteNotif.display && (
         <div className="w-full">{deleteNotif.message}</div>
       )}

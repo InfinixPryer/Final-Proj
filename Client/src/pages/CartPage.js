@@ -74,7 +74,7 @@ export const CartContainer = () => {
           <h3>{`Total: \u20b1${total}`}</h3>
         </article>
       ) : (
-        <span className=" w-32 m-auto text-center leading-8">No Items</span>
+        <span className=" w-32 m-auto text-center leading-8">{`  No Items`}</span>
       )}
     </div>
   );
