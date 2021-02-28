@@ -130,6 +130,7 @@ const PatchItem = ({ item }) => {
 
   const config = {
     headers: {
+      "Content-Type": `multipart/form-data`,
       Authorization: adminToken,
     },
   };
@@ -137,14 +138,13 @@ const PatchItem = ({ item }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const UpdateProductData = new FormData();
-    UpdateProductData.append(`options`, JSON.stringify(options));
-    UpdateProductData.append(`tags`, JSON.stringify(tags));
-    UpdateProductData.append(`preferences`, JSON.stringify(preferences));
+    UpdateProductData.append(`options`, `[${[...options.map(o => JSON.stringify(o))]}]`);
+    UpdateProductData.append(`tags`, `[${[...tags.map(t => `"${t}"`)]}]`);
+    UpdateProductData.append(`preferences`, `[${[...preferences.map(p => `"${p}"`)]}]`);
     UpdateProductData.append(`productName`, productName);
     UpdateProductData.append(`productId`, productId);
     UpdateProductData.append(`type`, type);
     UpdateProductData.append(`details`, details);
-
     imgHolder.forEach((i) => {
       UpdateProductData.append(`productImage`, i.file);
     });
