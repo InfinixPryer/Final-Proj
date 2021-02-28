@@ -41,8 +41,10 @@ const Login = () => {
 
   return (
     <form onSubmit={(e) => Login(e)}>
-      <div className=" w-6/12 h-64">
-        <label>
+      <div className=" m-auto flex shadow-lg border rounded-lg p-5 flex-col w-2/12 h-72">
+        <span>Welcome User!</span>
+
+        <label className="w-24 mt-4 text-xs">
           Username:
           <input
             value={userLogin.username}
@@ -51,7 +53,7 @@ const Login = () => {
             onChange={(e) => handleUserChange(e)}
           />
         </label>
-        <label>
+        <label className="mt-4 mb-20 text-xs w-24">
           Password:
           <input
             type="password"

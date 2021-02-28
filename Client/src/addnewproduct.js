@@ -60,15 +60,6 @@ const PatchItem = ({ item }) => {
       case "type":
         setNewItem({ ...newItem, type: data });
         break;
-      /*   case "imgs":
-        const reader = new FileReader();
-        const imgToUp = e.target.files[0];
-        reader.addEventListener("loadend", () => {
-          setImage(reader.result);
-          UpdateProductData.append("productImage", imgToUp);
-        });
-        reader.readAsDataURL(imgToUp);
-        break; */
       case "option":
         setOption({ ...newOption, name: data });
         break;
@@ -119,8 +110,6 @@ const PatchItem = ({ item }) => {
           src: reader.result,
         })
       );
-      //setNewItem({...newItem,productImage: [...productImage, reader.result],});
-      //UpdateProductData.append("productImage", imgToUp);
     });
     reader.readAsDataURL(imgToUp);
   };
