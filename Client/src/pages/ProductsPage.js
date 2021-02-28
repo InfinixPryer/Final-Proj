@@ -94,6 +94,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
                 rel="noreferrer"
                 href="https://www.facebook.com/phcoffeemonkey"
                 className="font-bold hover:text-coffee"
+                rel="noreferrer"
               >
                 {` Coffee Monkey Ph`}
               </a>{" "}
