@@ -31,7 +31,8 @@ const Checkout = () => {
     cusPhone: "",
     cusEmail: "",
   });
-  const toProds = useHistory();
+  const toHome = useHistory();
+  const [cusId, setCusId] = useState("");
 
   useEffect(() => {
     setOrder((ord) => ({
@@ -46,14 +47,6 @@ const Checkout = () => {
       setOrder((ord) => ({ ...ord, totalPrice: total }));
     } else setOrder((ord) => ({ ...ord, totalPrice: 0 }));
   }, [cart]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => {
-        toProds.push("/");
-      }, 500);
-    }
-  }, [isSuccess, toProds]);
 
   const { cusAddress, cusPhone, cusEmail } = orderInfo;
 
@@ -85,11 +78,12 @@ const Checkout = () => {
     if (
       cart.length !== 0 &&
       orderInfo.cusAddress.length > 10 &&
-      orderInfo.cusPhone.length > 9 &&
-      orderInfo.cusPhone.length < 14
+      orderInfo.cusPhone.length === 11
     ) {
       try {
-        api.post("/carts", orderInfo).then(() => {});
+        api.post("/carts", orderInfo).then((res) => {
+          setCusId(res.data.cusCheckId);
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -113,13 +107,21 @@ const Checkout = () => {
   };
   return (
     <>
-      <div className="w-full">
+      <div className="w-full mt-10">
         <div className="w-7/12 h-96 rounded relative bg-white border shadow-lg m-auto p-5">
           <form onSubmit={(e) => handlePlaceOrder(e)}>
             <CartContainer />
             {isSuccess && (
-              <span className="rounded absolute -top-2 w-full h-8 left-0 bg-coffee text-white p-1 text-center ">
-                {`Success! your order has been placed.`}
+              <span className="rounded absolute -top-2 z-20 p-5 w-full left-0 bg-coffee text-white text-center ">
+                Your order has been placed! thank you for supporting us. You can
+                go back to our home page and check your current order status
+                <span className="block">Your order id is {cusId}</span>
+                <span
+                  className="underline cursor-pointer"
+                  onClick={() => toHome.push("/")}
+                >
+                  Back to Home
+                </span>
               </span>
             )}
             {correctIn && (
@@ -159,7 +161,7 @@ const Checkout = () => {
                 />
               </label>
               <label>
-                Contact No:
+                Mobile No:
                 <input
                   type="text"
                   value={cusPhone}
@@ -178,7 +180,9 @@ const Checkout = () => {
                   required
                 />
               </label>
-              <span className="p-2 border my-2 ">Cash on delivery</span>
+              <span className="p-2 my-2 rounded text-center bg-black text-white">
+                Cash on delivery
+              </span>
               <button
                 type="submit"
                 className="m-0 transform transition-all hover:scale-105"

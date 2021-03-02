@@ -9,7 +9,7 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="w-3/6 h-96 overflow-scroll rounded-lg relative border shadow-md m-auto p-5">
+      <div className="w-3/6 h-96 mt-10 overflow-scroll rounded-lg relative border shadow-md m-auto p-5">
         <CartContainer cart={cart} dispatch={dispatch} />
         <button
           className="my-5 absolute bottom-0 right-5 transform transition-all hover:scale-105 px-4 py-3"
@@ -53,7 +53,7 @@ export const CartContainer = () => {
             } = item;
             return (
               <div
-                className="text-base font-light my-2 font-type border rounded-md max-w-max transform transition-all hover:scale-110 hover:shadow-md shadow-sm p-3 border-gray-100"
+                className="text-base font-light my-2 font-type border rounded-md max-w-max transform transition-all hover:scale-105 hover:shadow-md shadow-sm p-3 border-gray-100"
                 key={key}
               >
                 {`${quantity} 

@@ -133,7 +133,7 @@ const ItemPage = ({
     } else return null;
   };
   return (
-    <section className="flex w-full mx-10 h-page overflow-hidden bg-white ">
+    <section className="flex w-full mx-10 mt-10 h-page overflow-hidden bg-white ">
       <div className="absolute font-source text-sm py-1 rounded-br-md pl-12 bg-white /bg-darkbrown">
         <Link to="/Products">{`< Products / `}</Link>
         {`${productName}`}

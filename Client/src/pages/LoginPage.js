@@ -51,8 +51,8 @@ const Login = () => {
 
   return (
     <form onSubmit={(e) => Login(e)}>
-      <div className=" m-auto flex shadow-lg relative border rounded-lg p-5 flex-col w-2/12 h-72">
-        <span>Welcome User!</span>
+      <div className=" m-auto mt-20 flex shadow-lg relative border rounded-lg p-5 flex-col w-2/12 h-72">
+        <span>Welcome Admin!</span>
 
         <label className="w-24 mt-4 text-xs">
           Username:

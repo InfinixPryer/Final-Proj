@@ -7,15 +7,28 @@ import h1 from "../assets/h1.jpg";
 import h2 from "../assets/h2.jpg";
 import h3 from "../assets/h3.jpg";
 import h4 from "../assets/h4.jpg";
+import star from "../assets/star.png";
+import { api } from "../App";
+import OrderTracker from "./TrackOrderPage";
+
 const HomePage = () => {
-  const [data, setData] = useState("");
   const [display, setDisplay] = useState(0);
   const headArr = [h2, h3, h4];
   const toProd = useHistory();
+  const [reviews, setReviews] = useState([]);
+  const [isChecking, setCheck] = useState(false);
 
   useEffect(() => {
-    setData("p");
-    return () => {};
+    const getReviews = async () => {
+      const res = await api.get("/carts");
+      const intres = res.data.carts;
+      const revArr = intres.filter((cart) => "cusReview" in cart);
+      setReviews(revArr);
+    };
+    getReviews();
+    return () => {
+      setReviews([]);
+    };
   }, []);
 
   const handleClick = () => {
@@ -31,12 +44,23 @@ const HomePage = () => {
     } else return null;
   };
 
-  if (!data) {
-    return <Loading />;
-  }
   return (
     <>
-      <div className="mb-40 flex overflow-hidden .rounded-xl mx-16. relative h-page items-center">
+      {isChecking ? (
+        <OrderTracker setCheck={setCheck} />
+      ) : (
+        <span
+          onClick={() => {
+            setCheck(true);
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+          }}
+          className="fixed cursor-pointer font-source bg-gradient-to-tr text-sm from-espresso to-coffee text-white flex items-center justify-center z-50 rounded-full w-40  h-10 transform transition-all hover:scale-110 shadow bottom-10 right-14"
+        >
+          Track my order
+        </span>
+      )}
+      <div className="mb-40 flex overflow-hidden z-0 mt-10 relative h-page items-center">
         <span
           className="py-20 rounded-full z-50 px-4 absolute transition-all hover:rounded-none transform hover:bg-opacity-50 hover:py-32 text-white bg-black bg-opacity-10"
           onClick={() => handleDisplayState("prev")}
@@ -65,13 +89,14 @@ const HomePage = () => {
           className="w-3/12 p-3 shadow-md absolute right-40 hover:scale-105 transition-all bg-white transform rotate-6"
         />
       </div>
-      <div className="w-4/6 shadow-lg rounded-lg p-5 bg-white transform -translate-y-44 text-center my-40 m-auto">
+      <div className="w-4/6 shadow-lg rounded-lg p-5 bg-white transform -translate-y-44 text-center my-20 m-auto">
         <p className="italic">
           ”Welcome to Coffee Monkey PH! We provide a variety of coffee products
           coming from all corners of the Philippines supporting local farmers
           and suppliers that we guarantee you will like"
         </p>
       </div>
+      {reviews.length !== 0 && <RevSpan reviews={reviews} />}
       <span className="w-full h-80">
         <div className="w-4/6 overflow-hidden m-auto  mb-56 rounded-2xl">
           <img src={h1} alt="base" />
@@ -97,3 +122,50 @@ export const Loading = () => {
 };
 
 export default HomePage;
+
+const RevSpan = ({ reviews }) => {
+  return (
+    <div className="w-4/6 m-auto overflow-x-scroll mb-36">
+      {reviews.map((rev) => {
+        const rate = rev.cusReview.rating;
+        const stars = [];
+        const neg = [];
+        console.log(typeof rev.cusReview);
+        for (let i = rate; i > 0; i--) {
+          stars.push(
+            <img
+              className="h-6 p-1 w-6 inline-block"
+              key={i}
+              alt="star"
+              src={star}
+            />
+          );
+        }
+        const pos = 10 - stars.length;
+        for (let i = pos; i > 0; i--) {
+          neg.push(
+            <img
+              className="h-6 p-1 opacity-10 w-6 inline-block"
+              alt="null-star"
+              src={star}
+              key={20 - i}
+            />
+          );
+        }
+
+        const allStars = [...stars, ...neg];
+
+        return (
+          <div
+            key={rev.cartId}
+            className="p-5 w-80 rounded border m-4 flex flex-col shadow-md"
+          >
+            <span className="block text-2xl text-gray-600">{`${rev.cusReview.rating} / 10`}</span>
+            <span>{allStars}</span>
+            <span className="py-4 px-2 ">{rev.cusReview.review}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
