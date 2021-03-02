@@ -82,7 +82,8 @@ const Checkout = () => {
     ) {
       try {
         const res = await api.post("/carts", orderInfo);
-        setCusId(res.data.createdCart.cusCheckID);
+        setCusId(res.data.createdCart.cusCheckId);
+        //console.log(res.data.createdCart.cusCheckId);
       } catch (err) {
         console.error(err);
       } finally {
@@ -114,7 +115,12 @@ const Checkout = () => {
               <span className="rounded absolute -top-2 z-20 p-5 w-full left-0 bg-coffee text-white text-center ">
                 Your order has been placed! thank you for supporting us. You can
                 go back to our home page and check your current order status
-                <span className="block">Your order id is {cusId}</span>
+                <span className="block">
+                  Your order id is{" "}
+                  <h1 className=" text-lg border max-w-max px-2 m-auto my-2 font-bold">
+                    {cusId}
+                  </h1>
+                </span>
                 <span
                   className="underline cursor-pointer"
                   onClick={() => toHome.push("/")}
