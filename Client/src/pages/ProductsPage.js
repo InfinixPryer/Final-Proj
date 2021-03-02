@@ -83,7 +83,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
     <>
       {hidden && (
         <>
-          <div className="w-8/12 p-5 my-10 text-center hover:scale-150 m-auto">
+          <div className="w-8/12 p-5 mt-10 text-center hover:scale-150 m-auto">
             <img src={vlogo} alt="logo" className="w-48 mb-10 mx-auto" />
             <h1>
               Our Website currently only supports cash on delivery payment
@@ -102,7 +102,7 @@ const FinderBar = ({ setFind, setCateg, int_state }) => {
           </div>
         </>
       )}
-      <span className="category-bar px-5 z-10 py-3 m-auto block overflow-x-scroll w-9/12">
+      <span className="category-bar px-5 z-10 pt-10 pb-3 m-auto block overflow-x-scroll w-9/12">
         <span className="w-full h-12 flex">
           {tags.map((tag) => {
             if (tag === int_state) {

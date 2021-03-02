@@ -36,7 +36,7 @@ const CategoryViewer = ({ tag }) => {
 
   return (
     <>
-      <div className="w-full my-8 mb-48 flex flex-col cursor-default justify-center">
+      <div className="w-full mt-8 mb-48 flex flex-col cursor-default justify-center">
         <h1 className="text-7xl p-4 font-bold font-poppins">{tag}</h1>
         <p className="p-5 w-4/6 font-bold text-lg">
           Our products range from not just coffee beans, we also have bundles
@@ -44,8 +44,6 @@ const CategoryViewer = ({ tag }) => {
           you try them out!
         </p>
       </div>
-
-      <div></div>
       <section className="grid grid-container p-5 md:grid-cols-3 lg:grid-cols-4 grid-cols-2 mb-24 gap-6 font-type">
         {items.map((item) => {
           return (

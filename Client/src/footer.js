@@ -19,7 +19,7 @@ const Footer = () => {
       >
         Admin login
       </span>
-      <span className="absolute w-full p-3 bg-black bg-opacity-50 text-center bottom-0 z-50">
+      <span className="absolute w-full p-3 bg-black bg-opacity-50 text-center bottom-0 z-10">
         All rights reserved © 2020 Coffee Monkey Ph
       </span>
     </footer>
