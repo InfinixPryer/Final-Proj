@@ -72,7 +72,7 @@ const Checkout = () => {
         break;
     }
   };
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
 
     if (
@@ -81,9 +81,8 @@ const Checkout = () => {
       orderInfo.cusPhone.length === 11
     ) {
       try {
-        api.post("/carts", orderInfo).then((res) => {
-          setCusId(res.data.cusCheckId);
-        });
+        const res = await api.post("/carts", orderInfo);
+        setCusId(res.data.createdCart.cusCheckID);
       } catch (err) {
         console.error(err);
       } finally {
