@@ -125,12 +125,11 @@ export default HomePage;
 
 const RevSpan = ({ reviews }) => {
   return (
-    <div className="w-4/6 m-auto overflow-x-scroll mb-36">
+    <div className="w-7/12 m-auto overflow-x-scroll mb-36">
       {reviews.map((rev) => {
         const rate = rev.cusReview.rating;
         const stars = [];
         const neg = [];
-        console.log(typeof rev.cusReview);
         for (let i = rate; i > 0; i--) {
           stars.push(
             <img
@@ -158,7 +157,7 @@ const RevSpan = ({ reviews }) => {
         return (
           <div
             key={rev.cartId}
-            className="p-5 w-80 rounded border m-4 flex flex-col shadow-md"
+            className="p-5 w-80 rounded border m-4 inline-flex flex-col shadow-md"
           >
             <span className="block text-2xl text-gray-600">{`${rev.cusReview.rating} / 10`}</span>
             <span>{allStars}</span>
