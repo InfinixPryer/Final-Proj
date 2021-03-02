@@ -233,7 +233,7 @@ const PatchItem = ({ item }) => {
   };
 
   return (
-    <section className="w-full h-page absolute bg-gray-100">
+    <section className="w-full mt-10 h-page absolute bg-gray-100">
       <div className="p-5 rounded-lg bg-white w-5/6 mx-auto my-3 shadow-md">
         <div className="grid grid-cols-2 overflow-y-scroll px-4 float-right w-3/6">
           {imgHolder.map((img) => {

@@ -3,6 +3,7 @@ import { api } from "../App";
 
 const OrderTracker = ({ setCheck }) => {
   const [cusCheckId, setId] = useState("");
+  const [forCartId, setforCartId] = useState("");
   const [ordStat, setStat] = useState("");
   const [isComplete, setComplete] = useState(false);
   const [hasRated, setHasRated] = useState("Give Rating");
@@ -14,7 +15,7 @@ const OrderTracker = ({ setCheck }) => {
   const getOrderStatus = async () => {
     const res = await api.get(`/carts/${cusCheckId}`);
     const status = res.data.cart.status;
-    console.log(res);
+    setforCartId(res.data.cart.cartId);
     setStat(status);
     if (status === "Completed") {
       setComplete(true);
@@ -30,9 +31,12 @@ const OrderTracker = ({ setCheck }) => {
 
   const handlePostRate = async () => {
     const rating = { cusReview: cusRating };
-    api.patch(`/carts/${cusCheckId}/feedback`, rating).then(() => {
+    api.patch(`/carts/${forCartId}/feedback`, rating).then(() => {
       setHasRated("Thank you for your feedback");
       rateBtn.current.disabled = true;
+      setTimeout(() => {
+        setCheck(false);
+      }, 500);
     });
   };
 
@@ -154,7 +158,7 @@ const OrderTracker = ({ setCheck }) => {
             <button
               ref={rateBtn}
               onClick={() => handlePostRate()}
-              className="disabled:bg-gray-600"
+              className="disabled:bg-gray-200 disabled:text-white"
             >
               {hasRated}
             </button>
