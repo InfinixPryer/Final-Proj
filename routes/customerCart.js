@@ -40,7 +40,7 @@ router.get('/:cartId', (req, res, next) => {
             next();
         }else{
             res.status(200).json({
-                cart
+                cart: cart[0]
             })
         }
     })
@@ -63,7 +63,7 @@ router.get('/:cusCheckId', (req, res, next) => {
             })
         }else{
             return res.status(200).json({
-                cart
+                cart:cart[0]
             })
         }
     })
