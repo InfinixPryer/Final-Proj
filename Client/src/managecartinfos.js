@@ -105,7 +105,11 @@ const ManageCartInfo = () => {
             </tr>
           </thead>
           <tbody>
-            <Carts carts={cartsToDisplay} adminToken={adminToken} />
+            <Carts
+              carts={cartsToDisplay}
+              adminToken={adminToken}
+              getCarts={getCarts}
+            />
           </tbody>
           <tfoot></tfoot>
         </table>
@@ -113,13 +117,20 @@ const ManageCartInfo = () => {
     </>
   );
 };
-const Carts = ({ carts, adminToken }) => {
+const Carts = ({ carts, adminToken, getCarts }) => {
   return carts.map((cart) => {
-    return <CartRow cart={cart} adminToken={adminToken} key={cart.cartId} />;
+    return (
+      <CartRow
+        cart={cart}
+        adminToken={adminToken}
+        getCarts={getCarts}
+        key={cart.cartId}
+      />
+    );
   });
 };
 
-const CartRow = ({ cart, adminToken }) => {
+const CartRow = ({ cart, adminToken, getCarts }) => {
   const {
     orderIds,
     cartId,
@@ -135,11 +146,13 @@ const CartRow = ({ cart, adminToken }) => {
     status: status,
   });
   const ChangeOrdStatus = (id) => {
-    api.patch(`/carts/${id}/feedback`, ordStat, {
-      headers: {
-        Authorization: adminToken,
-      },
-    });
+    api
+      .patch(`/carts/${id}/feedback`, ordStat, {
+        headers: {
+          Authorization: adminToken,
+        },
+      })
+      .then(() => getCarts());
   };
   const handleChange = (e) => {
     setStat({ status: e.target.value });
