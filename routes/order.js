@@ -73,7 +73,7 @@ router.get('/:orderId'/*, authenticate*/, (req, res, next) => {
     })
 });
 
-router.delete('/:orderId', authenticate, (req, res, next) => {
+router.delete('/:orderId'/*, authenticate*/, (req, res, next) => {
     Order.deleteOne({orderId:req.params.orderId})
     .exec()
     .then(result => {
@@ -88,7 +88,7 @@ router.delete('/:orderId', authenticate, (req, res, next) => {
     })
 });
 
-router.delete('/', authenticate, (req, res, next) => {
+router.delete('/'/*, authenticate*/, (req, res, next) => {
     Order.deleteMany()
     .exec()
     .then(result => {

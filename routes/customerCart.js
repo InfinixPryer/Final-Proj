@@ -13,6 +13,11 @@ router.get('/' ,(req, res, next) => {
     .select('-__v -_id')
     .exec()
     .then(carts => {
+        if(carts.length === 0){
+            return res.status(404).json({
+                message:"No carts found."
+            })
+        }
         console.log(carts);
         res.status(200).json({
             count: carts.length,
@@ -26,7 +31,105 @@ router.get('/' ,(req, res, next) => {
     })
 });
 
+router.get('/:cartId', (req, res, next) => {
+    Cart.find({cartId: req.params.cartId})
+    .select('-__v -_id')
+    .exec()
+    .then(cart => {
+        if(cart.length <= 0){
+            next();
+        }else{
+            res.status(200).json({
+                cart
+            })
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).json({
+            error
+        })
+    })
+})
+
+router.get('/:cusCheckId', (req, res, next) => {
+    Cart.find({cusCheckId: req.params.cusCheckId})
+    .select('-__v -_id')
+    .exec()
+    .then(cart => {
+        if(cart.length === 0){
+            res.status(404).json({
+                message:'Cart is not found.'
+            })
+        }else{
+            return res.status(200).json({
+                cart
+            })
+        }
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).json({
+            error
+        })
+    })
+})
+
+router.get('/reviews' ,(req, res, next) => {
+    Cart.find()
+    .select('cusReview -_id')
+    .exec()
+    .then(reviews => {
+        if(reviews.length === 0){
+            res.status(404).json({
+                message:"No customer reviews"
+            })
+        }
+        res.status(200).json({
+            reviews
+        })
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).json({
+            error: error
+        })
+    })
+});
+
+const generateId = () => {
+    const ranString = Math.random().toString(36).substr(2, 4);
+    const ranNumber = Math.floor(Math.random()*999);
+
+    return ranString + ranNumber;
+}
+
+
 router.post('/', (req, res, next) => {
+    
+    const checkId = generateId();
+    Cart.find()
+    .select('cusCheckId')
+    .then(chkId => {
+        var x = false;
+        var count = 3;
+        do{
+            chkId.map(id => {
+                if(checkId == id){
+                    checkId = generateId();
+                    count++;
+                }else{
+                    count--;
+                    x = true;
+                }
+            })
+        }while(x == false && count !=0)
+    })
+    .catch(err => {
+        return res.sendStatus(500).json({
+            err
+        })
+    })
     Promise.all(req.body.orderItems.map((orderItem) => {
        return PostOrder.postOrder(orderItem);
     }))
@@ -47,7 +150,8 @@ router.post('/', (req, res, next) => {
                     cusName: req.body.cusName,
                     cusAddress: req.body.cusAddress,
                     cusPhone: req.body.cusPhone,
-                    cusEmail: req.body.cusEmail
+                    cusEmail: req.body.cusEmail,
+                    cusCheckId: checkId
                 })
                 return newCart.save()
             })
@@ -59,10 +163,11 @@ router.post('/', (req, res, next) => {
                         totalPrice: result.totalPrice,
                         approved: result.approved,
                         orderIds: result.orderIds,
-                        cusName: req.body.cusName,
-                        cusAddress: req.body.cusAddress,
-                        cusPhone: req.body.cusPhone,
-                        cusEmail: req.body.cusEmail,
+                        cusName: result.cusName,
+                        cusAddress: result.cusAddress,
+                        cusPhone: result.cusPhone,
+                        cusEmail: result.cusEmail,
+                        cusCheckId: result.cusCheckId,
                         orderDate: result.orderDate
                     }
                 })
@@ -76,7 +181,7 @@ router.post('/', (req, res, next) => {
         })
 });
 
-router.delete('/:cartId', authenticate, (req, res, next) => {
+router.delete('/:cartId'/*, authenticate*/, (req, res, next) => {
     Cart.find({cartId: req.params.cartId})
     .then(cart => {
         return (cart.length > 0) ? cart[0].orderIds : [];
@@ -104,17 +209,18 @@ router.delete('/:cartId', authenticate, (req, res, next) => {
     })
 });
 
-router.patch('/:cartId/status', authenticate, (req, res) => {
-    Cart.find({cartId: req.params.cartId})
+router.patch('/:cartId/feedback'/*, authenticate*/, (req, res) => {
+    const id = req.params.cartId
+    const updateBody = req.body
+    Cart.find({cartId: id})
     .then(cart => {
         if(cart.length === 0)
         {
             res.status(404).json({
-                message: 'Product not fouuuuuuuuuund.'
+                message: 'Cart not found'
             })
         }
-        const { approved } = req.body;
-        Cart.updateOne({cartId: req.params.cartId}, {$set: { approved }})
+        Cart.updateOne({cartId: req.params.cartId}, {$set: updateBody})
         .exec()
         .then(result => {
             res.status(200).json({
