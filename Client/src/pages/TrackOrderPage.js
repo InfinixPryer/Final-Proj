@@ -1,19 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "../App";
 
 const OrderTracker = ({ setCheck }) => {
   const [cusCheckId, setId] = useState("");
   const [ordStat, setStat] = useState("");
   const [isComplete, setComplete] = useState(false);
+  const [hasRated, setHasRated] = useState("Give Rating");
   const [cusRating, setRating] = useState({
-    name: "",
-    rating: "",
+    rating: 0,
     review: "",
   });
-
+  const rateBtn = useRef();
   const getOrderStatus = async () => {
     const res = await api.get(`/carts/${cusCheckId}`);
-    const status = res.data.status;
+    const status = res.data.cart.status;
+    console.log(res);
     setStat(status);
     if (status === "Completed") {
       setComplete(true);
@@ -25,6 +26,14 @@ const OrderTracker = ({ setCheck }) => {
 
   const handleRating = (e) => {
     setRating({ ...cusRating, rating: parseInt(e.target.value) });
+  };
+
+  const handlePostRate = async () => {
+    const rating = { cusReview: cusRating };
+    api.patch(`/carts/${cusCheckId}/feedback`, rating).then(() => {
+      setHasRated("Thank you for your feedback");
+      rateBtn.current.disabled = true;
+    });
   };
 
   useEffect(() => {
@@ -70,7 +79,7 @@ const OrderTracker = ({ setCheck }) => {
         {isComplete ? (
           <div className="mt-5">
             <span>Please give our service a rating!</span>
-            <label className="mx-2 flex w-32 my-auto h-6 items-center float-right justify-between">
+            <label className="mx-2 flex w-40 my-auto h-6 items-center float-right justify-between">
               <input
                 type="radio"
                 name="stars"
@@ -137,11 +146,21 @@ const OrderTracker = ({ setCheck }) => {
                 type="text"
                 value={cusRating.review}
                 className="w-full border-coffee border p-2 rounded"
+                onChange={(e) =>
+                  setRating({ ...cusRating, review: e.target.value })
+                }
               />
             </span>
+            <button
+              ref={rateBtn}
+              onClick={() => handlePostRate()}
+              className="disabled:bg-gray-600"
+            >
+              {hasRated}
+            </button>
           </div>
         ) : (
-          <div className="mt-5 text-sm m-auto text-gray-700">
+          <div className="mt-5 text-sm m-auto text-gray-600">
             Is your order taking too long? Please contact us +63912323231
           </div>
         )}
